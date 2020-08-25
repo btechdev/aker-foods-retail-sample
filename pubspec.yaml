@@ -19,14 +19,17 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  equatable: ^1.0.1 # To check the equality of objects
+
   flutter_bloc: ^3.2.0 # Flutter Bloc for Event & State management
+  flutter_statusbarcolor: ^0.2.3
+  flutter_svg: ^0.15.0 # To render SVG
+
+  equatable: ^1.0.1 # To check the equality of objects
   kiwi: 2.0.0 # For Dependency Injection
+  pedantic: ^1.8.0 # Analysis
 
   http: ^0.12.0 # API calls
   data_connection_checker: ^0.3.4 # To check if the device is connected to network
-
-  flutter_svg: ^0.15.0 # To render SVG
   cached_network_image: ^2.1.0+1
 
   shared_preferences: 0.5.4+9 # Local preferences to store key-value pairs data
@@ -43,10 +46,16 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  pedantic: ^1.8.0 # Analysis
+  flutter_launcher_icons: ^0.7.5 # For generating app launcher icons from flutter
   build_runner: ^1.7.3
   kiwi_generator: ^2.0.0
   hive_generator: ^0.7.0
+
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/icons/launcher.png"
 
 
 # For information on the generic Dart part of this file, see the
@@ -60,6 +69,28 @@ flutter:
     - assets/icons/
     - assets/images/
     - assets/raw/
+
+  fonts:
+    - family: MavenPro
+      fonts:
+        - asset: assets/fonts/MavenPro-Black-900.ttf
+          weight: 900
+        - asset: assets/fonts/MavenPro-ExtraBold-800.ttf
+          weight: 800
+        - asset: assets/fonts/MavenPro-Bold-700.ttf
+          weight: 700
+        - asset: assets/fonts/MavenPro-SemiBold-600.ttf
+          weight: 600
+        - asset: assets/fonts/MavenPro-Medium-500.ttf
+          weight: 500
+        - asset: assets/fonts/MavenPro-Regular-400.ttf
+          weight: 400
+        - asset: assets/fonts/MavenPro-Light-300.ttf
+          weight: 300
+        - asset: assets/fonts/MavenPro-ExtraLight-200.ttf
+          weight: 200
+        - asset: assets/fonts/MavenPro-Thin-100.ttf
+          weight: 100
 
 module:
   androidX: true
