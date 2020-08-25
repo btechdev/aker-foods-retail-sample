@@ -1,0 +1,65 @@
+name: aker_foods_retail
+description: Aker Foods Retail B2C Mobile Application.
+
+# The following defines the version and build number for your application.
+# A version number is three numbers separated by dots, like 1.2.43
+# followed by an optional build number separated by a +.
+# Both the version and the builder number may be overridden in flutter
+# build by specifying --build-name and --build-number, respectively.
+# In Android, build-name is used as versionName while build-number used as versionCode.
+# Read more about Android versioning at https://developer.android.com/studio/publish/versioning
+# In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
+# Read more about iOS versioning at
+# https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.6.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  equatable: ^1.0.1 # To check the equality of objects
+  flutter_bloc: ^3.2.0 # Flutter Bloc for Event & State management
+  kiwi: 2.0.0 # For Dependency Injection
+
+  http: ^0.12.0 # API calls
+  data_connection_checker: ^0.3.4 # To check if the device is connected to network
+
+  flutter_svg: ^0.15.0 # To render SVG
+  cached_network_image: ^2.1.0+1
+
+  shared_preferences: 0.5.4+9 # Local preferences to store key-value pairs data
+  url_launcher: 5.5.0 # Launching a URL in the mobile platform
+  permission_handler: ^4.0.0 # For handling platform specific run-time permissions
+  image_picker: 0.6.3+4 # Image Picker
+
+  # Local DB
+  hive: ^1.4.0+1
+
+  # To use CupertinoIcons class for iOS style icons
+  cupertino_icons: ^0.1.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  pedantic: ^1.8.0 # Analysis
+  build_runner: ^1.7.3
+  kiwi_generator: ^2.0.0
+  hive_generator: ^0.7.0
+
+
+# For information on the generic Dart part of this file, see the
+# following page: https://dart.dev/tools/pub/pubspec
+
+# The following section is specific to Flutter.
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/
+    - assets/icons/
+    - assets/images/
+    - assets/raw/
+
+module:
+  androidX: true

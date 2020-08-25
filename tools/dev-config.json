@@ -1,0 +1,9 @@
+{
+	"environmentVariables": {
+		"host": "https://localhost/dev",
+		"clientId": "abcdefghijkl",
+		"clientSecret": "abcdefghijkl",
+		"assetHost": "https://dev-assets.akerfoods.com",
+		"firebaseToken": "abcdefghijkl"
+	}
+}
