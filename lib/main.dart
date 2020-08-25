@@ -1,61 +1,41 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
+import 'package:pedantic/pedantic.dart';
 
-void main() => runApp(MyApp());
+import '.env.dart' as secret_config;
+import 'common/injector/injector.dart';
+import 'common/injector/injector_config.dart';
+import 'common/local_preferences/local_preferences.dart';
+import 'config/configuration.dart';
+import 'presentation/app.dart';
 
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Aker Foods Retail',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: DashboardScreen(title: 'Dashboard'),
-    );
-  }
-}
+void main() {
+  InjectorConfig.setup();
+  WidgetsFlutterBinding.ensureInitialized();
 
-class DashboardScreen extends StatefulWidget {
-  DashboardScreen({Key key, this.title}) : super(key: key);
+  // Initialize shared preferences wrapper
+  unawaited(Injector.resolve<LocalPreferences>().init());
 
-  final String title;
+  // Load configuration from secret environment
+  Configuration().setConfigurationValues(secret_config.environment);
 
-  @override
-  _DashboardScreenState createState() => _DashboardScreenState();
-}
+  // TODO(Bhushan): Import crashlytics and uncomment this following code
+  // Enable Crashlytics based on environment and
+  // Pass all uncaught errors from the framework to Crashlytics.
+  /*
+  Crashlytics.instance.enableInDevMode = Configuration.shouldEnableCrashlytics;
+  FlutterError.onError = Crashlytics.instance.recordFlutterError;
+  */
 
-class _DashboardScreenState extends State<DashboardScreen> {
-  int _counter = 0;
+  // Only Light mode, need update if support darkmode
+  unawaited(FlutterStatusbarcolor.setStatusBarWhiteForeground(false));
+  unawaited(FlutterStatusbarcolor.setStatusBarColor(Colors.transparent));
 
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text('You have following number of items in cart:'),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.display1,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Cart',
-        child: Icon(Icons.add_shopping_cart),
-      ),
-    );
-  }
+  runZoned(
+    () => runApp(App()),
+    // TODO(Bhushan): Import crashlytics and uncomment this following code
+    //onError: Crashlytics.instance.recordError,
+  );
 }
