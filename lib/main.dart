@@ -43,7 +43,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text('You have following number of items in cart:'),
+            const Text('You have following number of items in cart:'),
             Text(
               '$_counter',
               style: Theme.of(context).textTheme.display1,
