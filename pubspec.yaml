@@ -33,6 +33,7 @@ dependencies:
   url_launcher: 5.5.0 # Launching a URL in the mobile platform
   permission_handler: ^4.0.0 # For handling platform specific run-time permissions
   image_picker: 0.6.3+4 # Image Picker
+  otp_text_field: ^1.0.1
 
   # Local DB
   hive: ^1.4.0+1
@@ -47,7 +48,6 @@ dev_dependencies:
   build_runner: ^1.7.3
   kiwi_generator: ^2.0.0
   hive_generator: ^0.7.0
-
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
