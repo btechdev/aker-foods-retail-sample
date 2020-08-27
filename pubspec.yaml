@@ -36,6 +36,8 @@ dependencies:
   url_launcher: 5.5.0 # Launching a URL in the mobile platform
   permission_handler: ^4.0.0 # For handling platform specific run-time permissions
   image_picker: 0.6.3+4 # Image Picker
+  otp_text_field: ^1.0.1
+  keyboard_avoider: ^0.1.2
 
   # Local DB
   hive: ^1.4.0+1
@@ -85,12 +87,5 @@ flutter:
           weight: 500
         - asset: assets/fonts/MavenPro-Regular-400.ttf
           weight: 400
-        - asset: assets/fonts/MavenPro-Light-300.ttf
-          weight: 300
-        - asset: assets/fonts/MavenPro-ExtraLight-200.ttf
-          weight: 200
-        - asset: assets/fonts/MavenPro-Thin-100.ttf
-          weight: 100
-
 module:
   androidX: true
