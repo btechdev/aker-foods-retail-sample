@@ -7,11 +7,9 @@ import 'text_themes.dart';
 class AppDialogTheme {
   static double elevation = 0.0;
 
-  static TextStyle titleTextStyle = AppTextTheme.subhead
-      .copyWith(fontWeight: FontWeight.bold, color: AppColor.black);
+  static TextStyle titleTextStyle = AppTextTheme.defaultTextTheme().subtitle1;
 
-  static TextStyle contentTextStyle =
-      AppTextTheme.caption.copyWith(color: AppColor.black);
+  static TextStyle contentTextStyle = AppTextTheme.defaultTextTheme().bodyText2;
 
   static DialogTheme defaultDialogTheme() => DialogTheme(
         elevation: AppDialogTheme.elevation,

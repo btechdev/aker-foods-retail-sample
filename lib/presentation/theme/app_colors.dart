@@ -22,6 +22,8 @@ class AppColor {
   static Color black40 = black.withOpacity(0.40);
   static Color black25 = black.withOpacity(0.25);
 
+  static const Color scaffoldBackgroundColor = Color(0xFFF5F5F5);
+
   static const Color orangeDark = Color(0xFFF46400);
 
   static const Color yellow = Color(0xfffcd22a);
