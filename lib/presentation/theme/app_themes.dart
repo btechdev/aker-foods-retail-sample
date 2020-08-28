@@ -15,7 +15,7 @@ class AppTheme {
         scaffoldBackgroundColor: AppColor.scaffoldBackgroundColor,
         colorScheme: ColorScheme.light(
           primary: AppColor.primaryColor,
-          onPrimary: AppColor.skyBlue,
+          onPrimary: AppColor.primaryColor,
           primaryVariant: AppColor.primaryColor.withOpacity(0.38),
           secondary: AppColor.primaryColorDark,
         ),
@@ -24,11 +24,11 @@ class AppTheme {
           color: AppColor.transparent,
           elevation: 0.0,
           iconTheme: IconThemeData(
-            color: AppColor.skyBlue,
+            color: AppColor.primaryColor,
             size: 24.w,
           ),
           actionsIconTheme: const IconThemeData(
-            color: AppColor.skyBlue,
+            color: AppColor.black,
           ),
           textTheme: AppTextTheme.defaultTextTheme(),
         ),
