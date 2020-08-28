@@ -1,40 +1,42 @@
 import 'package:flutter/material.dart';
 
+import '../../common/constants/layout_constants.dart';
+import '../../presentation/theme/app_colors.dart';
+
 class ProfileTextFieldWidget extends StatelessWidget {
   final Icon prefixIcon;
   final String hintText;
+  final TextStyle hintStyle;
   final Function onTextChange;
   final TextEditingController controller;
 
   ProfileTextFieldWidget({
     this.prefixIcon,
     this.hintText,
+    this.hintStyle,
     this.onTextChange,
     this.controller,
   });
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 60.0,
-      decoration: BoxDecoration(
-        border: Border.all(
-          color: Colors.grey[500],
-          width: 1,
+  Widget build(BuildContext context) => Container(
+        alignment: Alignment.center,
+        height: LayoutConstants.profileInputTextFieldHeight,
+        decoration: LayoutConstants.inputBoxDecoration,
+        child: TextField(
+          style: Theme.of(context).textTheme.bodyText1,
+          decoration: InputDecoration(
+            prefixIcon: prefixIcon,
+            hintText: hintText,
+            hintStyle: hintStyle ??
+                Theme.of(context).textTheme.bodyText2.copyWith(
+                      color: AppColor.black54,
+                    ),
+            focusedBorder: InputBorder.none,
+            enabledBorder: InputBorder.none,
+            errorBorder: InputBorder.none,
+            disabledBorder: InputBorder.none,
+          ),
         ),
-        borderRadius: BorderRadius.circular(10.0),
-      ),
-      child: TextField(
-        decoration: InputDecoration(
-          prefixIcon: prefixIcon,
-          hintText: hintText,
-          focusedBorder: InputBorder.none,
-          enabledBorder: InputBorder.none,
-          errorBorder: InputBorder.none,
-          disabledBorder: InputBorder.none,
-        ),
-        style: const TextStyle(fontSize: 20),
-      ),
-    );
-  }
+      );
 }
