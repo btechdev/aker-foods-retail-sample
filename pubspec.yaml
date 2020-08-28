@@ -53,6 +53,9 @@ dev_dependencies:
   kiwi_generator: ^2.0.0
   hive_generator: ^0.7.0
 
+dependency_overrides:
+  analyzer: '0.39.14'
+
 
 flutter_icons:
   android: true
