@@ -1,17 +1,16 @@
+import 'package:aker_foods_retail/common/constants/layout_constants.dart';
+import 'package:aker_foods_retail/common/extensions/pixel_dimension_util_extensions.dart';
+import 'package:aker_foods_retail/common/widgets/profile_text_field_widget.dart';
+import 'package:aker_foods_retail/presentation/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:keyboard_avoider/keyboard_avoider.dart';
 
-import '../../common/constants/layout_constants.dart';
-import '../../common/extensions/pixel_dimension_util_extensions.dart';
-import '../../common/widgets/profile_text_field_widget.dart';
-import '../../presentation/theme/app_colors.dart';
-
-class SetupUserProfileScreen extends StatefulWidget {
+class EditProfileScreen extends StatefulWidget {
   @override
-  _SetupProfileScreen createState() => _SetupProfileScreen();
+  _UserProfileScreen createState() => _UserProfileScreen();
 }
 
-class _SetupProfileScreen extends State<SetupUserProfileScreen> {
+class _UserProfileScreen extends State<EditProfileScreen> {
   String dropdownValue;
 
   @override
@@ -28,7 +27,7 @@ class _SetupProfileScreen extends State<SetupUserProfileScreen> {
   AppBar _getAppBar() => AppBar(
         backgroundColor: AppColor.white,
         title: Text(
-          'Profile Details',
+          'Edit Profile',
           style: Theme.of(context).textTheme.button,
         ),
       );
@@ -55,10 +54,7 @@ class _SetupProfileScreen extends State<SetupUserProfileScreen> {
               prefixIcon: _textFieldPrefixIcon(Icons.email),
             ),
             _inputFieldsVerticalSpacing(),
-            ProfileTextFieldWidget(
-              hintText: 'Referral Code (optional)',
-              prefixIcon: _textFieldPrefixIcon(Icons.supervisor_account),
-            ),
+            _phoneNumberContainer(),
             SizedBox(height: 24.h),
             _buttonWithContainer(),
           ],
@@ -74,17 +70,17 @@ class _SetupProfileScreen extends State<SetupUserProfileScreen> {
   SizedBox _inputFieldsVerticalSpacing() => SizedBox(height: 20.h);
 
   Container _buttonWithContainer() => Container(
-        height: LayoutConstants.primaryButtonHeight,
         width: double.infinity,
+        height: LayoutConstants.primaryButtonHeight,
         child: RaisedButton(
           color: AppColor.primaryColor,
           disabledColor: Colors.lightGreen,
-          onPressed: () => Navigator.pushNamed(context, '/my-account'),
+          onPressed: () => {},
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12.w),
           ),
           child: Text(
-            'CONTINUE',
+            'SAVE',
             style: Theme.of(context).textTheme.button.copyWith(
                   color: AppColor.white,
                 ),
@@ -134,6 +130,28 @@ class _SetupProfileScreen extends State<SetupUserProfileScreen> {
                     }).toList(),
                   ),
                 ),
+              ),
+            ),
+          ],
+        ),
+      );
+
+  Container _phoneNumberContainer() => Container(
+        width: double.infinity,
+        height: LayoutConstants.profileInputTextFieldHeight,
+        padding: EdgeInsets.symmetric(
+          horizontal: 12.w,
+          vertical: 12.h,
+        ),
+        decoration: LayoutConstants.inputBoxDecoration,
+        child: Row(
+          children: [
+            _textFieldPrefixIcon(Icons.phonelink_setup),
+            SizedBox(width: 8.w),
+            Expanded(
+              child: Text(
+                '+91 **********',
+                style: Theme.of(context).textTheme.bodyText1,
               ),
             ),
           ],

@@ -12,10 +12,10 @@ class AppColor {
   static const Color black = Color(0xFF000000);
   static const Color grey = Color(0xFFBDBDBD);
 
-  static Color white87 = black.withOpacity(0.87);
-  static Color white54 = black.withOpacity(0.54);
-  static Color white40 = black.withOpacity(0.40);
-  static Color white25 = black.withOpacity(0.25);
+  static Color white87 = white.withOpacity(0.87);
+  static Color white54 = white.withOpacity(0.54);
+  static Color white40 = white.withOpacity(0.40);
+  static Color white25 = white.withOpacity(0.25);
 
   static Color black87 = black.withOpacity(0.87);
   static Color black54 = black.withOpacity(0.54);

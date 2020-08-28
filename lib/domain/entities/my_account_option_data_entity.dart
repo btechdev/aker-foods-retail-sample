@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
 
-class MyAccountCellItem {
+class MyAccountOptionDataEntity {
   final IconData icon;
   final String title;
   final String subtitle;
-  // final int index;
 
-  MyAccountCellItem({
+  MyAccountOptionDataEntity({
     @required this.icon,
     @required this.title,
-    // @required this.index,
     this.subtitle,
   });
 }

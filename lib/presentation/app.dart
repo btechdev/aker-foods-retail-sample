@@ -1,11 +1,11 @@
-import 'package:aker_foods_retail/presentation/my_account/widgets/my_account_screen.dart';
-import 'package:aker_foods_retail/presentation/my_account/widgets/user_profile_screen.dart';
 import 'package:flutter/material.dart';
 
 import '../common/utils/pixel_dimension_util.dart';
 import 'login/enter_otp_screen.dart';
 import 'login/enter_phone_number_screen.dart';
 import 'theme/app_themes.dart';
+import 'user/edit_profile/edit_profile_screen.dart';
+import 'user/my_account/my_account_screen.dart';
 
 class App extends StatelessWidget {
   final GlobalKey<NavigatorState> _navigatorStateKey =
@@ -32,12 +32,10 @@ class App extends StatelessWidget {
         title: 'Aker Foods Retail',
         theme: AppTheme.defaultTheme(),
         routes: {
-          '/my-account': (context) => MyAccountScreen(),
-          '/': (context) => EnterPhoneNumberScreen(
-                title: 'Login',
-              ),
+          '/': (context) => EnterPhoneNumberScreen(title: 'Login'),
           '/otp': (context) => EnterOtpScreen(),
-          '/user-profile': (context) => UserProfileScreen(),
+          '/my-account': (context) => MyAccountScreen(),
+          '/edit-profile': (context) => EditProfileScreen(),
         },
         initialRoute: '/',
       );

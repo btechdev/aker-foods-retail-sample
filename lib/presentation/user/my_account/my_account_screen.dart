@@ -1,8 +1,9 @@
-import 'package:aker_foods_retail/presentation/my_account/widgets/my_account_cell_item.dart';
-import 'package:aker_foods_retail/presentation/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 
+import '../../../common/constants/layout_constants.dart';
 import '../../../common/extensions/pixel_dimension_util_extensions.dart';
+import '../../../domain/entities/my_account_option_data_entity.dart';
+import '../../../presentation/theme/app_colors.dart';
 
 class MyAccountScreen extends StatefulWidget {
   MyAccountScreen({Key key}) : super(key: key);
@@ -12,21 +13,25 @@ class MyAccountScreen extends StatefulWidget {
 }
 
 class _MyAccountScreenState extends State<MyAccountScreen> {
-  final cells = [
-    MyAccountCellItem(
-      icon: Icons.business,
-      title: 'My Order',
+  final options = [
+    MyAccountOptionDataEntity(
+      icon: Icons.local_mall,
+      title: 'My Orders',
     ),
-    MyAccountCellItem(
-      icon: Icons.credit_card,
+    MyAccountOptionDataEntity(
+      icon: Icons.account_balance_wallet,
       title: 'My Wallet',
       subtitle: 'Rs 1000',
     ),
-    MyAccountCellItem(
+    MyAccountOptionDataEntity(
+      icon: Icons.location_city,
+      title: 'My Addresses',
+    ),
+    MyAccountOptionDataEntity(
       icon: Icons.question_answer,
       title: 'Support and FAQ',
     ),
-    MyAccountCellItem(
+    MyAccountOptionDataEntity(
       icon: Icons.offline_pin,
       title: 'Logout',
     )
@@ -49,7 +54,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
     return AppBar(
       title: Text(
         'My Account',
-        style: Theme.of(context).textTheme.headline6,
+        style: Theme.of(context).textTheme.button,
       ),
       centerTitle: false,
       actions: [
@@ -76,21 +81,25 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
       child: Column(
         children: [
           CircleAvatar(
-            backgroundImage: const NetworkImage('https://picsum.photos/200'),
-            radius: 70.w,
+            radius: 60.w,
+            backgroundImage:
+                const ExactAssetImage('assets/images/user-profile-vegies.jpeg'),
           ),
-          SizedBox(
-            height: 16.h,
-          ),
+          SizedBox(height: 16.h),
           Text(
-            'Mr Sumit Thakre',
+            'Mr Full Name',
             style: Theme.of(context).textTheme.headline5.apply(
                   color: AppColor.white,
                 ),
           ),
-          SizedBox(
-            height: 12.w,
+          SizedBox(height: 4.w),
+          Text(
+            'full-name@gmail.com',
+            style: Theme.of(context).textTheme.caption.apply(
+                  color: AppColor.white87,
+                ),
           ),
+          SizedBox(height: 8.h),
           _getAddressContainer(context)
         ],
       ),
@@ -107,7 +116,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
         itemCount: 4,
         itemBuilder: (context, index) => GestureDetector(
           onTap: () => {_navigateTo(index)},
-          child: _getCell(cells[index]),
+          child: _getCell(options[index]),
         ),
       ),
     );
@@ -125,22 +134,20 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
         color: AppColor.white,
         borderRadius: BorderRadius.circular(10.w),
       ),
-      height: 50.h,
+      height: LayoutConstants.profileInputTextFieldHeight,
       child: Row(
         children: [
           Icon(
-            Icons.add_location,
+            Icons.edit_location,
+            size: 30.h,
             color: AppColor.primaryColor,
-            size: 32.h,
           ),
-          SizedBox(
-            width: 4.w,
-          ),
+          SizedBox(width: 4.w),
           Expanded(
             flex: 2,
             child: Text(
-              'Something',
-              style: Theme.of(context).textTheme.headline6,
+              'Address',
+              style: Theme.of(context).textTheme.bodyText2,
             ),
           ),
           Expanded(
@@ -159,35 +166,38 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
     );
   }
 
-  Container _getCell(MyAccountCellItem item) => Container(
-        height: 60.h,
-        padding: EdgeInsets.all(16.w),
+  Container _getCell(MyAccountOptionDataEntity item) => Container(
+        alignment: Alignment.center,
+        width: double.infinity,
+        height: LayoutConstants.myAccountOptionCellHeight,
+        padding: EdgeInsets.symmetric(horizontal: 16.w),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Icon(
               item.icon,
               color: AppColor.primaryColor,
-              size: 32.h,
+              size: 30.h,
             ),
-            SizedBox(
-              width: 20.w,
-            ),
+            SizedBox(width: 20.w),
             Expanded(
               flex: 2,
               child: Text(
                 item.title,
-                style: Theme.of(context).textTheme.button,
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyText1
+                    .copyWith(fontWeight: FontWeight.w500),
               ),
             ),
             Expanded(
               flex: 1,
               child: Text(
                 item.subtitle ?? '',
-                style: Theme.of(context).textTheme.headline5.apply(
+                textAlign: TextAlign.end,
+                style: Theme.of(context).textTheme.bodyText1.copyWith(
                       color: AppColor.orangeDark,
                     ),
-                textAlign: TextAlign.end,
               ),
             )
           ],
@@ -203,10 +213,10 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
         debugPrint('My Wallet');
         break;
       case 2:
-        debugPrint('Faq');
+        debugPrint('Support and FAQ');
         break;
       case 3:
-        debugPrint('logout');
+        debugPrint('Logout');
         break;
     }
   }
