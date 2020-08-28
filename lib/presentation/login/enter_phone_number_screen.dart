@@ -1,10 +1,15 @@
-import 'package:aker_foods_retail/common/widgets/app_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:keyboard_avoider/keyboard_avoider.dart';
+
+import '../../common/extensions/pixel_dimension_util_extensions.dart';
+import '../../common/utils/pixel_dimension_util.dart';
+import '../../presentation/theme/app_colors.dart';
 
 class EnterPhoneNumberScreen extends StatefulWidget {
-  EnterPhoneNumberScreen({Key key, this.title}) : super(key: key);
   final String title;
+
+  EnterPhoneNumberScreen({Key key, this.title}) : super(key: key);
 
   @override
   _EnterPhoneNumberScreen createState() => _EnterPhoneNumberScreen();
@@ -12,124 +17,130 @@ class EnterPhoneNumberScreen extends StatefulWidget {
 
 class _EnterPhoneNumberScreen extends State<EnterPhoneNumberScreen> {
   @override
-  Widget build(BuildContext context) {
-    final Size size = MediaQuery.of(context).size;
+  Widget build(BuildContext context) => Scaffold(
+        body: KeyboardAvoider(
+          autoScroll: true,
+          child: _getBody(),
+        ),
+      );
 
-    return Scaffold(
-      body: Column(
-        children: [
-          Container(
-            padding: EdgeInsets.only(bottom: 30.0),
-            height: size.height * 0.55,
-            color: AppColor.backgroundScaffoldColor,
-            child: Container(
-              decoration: BoxDecoration(
-                color: AppColor.onboardingPageContainerColor,
-                borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(130.0),
-                  bottomRight: Radius.circular(200.0),
-                ),
-              ),
+  Container _getBody() => Container(
+        padding: EdgeInsets.symmetric(horizontal: 16.w),
+        child: Column(
+          children: [
+            _informationContainer(),
+            _bodyLowerSectionContainer(),
+          ],
+        ),
+      );
+
+  Container _informationContainer() => Container(
+        height: PixelDimensionUtil().uiHeightPx * 0.80,
+        padding: EdgeInsets.symmetric(
+          horizontal: 32.w,
+          vertical: 32.h,
+        ),
+        child: Container(
+          child: Image.asset('assets/images/logo_transparent_background.png'),
+        ),
+      );
+
+  Container _bodyLowerSectionContainer() => Container(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            _phoneNumberInputHeaderContainer(),
+            SizedBox(height: 12.h),
+            _phoneNumberInputTextFieldContainer(),
+            SizedBox(height: 8.h),
+            Text(
+              'We will send you OTP on this number',
+              style: Theme.of(context).textTheme.caption.copyWith(
+                    color: AppColor.grey,
+                  ),
             ),
-          ),
-          Expanded(
-            child: Container(
-              color: AppColor.backgroundScaffoldColor,
-              height: size.height * .45,
-              padding: EdgeInsets.only(
-                left: 16.0,
-                right: 16.0,
-                top: 60.0,
+            SizedBox(height: 24.h),
+            _buttonWithContainer(),
+          ],
+        ),
+      );
+
+  Container _phoneNumberInputHeaderContainer() => Container(
+        height: 48.h,
+        alignment: Alignment.centerLeft,
+        child: Text(
+          'Let\'s get you started',
+          style: Theme.of(context).textTheme.headline6,
+        ),
+      );
+
+  Container _phoneNumberInputTextFieldContainer() => Container(
+        alignment: Alignment.center,
+        decoration: _phoneNumberInputBoxDecoration(),
+        padding: EdgeInsets.symmetric(
+          horizontal: 12.h,
+          vertical: 8.h,
+        ),
+        height: 56.h,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            _countryCodeText(),
+            _divider(),
+            Expanded(child: _phoneNumberInputTextField()),
+          ],
+        ),
+      );
+
+  BoxDecoration _phoneNumberInputBoxDecoration() => BoxDecoration(
+        border: Border.all(color: AppColor.black25, width: 1.w),
+        borderRadius: BorderRadius.circular(12.w),
+      );
+
+  Text _countryCodeText() => Text(
+        '+91',
+        style: Theme.of(context).textTheme.bodyText1,
+      );
+
+  Container _divider() => Container(
+        color: AppColor.black25,
+        width: 1.w,
+        margin: EdgeInsets.symmetric(horizontal: 12.w, vertical: 4.h),
+      );
+
+  TextField _phoneNumberInputTextField() => TextField(
+        decoration: InputDecoration(
+          focusedBorder: InputBorder.none,
+          enabledBorder: InputBorder.none,
+          errorBorder: InputBorder.none,
+          disabledBorder: InputBorder.none,
+          hintText: 'Enter your phone number',
+          hintStyle: Theme.of(context).textTheme.bodyText2.copyWith(
+                color: AppColor.black54,
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Lets get you started',
-                    style: TextStyle(
-                      fontSize: 20.0,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  SizedBox(
-                    height: 10.0,
-                  ),
-                  Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.grey[500],
-                        width: 1,
-                      ),
-                      borderRadius: BorderRadius.circular(15.0),
-                    ),
-                    padding: EdgeInsets.all(5.0),
-                    height: 50.0,
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text(
-                          '+91',
-                          style: TextStyle(
-                            fontSize: 20.0,
-                          ),
-                        ),
-                        Container(
-                          color: Colors.grey[500],
-                          width: 1.0,
-                          margin: EdgeInsets.all(5.0),
-                        ),
-                        Expanded(
-                          child: TextField(
-                            decoration: InputDecoration(
-                              hintText: 'Enter your phone number',
-                              focusedBorder: InputBorder.none,
-                              enabledBorder: InputBorder.none,
-                              errorBorder: InputBorder.none,
-                              disabledBorder: InputBorder.none,
-                            ),
-                            inputFormatters: [
-                              FilteringTextInputFormatter.digitsOnly,
-                            ],
-                            style: TextStyle(
-                              fontSize: 19.0,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    height: 20.0,
-                  ),
-                  Text('We will send you OTP on this number'),
-                  SizedBox(
-                    height: 30.0,
-                  ),
-                  Container(
-                    height: 45.0,
-                    width: size.width,
-                    child: RaisedButton(
-                      color: AppColor.buttonBackgroundColor,
-                      disabledColor: Colors.lightGreen,
-                      onPressed: () => {Navigator.pushNamed(context, '/otp')},
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      child: Text(
-                        'GET OTP',
-                        style: TextStyle(
-                          fontSize: 20.0,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          )
+        ),
+        inputFormatters: [
+          FilteringTextInputFormatter.digitsOnly,
         ],
-      ),
-    );
-  }
+        style: Theme.of(context).textTheme.bodyText1,
+      );
+
+  Container _buttonWithContainer() => Container(
+        height: 48.h,
+        width: PixelDimensionUtil().uiWidthPx.toDouble(),
+        child: RaisedButton(
+          color: AppColor.primaryColor,
+          disabledColor: Colors.lightGreen,
+          onPressed: () => {Navigator.pushNamed(context, '/otp')},
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12.w),
+          ),
+          child: Text(
+            'GET OTP',
+            style: Theme.of(context).textTheme.button.copyWith(
+                  color: AppColor.white,
+                ),
+          ),
+        ),
+      );
 }

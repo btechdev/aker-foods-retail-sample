@@ -24,9 +24,7 @@ class AppBarDetailHeader extends StatelessWidget
       title: Text(
         title,
         key: titleKey,
-        style: TextStyle(
-          fontSize: 20.0,
-        ),
+        style: const TextStyle(fontSize: 20),
       ),
       centerTitle: false,
       elevation: 0.0,

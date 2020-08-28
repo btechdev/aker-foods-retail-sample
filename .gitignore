@@ -29,6 +29,7 @@ ios/Flutter/Flutter.podspec
 **/doc/api/
 .dart_tool/
 .flutter-plugins
+.gradle/
 .packages
 .pub-cache/
 .pub/
@@ -64,6 +65,7 @@ generated_plugin_registrant.dart
 **/ios/**/profile
 **/ios/**/xcuserdata
 **/ios/.generated/
+**/ios/Flutter/.last_build_id
 **/ios/Flutter/App.framework/*
 **/ios/Flutter/Flutter.framework
 **/ios/Flutter/Generated.xcconfig
