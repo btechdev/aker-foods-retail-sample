@@ -56,7 +56,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
         IconButton(
           icon: const Icon(Icons.edit),
           onPressed: () {
-            Navigator.pushNamed(context, '/user-profile');
+            Navigator.pushNamed(context, '/edit-profile');
           },
         ),
       ],
@@ -65,7 +65,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
 
   Container _getUserProfile(BuildContext context) {
     return Container(
-      color: AppColor.textfieldPrefixIconColor,
+      color: AppColor.primaryColor,
       padding: EdgeInsets.only(
         left: 16.w,
         right: 16.w,
@@ -91,7 +91,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
           SizedBox(
             height: 12.w,
           ),
-          _getLocationContainer(context)
+          _getAddressContainer(context)
         ],
       ),
     );
@@ -113,7 +113,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
     );
   }
 
-  Container _getLocationContainer(BuildContext context) {
+  Container _getAddressContainer(BuildContext context) {
     return Container(
       margin: EdgeInsets.symmetric(
         vertical: 16.w,
@@ -130,7 +130,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
         children: [
           Icon(
             Icons.add_location,
-            color: AppColor.textfieldPrefixIconColor,
+            color: AppColor.primaryColor,
             size: 32.h,
           ),
           SizedBox(
@@ -149,7 +149,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
               child: Text(
                 'Change',
                 style: Theme.of(context).textTheme.caption.apply(
-                      color: AppColor.textfieldPrefixIconColor,
+                      color: AppColor.primaryColor,
                     ),
               ),
             ),
@@ -167,7 +167,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
           children: [
             Icon(
               item.icon,
-              color: AppColor.textfieldPrefixIconColor,
+              color: AppColor.primaryColor,
               size: 32.h,
             ),
             SizedBox(
