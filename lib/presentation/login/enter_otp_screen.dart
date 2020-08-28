@@ -88,16 +88,10 @@ class _EnterOTPScreen extends State<EnterOtpScreen>
         ),
       );
 
-  BoxDecoration _otpInputBoxDecoration() => BoxDecoration(
-        border: Border.all(color: AppColor.black25, width: 1.w),
-        borderRadius: BorderRadius.circular(12.w),
-      );
-
   Container _otpInputTextFieldContainer() => Container(
-        height: 56.h,
+        height: 40.h,
         alignment: Alignment.center,
-        padding: EdgeInsets.symmetric(horizontal: 12.h),
-        decoration: _otpInputBoxDecoration(),
+        padding: EdgeInsets.symmetric(horizontal: 12.w),
         child: Row(
           children: [
             Expanded(
@@ -105,6 +99,7 @@ class _EnterOTPScreen extends State<EnterOtpScreen>
                 length: 6,
                 fieldWidth: 40.w,
                 fieldStyle: FieldStyle.underline,
+                keyboardType: TextInputType.number,
                 width: PixelDimensionUtil().uiWidthPx * 0.80,
                 style: Theme.of(context).textTheme.bodyText1,
                 textFieldAlignment: MainAxisAlignment.spaceAround,
@@ -148,7 +143,7 @@ class _EnterOTPScreen extends State<EnterOtpScreen>
             _otpInputHeaderContainer(),
             SizedBox(height: 12.h),
             _otpInputTextFieldContainer(),
-            SizedBox(height: 8.h),
+            SizedBox(height: 20.h),
             Text(
               'OTP has been sent to **********',
               style: Theme.of(context).textTheme.caption.copyWith(

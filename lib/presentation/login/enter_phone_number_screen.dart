@@ -104,6 +104,8 @@ class _EnterPhoneNumberScreen extends State<EnterPhoneNumberScreen> {
       );
 
   TextField _phoneNumberInputTextField() => TextField(
+        maxLines: 1,
+        keyboardType: TextInputType.number,
         decoration: InputDecoration(
           focusedBorder: InputBorder.none,
           enabledBorder: InputBorder.none,
