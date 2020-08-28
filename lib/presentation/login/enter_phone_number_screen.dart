@@ -35,7 +35,7 @@ class _EnterPhoneNumberScreen extends State<EnterPhoneNumberScreen> {
       );
 
   Container _informationContainer() => Container(
-        height: PixelDimensionUtil().uiHeightPx * 0.80,
+        height: PixelDimensionUtil().uiHeightPx * 0.50,
         padding: EdgeInsets.symmetric(
           horizontal: 32.w,
           vertical: 32.h,
@@ -53,12 +53,7 @@ class _EnterPhoneNumberScreen extends State<EnterPhoneNumberScreen> {
             SizedBox(height: 12.h),
             _phoneNumberInputTextFieldContainer(),
             SizedBox(height: 8.h),
-            Text(
-              'We will send you OTP on this number',
-              style: Theme.of(context).textTheme.caption.copyWith(
-                    color: AppColor.grey,
-                  ),
-            ),
+            _phoneNumberInputBottomText(),
             SizedBox(height: 24.h),
             _buttonWithContainer(),
           ],
@@ -123,6 +118,13 @@ class _EnterPhoneNumberScreen extends State<EnterPhoneNumberScreen> {
           FilteringTextInputFormatter.digitsOnly,
         ],
         style: Theme.of(context).textTheme.bodyText1,
+      );
+
+  Text _phoneNumberInputBottomText() => Text(
+        'We will send you OTP on this number',
+        style: Theme.of(context).textTheme.caption.copyWith(
+              color: AppColor.grey,
+            ),
       );
 
   Container _buttonWithContainer() => Container(
