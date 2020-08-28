@@ -6,7 +6,7 @@ import 'package:otp_text_field/style.dart';
 import '../../common/extensions/pixel_dimension_util_extensions.dart';
 import '../../common/utils/pixel_dimension_util.dart';
 import '../../common/widgets/countdown_timer_text.dart';
-import '../../presentation/login/setup_profile_screen.dart';
+import '../../presentation/login/setup_user_profile_screen.dart';
 import '../../presentation/theme/app_colors.dart';
 
 class EnterOtpScreen extends StatefulWidget {
@@ -48,7 +48,7 @@ class _EnterOTPScreen extends State<EnterOtpScreen>
   }
 
   Container _informationContainer() => Container(
-        height: PixelDimensionUtil().uiHeightPx * 0.80,
+        height: PixelDimensionUtil().uiHeightPx * 0.50,
         padding: EdgeInsets.symmetric(
           horizontal: 32.w,
           vertical: 32.h,
@@ -124,7 +124,7 @@ class _EnterOTPScreen extends State<EnterOtpScreen>
           onPressed: () => Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => SetupProfileScreen(),
+              builder: (context) => SetupUserProfileScreen(),
               fullscreenDialog: true,
               maintainState: true,
             ),
