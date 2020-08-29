@@ -45,7 +45,7 @@ class PixelDimensionUtil {
     _instance.navigator = navigator;
 
     try {
-      final MediaQueryData mediaQuery = MediaQuery.of(context);
+      final mediaQuery = MediaQuery.of(context);
       _mediaQueryData = mediaQuery;
       _pixelRatio = mediaQuery.devicePixelRatio;
       _screenWidth = mediaQuery.size.width;

@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:aker_foods_retail/common/constants/assertion_constants.dart';
+
+import '../../common/constants/assertion_constants.dart';
 
 export 'package:aker_foods_retail/common/constants/local_preferences_keys_constants.dart';
 
@@ -11,19 +14,25 @@ class LocalPreferences {
   }
 
   Future<bool> set(String key, dynamic value) {
+    if (key == null || value == null) {
+      return Future.value(false);
+    }
+
     assert(
       value is bool || value is double || value is int || value is String,
       AssertionConstants.unsupportedType,
     );
 
-    final Map<Type, Function> typeResolvers = {
-      bool: sharedPreferences.setBool,
-      double: sharedPreferences.setDouble,
-      int: sharedPreferences.setInt,
-      String: sharedPreferences.setString,
-    };
-
-    return typeResolvers[value.runtimeType](key, value);
+    if (value is bool) {
+      return sharedPreferences.setBool(key, value);
+    } else if (value is double) {
+      return sharedPreferences.setDouble(key, value);
+      // ignore: avoid_double_and_int_checks
+    } else if (value is int) {
+      return sharedPreferences.setInt(key, value);
+    } else {
+      return sharedPreferences.setString(key, value);
+    }
   }
 
   dynamic get(String key) => sharedPreferences.get(key);

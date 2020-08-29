@@ -16,13 +16,13 @@ class CountdownTimerText extends AnimatedWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Duration clockTimerDuration = Duration(seconds: animation.value);
+    final clockTimerDuration = Duration(seconds: animation.value);
 
     final minutes = clockTimerDuration.inMinutes.remainder(60);
-    final String minutesText = '${minutes.toString().padLeft(2, '0')}';
+    final minutesText = '${minutes.toString().padLeft(2, '0')}';
 
     final seconds = clockTimerDuration.inSeconds.remainder(60) % 60;
-    final String secondsText = '${seconds.toString().padLeft(2, '0')}';
+    final secondsText = '${seconds.toString().padLeft(2, '0')}';
 
     return Row(
       children: [

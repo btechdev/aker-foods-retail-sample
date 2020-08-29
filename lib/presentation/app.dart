@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../common/constants/route_constants.dart';
 import '../common/utils/pixel_dimension_util.dart';
 import 'login/enter_otp_screen.dart';
 import 'login/enter_phone_number_screen.dart';
@@ -32,12 +33,12 @@ class App extends StatelessWidget {
         title: 'Aker Foods Retail',
         theme: AppTheme.defaultTheme(),
         routes: {
-          '/': (context) => EnterPhoneNumberScreen(title: 'Login'),
-          '/otp': (context) => EnterOtpScreen(),
-          '/my-account': (context) => MyAccountScreen(),
-          '/edit-profile': (context) => EditProfileScreen(),
+          RouteConstant.initial: (context) => EnterPhoneNumberScreen(),
+          RouteConstant.verifyOtp: (context) => EnterOtpScreen(),
+          RouteConstant.myAccount: (context) => MyAccountScreen(),
+          RouteConstant.editProfile: (context) => EditProfileScreen(),
         },
-        initialRoute: '/',
+        initialRoute: RouteConstant.initial,
       );
 }
 

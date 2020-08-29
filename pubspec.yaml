@@ -32,15 +32,19 @@ dependencies:
   data_connection_checker: ^0.3.4 # To check if the device is connected to network
   cached_network_image: ^2.1.0+1
 
-  shared_preferences: 0.5.4+9 # Local preferences to store key-value pairs data
+  # Widgets & Utils
   url_launcher: 5.5.0 # Launching a URL in the mobile platform
   permission_handler: ^4.0.0 # For handling platform specific run-time permissions
   image_picker: 0.6.3+4 # Image Picker
   otp_text_field: ^1.0.1
   keyboard_avoider: ^0.1.2
 
-  # Local DB
-  hive: ^1.4.0+1
+  # Firebase
+  firebase_auth: ^0.18.0+1
+
+  # Local Storage Data
+  hive: ^1.4.0+1 # Local DB
+  shared_preferences: 0.5.4+9 # Local preferences to store key-value pairs data
 
   # To use CupertinoIcons class for iOS style icons
   cupertino_icons: ^0.1.2

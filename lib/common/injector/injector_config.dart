@@ -1,4 +1,9 @@
 import 'package:aker_foods_retail/common/local_preferences/local_preferences.dart';
+import 'package:aker_foods_retail/data/local_data_source/authentication_local_data_source.dart';
+import 'package:aker_foods_retail/data/repositories/auth_repository_impl.dart';
+import 'package:aker_foods_retail/domain/repositories/auth_repository.dart';
+import 'package:aker_foods_retail/domain/usecases/auth_usecase.dart';
+import 'package:aker_foods_retail/presentation/login/bloc/auth_bloc.dart';
 import 'package:kiwi/kiwi.dart';
 
 part 'injector_config.g.dart';
@@ -17,40 +22,41 @@ abstract class InjectorConfig {
   static final resolve = container.resolve;
 
   void _configure() {
-    /*_configureBlocs();
+    _configureBlocs();
     _configureUseCases();
     _configureRepositories();
-    _configureRemoteDataSources();
     _configureLocalDataSources();
+    /*_configureRemoteDataSources();
     _configureUtils();
     _configureClients();*/
     _configureCommon();
   }
 
-  /*
   /// ============ Register Blocs ============
-  @Register.singleton(AuthenticationBloc)
-  @Register.factory(LoginBloc)
+  @Register.factory(AuthBloc)
   void _configureBlocs();
 
   /// ============ Register UseCases ============
-  @Register.singleton(LoginUseCase)
+  @Register.factory(AuthUseCase)
   void _configureUseCases();
 
   /// ============ Register Repositories ============
-  @Register.singleton(
-    LoginRepository,
-    from: LoginRepositoryImpl,
+  @Register.factory(
+    AuthRepository,
+    from: AuthRepositoryImpl,
   )
   void _configureRepositories();
 
+  /// ============ Register LocalDataSources ============
+  @Register.singleton(AuthenticationLocalDataSource)
+  void _configureLocalDataSources();
+
+  /*
   /// ============ Register RemoteDataSources ============
   @Register.singleton(LoginRemoteDataSource)
   void _configureRemoteDataSources();
 
-  /// ============ Register LocalDataSources ============
-  @Register.singleton(LocalDataSource)
-  void _configureLocalDataSources();
+ 
 
   /// ============ Register Clients ============
   @Register.singleton(ApiClient)

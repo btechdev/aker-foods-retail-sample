@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 import 'package:pedantic/pedantic.dart';
@@ -14,7 +15,7 @@ import 'presentation/app.dart';
 void main() {
   InjectorConfig.setup();
   WidgetsFlutterBinding.ensureInitialized();
-
+  Firebase.initializeApp();
   // Initialize shared preferences wrapper
   unawaited(Injector.resolve<LocalPreferences>().init());
 

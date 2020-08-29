@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "267926914538",
+    "firebase_url": "https://aker-retail-96630.firebaseio.com",
+    "project_id": "aker-retail-96630",
+    "storage_bucket": "aker-retail-96630.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:267926914538:android:609cfe17b59e726a6e5e93",
+        "android_client_info": {
+          "package_name": "com.akerfoods.aker_foods_retail"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "267926914538-i43d97kg2t8rpbpoh7mgtncv0b1234eh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.akerfoods.aker_foods_retail",
+            "certificate_hash": "51cc2426a2e014bda998f8fa77fec2acb3a64ec7"
+          }
+        },
+        {
+          "client_id": "267926914538-7nhim1ob1j5s5bn6cgghs7fs7s5cv6bv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDSKsTDn1e2jJ-zSEFqfrp5lOgwqdrlZeY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "267926914538-7nhim1ob1j5s5bn6cgghs7fs7s5cv6bv.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "267926914538-7p03fjccb2148qvlu402c75eag9ma5ja.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.flutterOtpAuth"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

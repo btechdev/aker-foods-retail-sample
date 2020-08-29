@@ -1,21 +1,28 @@
+import 'package:aker_foods_retail/common/constants/route_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:keyboard_avoider/keyboard_avoider.dart';
 
 import '../../common/extensions/pixel_dimension_util_extensions.dart';
+import '../../common/extensions/string_extensions.dart';
 import '../../common/utils/pixel_dimension_util.dart';
 import '../../presentation/theme/app_colors.dart';
 
 class EnterPhoneNumberScreen extends StatefulWidget {
-  final String title;
-
-  EnterPhoneNumberScreen({Key key, this.title}) : super(key: key);
+  EnterPhoneNumberScreen({Key key}) : super(key: key);
 
   @override
   _EnterPhoneNumberScreen createState() => _EnterPhoneNumberScreen();
 }
 
 class _EnterPhoneNumberScreen extends State<EnterPhoneNumberScreen> {
+  final _textEditingController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) => Scaffold(
         body: KeyboardAvoider(
@@ -106,6 +113,7 @@ class _EnterPhoneNumberScreen extends State<EnterPhoneNumberScreen> {
   TextField _phoneNumberInputTextField() => TextField(
         maxLines: 1,
         keyboardType: TextInputType.number,
+        controller: _textEditingController,
         decoration: InputDecoration(
           focusedBorder: InputBorder.none,
           enabledBorder: InputBorder.none,
@@ -120,6 +128,14 @@ class _EnterPhoneNumberScreen extends State<EnterPhoneNumberScreen> {
           FilteringTextInputFormatter.digitsOnly,
         ],
         style: Theme.of(context).textTheme.bodyText1,
+        onChanged: (value) => {},
+      );
+
+  Text _phoneNumberInputBottomText() => Text(
+        'We will send you OTP on this number',
+        style: Theme.of(context).textTheme.caption.copyWith(
+              color: AppColor.grey,
+            ),
       );
 
   Text _phoneNumberInputBottomText() => Text(
@@ -134,8 +150,8 @@ class _EnterPhoneNumberScreen extends State<EnterPhoneNumberScreen> {
         width: PixelDimensionUtil().uiWidthPx.toDouble(),
         child: RaisedButton(
           color: AppColor.primaryColor,
-          disabledColor: Colors.lightGreen,
-          onPressed: () => {Navigator.pushNamed(context, '/otp')},
+          disabledColor: AppColor.grey,
+          onPressed: _validateAndVerifyPhoneNumber,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12.w),
           ),
@@ -147,4 +163,16 @@ class _EnterPhoneNumberScreen extends State<EnterPhoneNumberScreen> {
           ),
         ),
       );
+
+  void _validateAndVerifyPhoneNumber() {
+    final phoneNumber = _textEditingController.text;
+    if (phoneNumber.isNotNullAndEmpty && phoneNumber.length == 10) {
+      Navigator.pushNamed(
+        context,
+        RouteConstant.verifyOtp,
+        arguments: phoneNumber,
+      );
+    }
+    // TODO(Bhushan): Show snackbar / toast to indicate validation error
+  }
 }
