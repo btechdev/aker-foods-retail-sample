@@ -34,5 +34,7 @@ class Configuration {
 
   static bool get shouldEnableCrashlytics => _shouldEnableCrashlytics;
 
+  static bool get isDev => _environment == describeEnum(Environment.dev);
+
   static bool get isProd => _environment == describeEnum(Environment.prod);
 }
