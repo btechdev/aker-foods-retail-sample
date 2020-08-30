@@ -1,8 +1,7 @@
 import 'package:aker_foods_retail/common/constants/layout_constants.dart';
+import 'package:aker_foods_retail/common/extensions/pixel_dimension_util_extensions.dart';
 import 'package:aker_foods_retail/presentation/theme/app_colors.dart';
 import 'package:flutter/material.dart';
-
-import '../../../common/extensions/pixel_dimension_util_extensions.dart';
 
 class ChangeAddressScreen extends StatelessWidget {
   final ScrollController scrollController;
@@ -138,7 +137,7 @@ class ChangeAddressScreen extends StatelessWidget {
         ),
       );
 
-  Expanded _getLocationTypeList() => Expanded(
+  /*Expanded _getLocationTypeList() => Expanded(
         child: _getLocationTypeListView(),
       );
 
@@ -147,7 +146,7 @@ class ChangeAddressScreen extends StatelessWidget {
             const Divider(color: AppColor.grey),
         itemCount: titles.length,
         itemBuilder: _addressModeSelectionListItem,
-      );
+      );*/
 
   Widget _addressModeSelectionListItem(BuildContext context, int index) {
     return GestureDetector(
