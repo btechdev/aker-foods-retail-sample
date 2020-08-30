@@ -4,6 +4,7 @@ import '../common/constants/route_constants.dart';
 import '../common/utils/pixel_dimension_util.dart';
 import 'location/choose_your_location/choose_your_location_screen.dart';
 import 'login/enter_otp_screen.dart';
+import 'login/enter_phone_number_screen.dart';
 import 'theme/app_themes.dart';
 import 'user/edit_profile/edit_profile_screen.dart';
 import 'user/my_account/my_account_screen.dart';
@@ -37,7 +38,7 @@ class App extends StatelessWidget {
           RouteConstant.verifyOtp: (context) => EnterOtpScreen(),
           RouteConstant.myAccount: (context) => MyAccountScreen(),
           RouteConstant.editProfile: (context) => EditProfileScreen(),
-          '/choose-location': (context) => ChooseYourLocationScreen(),
+          RouteConstant.chooseLocation: (context) => ChooseYourLocationScreen(),
         },
         initialRoute: RouteConstant.initial,
       );

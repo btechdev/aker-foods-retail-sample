@@ -138,13 +138,6 @@ class _EnterPhoneNumberScreen extends State<EnterPhoneNumberScreen> {
             ),
       );
 
-  Text _phoneNumberInputBottomText() => Text(
-        'We will send you OTP on this number',
-        style: Theme.of(context).textTheme.caption.copyWith(
-              color: AppColor.grey,
-            ),
-      );
-
   Container _buttonWithContainer() => Container(
         height: 48.h,
         width: PixelDimensionUtil().uiWidthPx.toDouble(),
