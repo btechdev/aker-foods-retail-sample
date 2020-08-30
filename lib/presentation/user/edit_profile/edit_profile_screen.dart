@@ -1,9 +1,10 @@
-import 'package:aker_foods_retail/common/constants/layout_constants.dart';
-import 'package:aker_foods_retail/common/extensions/pixel_dimension_util_extensions.dart';
-import 'package:aker_foods_retail/common/widgets/profile_text_field_widget.dart';
-import 'package:aker_foods_retail/presentation/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:keyboard_avoider/keyboard_avoider.dart';
+
+import 'package:aker_foods_retail/common/constants/layout_constants.dart';
+import 'package:aker_foods_retail/common/extensions/pixel_dimension_util_extensions.dart';
+import 'package:aker_foods_retail/presentation/theme/app_colors.dart';
+import 'package:aker_foods_retail/presentation/widgets/profile_text_field_widget.dart';
 
 class EditProfileScreen extends StatefulWidget {
   @override

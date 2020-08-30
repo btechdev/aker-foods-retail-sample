@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../../common/constants/layout_constants.dart';
-import '../../presentation/theme/app_colors.dart';
-import '../extensions/pixel_dimension_util_extensions.dart';
+import '../../common/extensions/pixel_dimension_util_extensions.dart';
+import '../theme/app_colors.dart';
 
 class ProfileTextFieldWidget extends StatelessWidget {
   final Icon prefixIcon;

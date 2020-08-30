@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../extensions/pixel_dimension_util_extensions.dart';
+import '../../common/extensions/pixel_dimension_util_extensions.dart';
 
 // ignore: must_be_immutable
 class CountdownTimerText extends AnimatedWidget {

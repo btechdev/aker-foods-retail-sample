@@ -9,9 +9,9 @@ import 'package:otp_text_field/style.dart';
 
 import '../../common/extensions/pixel_dimension_util_extensions.dart';
 import '../../common/utils/pixel_dimension_util.dart';
-import '../../common/widgets/countdown_timer_text.dart';
 import '../../presentation/login/setup_user_profile_screen.dart';
 import '../../presentation/theme/app_colors.dart';
+import '../widgets/countdown_timer_text.dart';
 import 'bloc/auth_state.dart';
 
 class EnterOtpScreen extends StatefulWidget {
