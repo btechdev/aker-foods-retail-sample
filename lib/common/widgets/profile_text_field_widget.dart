@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../common/constants/layout_constants.dart';
 import '../../presentation/theme/app_colors.dart';
+import '../extensions/pixel_dimension_util_extensions.dart';
 
 class ProfileTextFieldWidget extends StatelessWidget {
   final Icon prefixIcon;
@@ -21,7 +22,7 @@ class ProfileTextFieldWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Container(
         alignment: Alignment.center,
-        height: LayoutConstants.profileInputTextFieldHeight,
+        height: LayoutConstants.dimen_52.h,
         decoration: LayoutConstants.inputBoxDecoration,
         child: TextField(
           style: Theme.of(context).textTheme.bodyText1,

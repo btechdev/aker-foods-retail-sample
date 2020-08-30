@@ -29,6 +29,7 @@ class PixelDimensionUtil {
   static double _statusBarHeight;
   static double _bottomBarHeight;
   static double _textScaleFactor;
+  static double _viewInsetBottom;
 
   static void init(
     BuildContext context, {
@@ -53,6 +54,7 @@ class PixelDimensionUtil {
       _statusBarHeight = mediaQuery.padding.top;
       _bottomBarHeight = _mediaQueryData.padding.bottom;
       _textScaleFactor = mediaQuery.textScaleFactor;
+      _viewInsetBottom = mediaQuery.viewInsets.bottom;
     } catch (_) {
       _pixelRatio = 0;
       _screenWidth = 0;
@@ -60,10 +62,13 @@ class PixelDimensionUtil {
       _statusBarHeight = 0;
       _bottomBarHeight = 0;
       _textScaleFactor = 0;
+      _viewInsetBottom = 0.0;
     }
   }
 
   static MediaQueryData get mediaQueryData => _mediaQueryData;
+
+  static double get viewInsetBottom => _viewInsetBottom;
 
   /// The number of font pixels for each logical pixel.
   static double get textScaleFactor => _textScaleFactor;

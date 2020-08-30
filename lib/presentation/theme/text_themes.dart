@@ -67,7 +67,7 @@ class AppTextTheme {
   static final TextStyle bodyText1 = TextStyle(
     fontSize: 18.sp,
     color: AppColor.black,
-    fontWeight: FontWeight.normal,
+    fontWeight: FontWeight.w500,
     fontStyle: FontStyle.normal,
   );
 

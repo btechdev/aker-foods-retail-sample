@@ -71,7 +71,7 @@ class _UserProfileScreen extends State<EditProfileScreen> {
 
   Container _buttonWithContainer() => Container(
         width: double.infinity,
-        height: LayoutConstants.primaryButtonHeight,
+        height: LayoutConstants.dimen_48.h,
         child: RaisedButton(
           color: AppColor.primaryColor,
           disabledColor: Colors.lightGreen,
@@ -90,7 +90,7 @@ class _UserProfileScreen extends State<EditProfileScreen> {
 
   Container _salutationDropdownContainer() => Container(
         width: double.infinity,
-        height: LayoutConstants.profileInputTextFieldHeight,
+        height: LayoutConstants.dimen_52.h,
         padding: EdgeInsets.symmetric(
           horizontal: 12.w,
           vertical: 12.h,
@@ -138,7 +138,7 @@ class _UserProfileScreen extends State<EditProfileScreen> {
 
   Container _phoneNumberContainer() => Container(
         width: double.infinity,
-        height: LayoutConstants.profileInputTextFieldHeight,
+        height: LayoutConstants.dimen_52.h,
         padding: EdgeInsets.symmetric(
           horizontal: 12.w,
           vertical: 12.h,

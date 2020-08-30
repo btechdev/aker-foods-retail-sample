@@ -74,7 +74,7 @@ class _SetupProfileScreen extends State<SetupUserProfileScreen> {
   SizedBox _inputFieldsVerticalSpacing() => SizedBox(height: 20.h);
 
   Container _buttonWithContainer() => Container(
-        height: LayoutConstants.primaryButtonHeight,
+        height: LayoutConstants.dimen_48.h,
         width: double.infinity,
         child: RaisedButton(
           color: AppColor.primaryColor,
@@ -94,7 +94,7 @@ class _SetupProfileScreen extends State<SetupUserProfileScreen> {
 
   Container _salutationDropdownContainer() => Container(
         width: double.infinity,
-        height: LayoutConstants.profileInputTextFieldHeight,
+        height: LayoutConstants.dimen_52.h,
         padding: EdgeInsets.symmetric(
           horizontal: 12.w,
           vertical: 12.h,

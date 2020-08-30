@@ -4,6 +4,7 @@ import '../../../common/constants/layout_constants.dart';
 import '../../../common/extensions/pixel_dimension_util_extensions.dart';
 import '../../../domain/entities/my_account_option_data_entity.dart';
 import '../../../presentation/theme/app_colors.dart';
+import '../../../presentation/user/address/change_address_mode_selection_bottom_sheet.dart';
 
 class MyAccountScreen extends StatefulWidget {
   MyAccountScreen({Key key}) : super(key: key);
@@ -37,6 +38,8 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
     )
   ];
 
+  List<String> savedAddresses;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,19 +55,11 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
 
   AppBar _getAppBar(BuildContext context) {
     return AppBar(
+      centerTitle: false,
       title: Text(
         'My Account',
         style: Theme.of(context).textTheme.button,
       ),
-      centerTitle: false,
-      actions: [
-        IconButton(
-          icon: const Icon(Icons.edit),
-          onPressed: () {
-            Navigator.pushNamed(context, '/edit-profile');
-          },
-        ),
-      ],
     );
   }
 
@@ -80,26 +75,8 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
       margin: const EdgeInsets.all(0),
       child: Column(
         children: [
-          CircleAvatar(
-            radius: 60.w,
-            backgroundImage:
-                const ExactAssetImage('assets/images/user-profile-vegies.jpeg'),
-          ),
-          SizedBox(height: 16.h),
-          Text(
-            'Mr Full Name',
-            style: Theme.of(context).textTheme.headline5.apply(
-                  color: AppColor.white,
-                ),
-          ),
-          SizedBox(height: 4.w),
-          Text(
-            'full-name@gmail.com',
-            style: Theme.of(context).textTheme.caption.apply(
-                  color: AppColor.white87,
-                ),
-          ),
-          SizedBox(height: 8.h),
+          _getUserDetailsContainer(context),
+          SizedBox(height: LayoutConstants.dimen_8.h),
           _getAddressContainer(context)
         ],
       ),
@@ -113,10 +90,12 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
         separatorBuilder: (context, index) => const Divider(
           color: AppColor.grey,
         ),
-        itemCount: 4,
+        itemCount: options.length,
         itemBuilder: (context, index) => GestureDetector(
           onTap: () => {_navigateTo(index)},
-          child: _getCell(options[index]),
+          child: _getCell(
+            options[index],
+          ),
         ),
       ),
     );
@@ -134,7 +113,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
         color: AppColor.white,
         borderRadius: BorderRadius.circular(10.w),
       ),
-      height: LayoutConstants.profileInputTextFieldHeight,
+      height: LayoutConstants.dimen_52.h,
       child: Row(
         children: [
           Icon(
@@ -152,7 +131,9 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
           ),
           Expanded(
             child: FlatButton(
-              onPressed: () => {},
+              onPressed: () => {
+                _getLocationSelectionBottomSheet(context),
+              },
               child: Text(
                 'Change',
                 style: Theme.of(context).textTheme.caption.apply(
@@ -166,10 +147,27 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
     );
   }
 
+  Future _getLocationSelectionBottomSheet(BuildContext context) {
+    savedAddresses = List();
+    for (int i = 0; i < 10; i++) {
+      savedAddresses.add('Address ${i + 1}');
+    }
+    return showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      isDismissible: true,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(LayoutConstants.dimen_12.w),
+      ),
+      builder: (BuildContext context) =>
+          ChangeAddressModeSelectionBottomSheet(savedAddresses: savedAddresses),
+    );
+  }
+
   Container _getCell(MyAccountOptionDataEntity item) => Container(
         alignment: Alignment.center,
         width: double.infinity,
-        height: LayoutConstants.myAccountOptionCellHeight,
+        height: LayoutConstants.dimen_60.h,
         padding: EdgeInsets.symmetric(horizontal: 16.w),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -220,4 +218,60 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
         break;
     }
   }
+
+  Column _getUserDetailsContainer(BuildContext context) {
+    return Column(
+      children: [
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Container(
+              width: LayoutConstants.dimen_20.w,
+              height: LayoutConstants.dimen_120.w,
+            ),
+            CircleAvatar(
+              radius: LayoutConstants.dimen_60.w,
+              backgroundImage: const ExactAssetImage(
+                  'assets/images/user-profile-vegies.jpeg'),
+            ),
+            Container(
+              height: LayoutConstants.dimen_120.w,
+              alignment: Alignment.topCenter,
+              child: _getEditUserInfoButton(),
+            ),
+          ],
+        ),
+        SizedBox(height: LayoutConstants.dimen_16.h),
+        _getUserInfoColumn(),
+      ],
+    );
+  }
+
+  Column _getUserInfoColumn() => Column(
+        children: [
+          Text(
+            'Mr Full Name',
+            style: Theme.of(context).textTheme.headline5.apply(
+                  color: AppColor.white,
+                ),
+          ),
+          SizedBox(height: LayoutConstants.dimen_4.h),
+          Text(
+            'full-name@gmail.com',
+            style: Theme.of(context).textTheme.caption.apply(
+                  color: AppColor.white87,
+                ),
+          ),
+        ],
+      );
+
+  Widget _getEditUserInfoButton() => IconButton(
+        icon: Icon(
+          Icons.edit,
+          color: AppColor.white,
+          size: LayoutConstants.dimen_20.w,
+        ),
+        onPressed: () => Navigator.pushNamed(context, '/edit-profile'),
+      );
 }
