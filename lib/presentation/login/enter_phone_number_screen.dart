@@ -1,4 +1,10 @@
+import 'package:aker_foods_retail/common/constants/app_constants.dart';
+import 'package:aker_foods_retail/common/constants/layout_constants.dart';
 import 'package:aker_foods_retail/common/constants/route_constants.dart';
+import 'package:aker_foods_retail/common/injector/injector.dart';
+import 'package:aker_foods_retail/presentation/common_blocs/snack_bar_bloc/snack_bar_bloc.dart';
+import 'package:aker_foods_retail/presentation/common_blocs/snack_bar_bloc/snack_bar_event.dart';
+import 'package:aker_foods_retail/presentation/widgets/custom_snack_bar/snack_bar_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:keyboard_avoider/keyboard_avoider.dart';
@@ -125,10 +131,10 @@ class _EnterPhoneNumberScreen extends State<EnterPhoneNumberScreen> {
               ),
         ),
         inputFormatters: [
+          LengthLimitingTextInputFormatter(AppConstants.phoneNumberLength),
           FilteringTextInputFormatter.digitsOnly,
         ],
         style: Theme.of(context).textTheme.bodyText1,
-        onChanged: (value) => {},
       );
 
   Text _phoneNumberInputBottomText() => Text(
@@ -139,17 +145,17 @@ class _EnterPhoneNumberScreen extends State<EnterPhoneNumberScreen> {
       );
 
   Container _buttonWithContainer() => Container(
-        height: 48.h,
+        height: LayoutConstants.dimen_48.h,
         width: PixelDimensionUtil().uiWidthPx.toDouble(),
         child: RaisedButton(
           color: AppColor.primaryColor,
           disabledColor: AppColor.grey,
           onPressed: _validateAndVerifyPhoneNumber,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12.w),
+            borderRadius: BorderRadius.circular(LayoutConstants.dimen_12.w),
           ),
           child: Text(
-            'GET OTP',
+            'Get OTP'.toUpperCase(),
             style: Theme.of(context).textTheme.button.copyWith(
                   color: AppColor.white,
                 ),
@@ -159,13 +165,30 @@ class _EnterPhoneNumberScreen extends State<EnterPhoneNumberScreen> {
 
   void _validateAndVerifyPhoneNumber() {
     final phoneNumber = _textEditingController.text;
-    if (phoneNumber.isNotNullAndEmpty && phoneNumber.length == 10) {
+    if (phoneNumber.isNotNullAndEmpty &&
+        phoneNumber.length == AppConstants.phoneNumberLength) {
       Navigator.pushNamed(
         context,
         RouteConstant.verifyOtp,
         arguments: phoneNumber,
       );
+      return;
     }
-    // TODO(Bhushan): Show snackbar / toast to indicate validation error
+
+    Injector.resolve<SnackBarBloc>().add(ShowSnackBarEvent(
+      text: 'Please enter 10 digit valid phone number',
+      type: CustomSnackBarType.error,
+      position: CustomSnackBarPosition.top,
+    ));
+
+    /*
+    // NOTE: This is sample code to show snack bar
+    Injector.resolve<SnackBarBloc>().add(ShowSnackBarEvent(
+      text: 'Testing the very very long snack bar text with success icon. '
+          'Some more text to verify the behaviour.',
+      type: CustomSnackBarType.success,
+      position: CustomSnackBarPosition.top,
+    ));
+    */
   }
 }

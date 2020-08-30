@@ -1,7 +1,10 @@
+import 'package:aker_foods_retail/common/constants/route_constants.dart';
+import 'package:aker_foods_retail/common/utils/pixel_dimension_util.dart';
+import 'package:aker_foods_retail/presentation/app/app_bloc_listeners.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../common/constants/route_constants.dart';
-import '../common/utils/pixel_dimension_util.dart';
+import 'app/app_bloc_providers.dart';
 import 'location/choose_your_location/choose_your_location_screen.dart';
 import 'login/enter_otp_screen.dart';
 import 'login/enter_phone_number_screen.dart';
@@ -10,7 +13,7 @@ import 'user/edit_profile/edit_profile_screen.dart';
 import 'user/my_account/my_account_screen.dart';
 
 class App extends StatelessWidget {
-  final GlobalKey<NavigatorState> _navigatorStateKey =
+  final GlobalKey<NavigatorState> _navigatorStateGlobalKey =
       GlobalKey<NavigatorState>();
 
   @override
@@ -22,14 +25,20 @@ class App extends StatelessWidget {
       );
 
   MaterialApp _wrapWithThemedMaterialApp() => MaterialApp(
-        navigatorKey: _navigatorStateKey,
+        navigatorKey: _navigatorStateGlobalKey,
         builder: (context, widget) {
           PixelDimensionUtil.init(
             context,
             allowFontScaling: true,
-            navigator: _navigatorStateKey,
+            navigator: _navigatorStateGlobalKey,
           );
-          return widget;
+          return MultiBlocProvider(
+            providers: getAppStartupBlocProviders(_navigatorStateGlobalKey),
+            child: MultiBlocListener(
+              listeners: getAppStartupBlocListeners(_navigatorStateGlobalKey),
+              child: widget,
+            ),
+          );
         },
         title: 'Aker Foods Retail',
         theme: AppTheme.defaultTheme(),

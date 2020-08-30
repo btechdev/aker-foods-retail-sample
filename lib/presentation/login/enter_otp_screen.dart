@@ -1,3 +1,4 @@
+import 'package:aker_foods_retail/common/constants/layout_constants.dart';
 import 'package:aker_foods_retail/common/injector/injector.dart';
 import 'package:aker_foods_retail/presentation/login/bloc/auth_bloc.dart';
 import 'package:aker_foods_retail/presentation/login/bloc/auth_event.dart';
@@ -166,11 +167,10 @@ class _EnterOTPScreen extends State<EnterOtpScreen>
       );
 
   Container _buttonWithContainer() => Container(
-        height: 48.h,
+        height: LayoutConstants.dimen_48.h,
         width: PixelDimensionUtil().uiWidthPx.toDouble(),
         child: RaisedButton(
           color: AppColor.primaryColor,
-          disabledColor: Colors.lightGreen,
           onPressed: _smsCode?.length == 6 ? _verifySmsOtp : null,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12.w),

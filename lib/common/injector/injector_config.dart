@@ -3,6 +3,8 @@ import 'package:aker_foods_retail/data/local_data_source/authentication_local_da
 import 'package:aker_foods_retail/data/repositories/auth_repository_impl.dart';
 import 'package:aker_foods_retail/domain/repositories/auth_repository.dart';
 import 'package:aker_foods_retail/domain/usecases/auth_usecase.dart';
+import 'package:aker_foods_retail/network/api/api_client.dart';
+import 'package:aker_foods_retail/presentation/common_blocs/snack_bar_bloc/snack_bar_bloc.dart';
 import 'package:aker_foods_retail/presentation/login/bloc/auth_bloc.dart';
 import 'package:kiwi/kiwi.dart';
 
@@ -27,13 +29,14 @@ abstract class InjectorConfig {
     _configureRepositories();
     _configureLocalDataSources();
     /*_configureRemoteDataSources();
-    _configureUtils();
-    _configureClients();*/
+    _configureUtils();*/
+    _configureClients();
     _configureCommon();
   }
 
   /// ============ Register Blocs ============
-  @Register.factory(AuthBloc)
+  @Register.singleton(SnackBarBloc)
+  @Register.singleton(AuthBloc)
   void _configureBlocs();
 
   /// ============ Register UseCases ============
@@ -56,15 +59,13 @@ abstract class InjectorConfig {
   @Register.singleton(LoginRemoteDataSource)
   void _configureRemoteDataSources();
 
- 
+  /// ============ Register Utils ============
+  @Register.singleton(DeviceInfoUtil)
+  void _configureUtils();*/
 
   /// ============ Register Clients ============
   @Register.singleton(ApiClient)
   void _configureClients();
-
-  /// ============ Register Utils ============
-  @Register.singleton(DeviceInfoUtil)
-  void _configureUtils();*/
 
   /// ============ Register Common Classes ============
   @Register.singleton(LocalPreferences)

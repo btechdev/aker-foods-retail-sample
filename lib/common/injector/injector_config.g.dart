@@ -9,7 +9,8 @@ part of 'injector_config.dart';
 class _$InjectorConfig extends InjectorConfig {
   void _configureBlocs() {
     final KiwiContainer container = KiwiContainer();
-    container.registerFactory((c) => AuthBloc(authUseCase: c<AuthUseCase>()));
+    container.registerSingleton((c) => SnackBarBloc());
+    container.registerSingleton((c) => AuthBloc(authUseCase: c<AuthUseCase>()));
   }
 
   void _configureUseCases() {
@@ -28,6 +29,11 @@ class _$InjectorConfig extends InjectorConfig {
     final KiwiContainer container = KiwiContainer();
     container.registerSingleton((c) =>
         AuthenticationLocalDataSource(localPreferences: c<LocalPreferences>()));
+  }
+
+  void _configureClients() {
+    final KiwiContainer container = KiwiContainer();
+    container.registerSingleton((c) => ApiClient());
   }
 
   void _configureCommon() {
