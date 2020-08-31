@@ -12,12 +12,16 @@ class _$InjectorConfig extends InjectorConfig {
     container.registerSingleton((c) => SnackBarBloc());
     container.registerSingleton(
         (c) => FirebaseAuthBloc(authUseCase: c<AuthenticationUseCase>()));
+    container.registerFactory(
+        (c) => SelectSocietyBloc(userAddressUseCase: c<UserAddressUseCase>()));
   }
 
   void _configureUseCases() {
     final KiwiContainer container = KiwiContainer();
     container.registerFactory((c) => AuthenticationUseCase(
         authenticationRepository: c<AuthenticationRepository>()));
+    container.registerFactory((c) =>
+        UserAddressUseCase(userAddressRepository: c<UserAddressRepository>()));
   }
 
   void _configureRepositories() {
@@ -25,12 +29,21 @@ class _$InjectorConfig extends InjectorConfig {
     container.registerFactory<AuthenticationRepository>((c) =>
         AuthenticationRepositoryImpl(
             authenticationLocalDataSource: c<AuthenticationLocalDataSource>()));
+    container.registerFactory<UserAddressRepository>((c) =>
+        UserAddressRepositoryImpl(
+            userAddressRemoteDataSource: c<UserAddressRemoteDataSource>()));
   }
 
   void _configureLocalDataSources() {
     final KiwiContainer container = KiwiContainer();
-    container.registerSingleton((c) =>
+    container.registerFactory((c) =>
         AuthenticationLocalDataSource(localPreferences: c<LocalPreferences>()));
+  }
+
+  void _configureRemoteDataSources() {
+    final KiwiContainer container = KiwiContainer();
+    container.registerFactory(
+        (c) => UserAddressRemoteDataSource(apiClient: c<ApiClient>()));
   }
 
   void _configureClients() {

@@ -110,6 +110,7 @@ class LayoutConstants {
   static const dimen_279 = 279.0;
   static const dimen_280 = 280.0;
   static const dimen_291 = 291.0;
+  static const dimen_300 = 300.0;
   static const dimen_303 = 303.0;
   static const dimen_305 = 305.0;
   static const dimen_315 = 315.0;

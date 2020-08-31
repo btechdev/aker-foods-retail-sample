@@ -1,4 +1,5 @@
 import 'package:aker_foods_retail/common/constants/layout_constants.dart';
+import 'package:aker_foods_retail/presentation/app/route_constants.dart';
 import 'package:aker_foods_retail/presentation/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:keyboard_avoider/keyboard_avoider.dart';
@@ -37,11 +38,13 @@ class EnterNewAddressScreen extends StatelessWidget {
             const Divider(color: AppColor.grey),
             _getTextFieldContainer(context, 'Flat/Building Details *', 'G502'),
             const Divider(color: AppColor.grey),
-            _getTextFieldContainer(
+            _getSocietyFieldContainer(
                 context, 'Society Name *', 'Splendid County'),
             const Divider(color: AppColor.grey),
             _getTextFieldContainer(
                 context, 'Landmark *', 'Near Ganapati Bappa Temple'),
+            const Divider(color: AppColor.grey),
+            _getTextFieldContainer(context, 'Pincode *', '411028'),
             const Divider(color: AppColor.grey),
             SizedBox(height: LayoutConstants.dimen_20.h),
             Text(
@@ -86,6 +89,36 @@ class EnterNewAddressScreen extends StatelessWidget {
       ],
     );
   }
+
+  _navigateToSelectSociety(BuildContext context) async {
+    final society = await Navigator.pushNamed(
+      context,
+      RouteConstants.selectSociety,
+    );
+    debugPrint(society);
+  }
+
+  Container _getSocietyFieldContainer(
+    BuildContext context,
+    String hintText,
+    String text,
+  ) =>
+      Container(
+        height: LayoutConstants.dimen_52.h,
+        padding: EdgeInsets.only(top: LayoutConstants.dimen_8.h),
+        child: InkWell(
+          onTap: () => _navigateToSelectSociety(context),
+          child: TextField(
+            controller: TextEditingController()..text = text,
+            style: Theme.of(context).textTheme.bodyText1,
+            decoration: _getInputDecoration(
+              context: context,
+              hintText: hintText,
+            ),
+            enabled: false,
+          ),
+        ),
+      );
 
   Container _getTextFieldContainer(
     BuildContext context,

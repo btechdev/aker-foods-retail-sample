@@ -7,4 +7,5 @@ class RouteConstants {
   static const myAccount = '/my-account';
   static const editProfile = '/edit-profile';
   static const chooseLocation = '/choose-location';
+  static const selectSociety = '/select-society';
 }
