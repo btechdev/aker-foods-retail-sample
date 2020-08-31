@@ -20,31 +20,32 @@ dependencies:
   flutter:
     sdk: flutter
 
-  flutter_bloc: ^3.2.0 # Flutter Bloc for Event & State management
-  flutter_statusbarcolor: ^0.2.3
-  flutter_svg: ^0.15.0 # To render SVG
+  flutter_bloc: ^6.0.3 # Flutter Bloc for Event & State management
+  flutter_statusbarcolor: ^0.2.3 # To manage status bar color of device
+  flutter_svg: ^0.18.1 # To render SVG
 
-  equatable: ^1.0.1 # To check the equality of objects
-  kiwi: 2.0.0 # For Dependency Injection
+  equatable: ^1.2.4 # To check the equality of objects
+  kiwi: ^2.0.0 # For Dependency Injection
   pedantic: ^1.8.0 # Analysis
 
-  http: ^0.12.0 # API calls
+  http: ^0.12.2 # API calls
   data_connection_checker: ^0.3.4 # To check if the device is connected to network
-  cached_network_image: ^2.1.0+1
+  cached_network_image: ^2.3.1
 
   # Widgets & Utils
-  url_launcher: 5.5.0 # Launching a URL in the mobile platform
-  permission_handler: ^4.0.0 # For handling platform specific run-time permissions
-  image_picker: 0.6.3+4 # Image Picker
+  url_launcher: ^5.5.2 # Launching a URL in the mobile platform
+  permission_handler: ^5.0.1+1 # For handling platform specific run-time permissions
+  image_picker: ^0.6.7+7 # Image Picker
   otp_text_field: ^1.0.1
   keyboard_avoider: ^0.1.2
 
   # Firebase
   firebase_auth: ^0.18.0+1
+  firebase_crashlytics: ^0.1.4+1
 
   # Local Storage Data
   hive: ^1.4.0+1 # Local DB
-  shared_preferences: 0.5.4+9 # Local preferences to store key-value pairs data
+  shared_preferences: ^0.5.10 # Local preferences to store key-value pairs data
 
   # To use CupertinoIcons class for iOS style icons
   cupertino_icons: ^0.1.2
