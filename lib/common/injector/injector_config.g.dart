@@ -10,19 +10,21 @@ class _$InjectorConfig extends InjectorConfig {
   void _configureBlocs() {
     final KiwiContainer container = KiwiContainer();
     container.registerSingleton((c) => SnackBarBloc());
-    container.registerSingleton((c) => AuthBloc(authUseCase: c<AuthUseCase>()));
+    container.registerSingleton(
+        (c) => FirebaseAuthBloc(authUseCase: c<AuthenticationUseCase>()));
   }
 
   void _configureUseCases() {
     final KiwiContainer container = KiwiContainer();
-    container.registerFactory(
-        (c) => AuthUseCase(authRepository: c<AuthRepository>()));
+    container.registerFactory((c) => AuthenticationUseCase(
+        authenticationRepository: c<AuthenticationRepository>()));
   }
 
   void _configureRepositories() {
     final KiwiContainer container = KiwiContainer();
-    container.registerFactory<AuthRepository>((c) => AuthRepositoryImpl(
-        authenticationLocalDataSource: c<AuthenticationLocalDataSource>()));
+    container.registerFactory<AuthenticationRepository>((c) =>
+        AuthenticationRepositoryImpl(
+            authenticationLocalDataSource: c<AuthenticationLocalDataSource>()));
   }
 
   void _configureLocalDataSources() {

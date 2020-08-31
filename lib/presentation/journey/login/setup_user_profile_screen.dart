@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:keyboard_avoider/keyboard_avoider.dart';
 
-import '../../common/constants/layout_constants.dart';
-import '../../common/extensions/pixel_dimension_util_extensions.dart';
-import '../../presentation/theme/app_colors.dart';
-import '../widgets/profile_text_field_widget.dart';
+import '../../../common/constants/layout_constants.dart';
+import '../../../common/extensions/pixel_dimension_util_extensions.dart';
+import '../../theme/app_colors.dart';
+import '../../widgets/profile_text_field_widget.dart';
 
 class SetupUserProfileScreen extends StatefulWidget {
   @override

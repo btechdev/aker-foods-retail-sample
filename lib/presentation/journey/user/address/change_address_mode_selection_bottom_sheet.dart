@@ -1,4 +1,4 @@
-import 'package:aker_foods_retail/presentation/location/change_address/change_address_screen.dart';
+import 'package:aker_foods_retail/presentation/journey/user/address/change_address/change_address_screen.dart';
 import 'package:flutter/material.dart';
 
 class ChangeAddressModeSelectionBottomSheet extends StatefulWidget {

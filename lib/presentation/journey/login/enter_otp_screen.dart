@@ -1,19 +1,19 @@
 import 'package:aker_foods_retail/common/constants/layout_constants.dart';
 import 'package:aker_foods_retail/common/injector/injector.dart';
-import 'package:aker_foods_retail/presentation/login/bloc/auth_bloc.dart';
-import 'package:aker_foods_retail/presentation/login/bloc/auth_event.dart';
+import 'package:aker_foods_retail/presentation/common_blocs/firebase_auth_bloc/firebase_auth_bloc.dart';
+import 'package:aker_foods_retail/presentation/common_blocs/firebase_auth_bloc/firebase_auth_event.dart';
+import 'package:aker_foods_retail/presentation/common_blocs/firebase_auth_bloc/firebase_auth_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:keyboard_avoider/keyboard_avoider.dart';
 import 'package:otp_text_field/otp_field.dart';
 import 'package:otp_text_field/style.dart';
 
-import '../../common/extensions/pixel_dimension_util_extensions.dart';
-import '../../common/utils/pixel_dimension_util.dart';
-import '../../presentation/login/setup_user_profile_screen.dart';
-import '../../presentation/theme/app_colors.dart';
-import '../widgets/countdown_timer_text.dart';
-import 'bloc/auth_state.dart';
+import '../../../common/extensions/pixel_dimension_util_extensions.dart';
+import '../../../common/utils/pixel_dimension_util.dart';
+import '../../theme/app_colors.dart';
+import '../../widgets/countdown_timer_text.dart';
+import 'setup_user_profile_screen.dart';
 
 class EnterOtpScreen extends StatefulWidget {
   EnterOtpScreen({Key key}) : super(key: key);
@@ -27,14 +27,14 @@ class _EnterOTPScreen extends State<EnterOtpScreen>
   String phoneNumber;
 
   bool _firstTime = true;
-  AuthBloc _authBloc;
+  FirebaseAuthBloc _authBloc;
   AnimationController _controller;
   String _smsCode = '';
 
   @override
   void initState() {
     super.initState();
-    _authBloc = Injector.resolve<AuthBloc>();
+    _authBloc = Injector.resolve<FirebaseAuthBloc>();
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(minutes: 5),
@@ -49,7 +49,7 @@ class _EnterOTPScreen extends State<EnterOtpScreen>
 
   void _authenticationStateListener(
     BuildContext context,
-    AuthenticationState state,
+    FirebaseAuthState state,
   ) {
     if (state is AuthSuccessState) {
       final user = state.user;
@@ -85,12 +85,12 @@ class _EnterOTPScreen extends State<EnterOtpScreen>
       _firstTime = false;
     }
 
-    return BlocProvider<AuthBloc>(
+    return BlocProvider<FirebaseAuthBloc>(
       create: (context) => _authBloc,
       child: Scaffold(
         body: KeyboardAvoider(
           autoScroll: true,
-          child: BlocListener<AuthBloc, AuthenticationState>(
+          child: BlocListener<FirebaseAuthBloc, FirebaseAuthState>(
             listener: _authenticationStateListener,
             child: _getBody(),
           ),

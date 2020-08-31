@@ -1,14 +1,14 @@
-import 'package:aker_foods_retail/data/local_data_source/authentication_local_data_source.dart';
-import 'package:aker_foods_retail/data/models/user_model.dart';
-import 'package:aker_foods_retail/domain/repositories/auth_repository.dart';
+import 'package:aker_foods_retail/data/local_data_sources/authentication_local_data_source.dart';
+import 'package:aker_foods_retail/data/models/firebase_auth_model.dart';
+import 'package:aker_foods_retail/domain/repositories/authentication_repository.dart';
 
-class AuthRepositoryImpl implements AuthRepository {
+class AuthenticationRepositoryImpl implements AuthenticationRepository {
   final AuthenticationLocalDataSource authenticationLocalDataSource;
 
-  AuthRepositoryImpl({this.authenticationLocalDataSource}) : super();
+  AuthenticationRepositoryImpl({this.authenticationLocalDataSource}) : super();
 
   @override
-  Future<bool> saveUserAuthentication(UserModel user) async {
+  Future<bool> saveUserAuthentication(FirebaseAuthModel user) async {
     final result1 = await authenticationLocalDataSource.setUserUid(user.userId);
     final result2 =
         await authenticationLocalDataSource.setFirebaseIdToken(user.idToken);

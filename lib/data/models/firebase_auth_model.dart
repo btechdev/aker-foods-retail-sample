@@ -1,7 +1,7 @@
-import 'package:aker_foods_retail/domain/entities/user_entity.dart';
+import 'package:aker_foods_retail/domain/entities/firebase_auth_entity.dart';
 
-class UserModel extends UserEntity {
-  UserModel({
+class FirebaseAuthModel extends FirebaseAuthEntity {
+  FirebaseAuthModel({
     String userId,
     String idToken,
     String refreshToken,
@@ -15,7 +15,8 @@ class UserModel extends UserEntity {
           phoneNumber: phoneNumber,
         );
 
-  factory UserModel.fromEntity(UserEntity entity) => UserModel(
+  factory FirebaseAuthModel.fromEntity(FirebaseAuthEntity entity) =>
+      FirebaseAuthModel(
         userId: entity.userId,
         idToken: entity.idToken,
         refreshToken: entity.refreshToken,

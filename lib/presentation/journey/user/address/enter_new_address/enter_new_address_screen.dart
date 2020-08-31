@@ -3,7 +3,7 @@ import 'package:aker_foods_retail/presentation/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:keyboard_avoider/keyboard_avoider.dart';
 
-import '../../../common/extensions/pixel_dimension_util_extensions.dart';
+import '../../../../../common/extensions/pixel_dimension_util_extensions.dart';
 
 class EnterNewAddressScreen extends StatelessWidget {
   final ScrollController scrollController;

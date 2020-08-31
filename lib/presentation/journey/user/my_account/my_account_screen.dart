@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-import '../../../common/constants/layout_constants.dart';
-import '../../../common/extensions/pixel_dimension_util_extensions.dart';
-import '../../../domain/entities/my_account_option_data_entity.dart';
-import '../../../presentation/theme/app_colors.dart';
-import '../../../presentation/user/address/change_address_mode_selection_bottom_sheet.dart';
+import '../../../../common/constants/layout_constants.dart';
+import '../../../../common/extensions/pixel_dimension_util_extensions.dart';
+import '../../../../domain/entities/my_account_option_data_entity.dart';
+import '../../../theme/app_colors.dart';
+import '../address/change_address_mode_selection_bottom_sheet.dart';
 
 class MyAccountScreen extends StatefulWidget {
   MyAccountScreen({Key key}) : super(key: key);

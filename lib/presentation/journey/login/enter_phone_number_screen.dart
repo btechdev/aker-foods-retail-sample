@@ -1,6 +1,6 @@
 import 'package:aker_foods_retail/common/constants/app_constants.dart';
 import 'package:aker_foods_retail/common/constants/layout_constants.dart';
-import 'package:aker_foods_retail/common/constants/route_constants.dart';
+import 'package:aker_foods_retail/presentation/app/route_constants.dart';
 import 'package:aker_foods_retail/common/injector/injector.dart';
 import 'package:aker_foods_retail/presentation/common_blocs/snack_bar_bloc/snack_bar_bloc.dart';
 import 'package:aker_foods_retail/presentation/common_blocs/snack_bar_bloc/snack_bar_event.dart';
@@ -9,10 +9,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:keyboard_avoider/keyboard_avoider.dart';
 
-import '../../common/extensions/pixel_dimension_util_extensions.dart';
-import '../../common/extensions/string_extensions.dart';
-import '../../common/utils/pixel_dimension_util.dart';
-import '../../presentation/theme/app_colors.dart';
+import '../../../common/extensions/pixel_dimension_util_extensions.dart';
+import '../../../common/extensions/string_extensions.dart';
+import '../../../common/utils/pixel_dimension_util.dart';
+import '../../theme/app_colors.dart';
 
 class EnterPhoneNumberScreen extends StatefulWidget {
   EnterPhoneNumberScreen({Key key}) : super(key: key);
@@ -169,7 +169,7 @@ class _EnterPhoneNumberScreen extends State<EnterPhoneNumberScreen> {
         phoneNumber.length == AppConstants.phoneNumberLength) {
       Navigator.pushNamed(
         context,
-        RouteConstant.verifyOtp,
+        RouteConstants.verifyOtp,
         arguments: phoneNumber,
       );
       return;

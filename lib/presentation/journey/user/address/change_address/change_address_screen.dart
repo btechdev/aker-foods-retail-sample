@@ -61,6 +61,7 @@ class ChangeAddressScreen extends StatelessWidget {
     switch (index) {
       case 0:
         return _getHeader(context);
+
       case 1:
       case 3:
         return SizedBox(height: LayoutConstants.dimen_8.h);

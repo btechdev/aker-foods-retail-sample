@@ -1,21 +1,19 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 
-enum AuthEvents { appStart, sendCode, resendCode, verifyPhoneNumber }
-
-class AuthEvent {
+class FirebaseAuthEvent {
   final String phoneNumber;
 
-  AuthEvent(this.phoneNumber);
+  FirebaseAuthEvent(this.phoneNumber);
 }
 
-class VerifyPhoneNumberEvent extends AuthEvent {
+class VerifyPhoneNumberEvent extends FirebaseAuthEvent {
   VerifyPhoneNumberEvent({
     @required String phoneNumber,
   }) : super(phoneNumber);
 }
 
-class VerifyPhoneNumberSuccessEvent extends AuthEvent {
+class VerifyPhoneNumberSuccessEvent extends FirebaseAuthEvent {
   final AuthCredential authCredential;
 
   VerifyPhoneNumberSuccessEvent({
@@ -24,13 +22,13 @@ class VerifyPhoneNumberSuccessEvent extends AuthEvent {
   }) : super(phoneNumber);
 }
 
-class VerifyPhoneNumberFailedEvent extends AuthEvent {
+class VerifyPhoneNumberFailedEvent extends FirebaseAuthEvent {
   VerifyPhoneNumberFailedEvent({
     @required Exception exception,
   }) : super(null);
 }
 
-class AuthenticateWithSmsCodeEvent extends AuthEvent {
+class AuthenticateWithSmsCodeEvent extends FirebaseAuthEvent {
   final String smsCode;
 
   AuthenticateWithSmsCodeEvent({

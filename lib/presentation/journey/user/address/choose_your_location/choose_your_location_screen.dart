@@ -1,10 +1,10 @@
 import 'package:aker_foods_retail/common/constants/layout_constants.dart';
 import 'package:aker_foods_retail/common/utils/pixel_dimension_util.dart';
-import 'package:aker_foods_retail/presentation/location/enter_new_address/enter_new_address_screen.dart';
+import 'package:aker_foods_retail/presentation/journey/user/address/enter_new_address/enter_new_address_screen.dart';
 import 'package:aker_foods_retail/presentation/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 
-import '../../../common/extensions/pixel_dimension_util_extensions.dart';
+import '../../../../../common/extensions/pixel_dimension_util_extensions.dart';
 
 class ChooseYourLocationScreen extends StatefulWidget {
   ChooseYourLocationScreen({Key key}) : super(key: key);

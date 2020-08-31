@@ -1,5 +1,8 @@
-class RouteConstant {
-  static const initial = '/';
+class RouteConstants {
+  //static const initial = '/';
+  static const initial = enterPhoneNumber;
+
+  static const enterPhoneNumber = '/enter-phone-number';
   static const verifyOtp = '/verify-otp';
   static const myAccount = '/my-account';
   static const editProfile = '/edit-profile';
