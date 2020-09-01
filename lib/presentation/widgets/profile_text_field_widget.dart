@@ -25,6 +25,7 @@ class ProfileTextFieldWidget extends StatelessWidget {
         height: LayoutConstants.dimen_52.h,
         decoration: LayoutConstants.inputBoxDecoration,
         child: TextField(
+          controller: controller,
           style: Theme.of(context).textTheme.bodyText1,
           decoration: InputDecoration(
             prefixIcon: prefixIcon,

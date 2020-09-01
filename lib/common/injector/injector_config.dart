@@ -1,16 +1,21 @@
 import 'package:aker_foods_retail/common/local_preferences/local_preferences.dart';
 import 'package:aker_foods_retail/data/local_data_sources/authentication_local_data_source.dart';
 import 'package:aker_foods_retail/data/remote_data_sources/user_address_remote_data_source.dart';
+import 'package:aker_foods_retail/data/remote_data_sources/user_profile_remote_data_source.dart';
 import 'package:aker_foods_retail/data/repositories/authentication_repository_impl.dart';
 import 'package:aker_foods_retail/data/repositories/user_address_repository_impl.dart';
+import 'package:aker_foods_retail/data/repositories/user_profile_repository_impl.dart';
 import 'package:aker_foods_retail/domain/repositories/authentication_repository.dart';
 import 'package:aker_foods_retail/domain/repositories/user_address_repository.dart';
+import 'package:aker_foods_retail/domain/repositories/user_profile_repository.dart';
 import 'package:aker_foods_retail/domain/usecases/authentication_use_case.dart';
 import 'package:aker_foods_retail/domain/usecases/user_address_use_case.dart';
+import 'package:aker_foods_retail/domain/usecases/user_profile_user_case.dart';
 import 'package:aker_foods_retail/network/api/api_client.dart';
 import 'package:aker_foods_retail/presentation/common_blocs/firebase_auth_bloc/firebase_auth_bloc.dart';
 import 'package:aker_foods_retail/presentation/common_blocs/snack_bar_bloc/snack_bar_bloc.dart';
 import 'package:aker_foods_retail/presentation/journey/user/address/select_society/bloc/select_society_bloc.dart';
+import 'package:aker_foods_retail/presentation/journey/user/bloc/user_profile_bloc.dart';
 import 'package:kiwi/kiwi.dart';
 
 part 'injector_config.g.dart';
@@ -42,11 +47,13 @@ abstract class InjectorConfig {
   @Register.singleton(SnackBarBloc)
   @Register.singleton(FirebaseAuthBloc)
   @Register.factory(SelectSocietyBloc)
+  @Register.factory(UserProfileBloc)
   void _configureBlocs();
 
   /// ============ Register UseCases ============
   @Register.factory(AuthenticationUseCase)
   @Register.factory(UserAddressUseCase)
+  @Register.factory(UserProfileUseCase)
   void _configureUseCases();
 
   /// ============ Register Repositories ============
@@ -58,6 +65,10 @@ abstract class InjectorConfig {
     UserAddressRepository,
     from: UserAddressRepositoryImpl,
   )
+  @Register.factory(
+    UserProfileRepository,
+    from: UserProfileRepositoryImpl,
+  )
   void _configureRepositories();
 
   /// ============ Register LocalDataSources ============
@@ -66,6 +77,7 @@ abstract class InjectorConfig {
 
   /// ============ Register RemoteDataSources ============
   @Register.factory(UserAddressRemoteDataSource)
+  @Register.factory(UserProfileRemoteDataSource)
   void _configureRemoteDataSources();
 
   /// ============ Register Clients ============

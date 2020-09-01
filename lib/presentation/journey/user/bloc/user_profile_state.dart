@@ -5,36 +5,36 @@ abstract class UserProfileState {}
 
 class EmptyState extends UserProfileState {}
 
-class SettingUpUserProfileState extends UserProfileState {}
+class UserProfileSettingUpState extends UserProfileState {}
 
-class SetupUserProfileSuccessfulState extends UserProfileState {}
+class UserProfileSetupSuccessState extends UserProfileState {}
 
-class SetupUserProfileFailedState extends UserProfileState {
+class UserProfileSetupFailedState extends UserProfileState {
   final String errorMessage;
 
-  SetupUserProfileFailedState({@required this.errorMessage});
+  UserProfileSetupFailedState({@required this.errorMessage});
 }
 
-class UpdatingUserProfileState extends UserProfileState {}
+class UserProfileUpdatingState extends UserProfileState {}
 
-class UpdateUserProfileSuccessfulState extends UserProfileState {}
+class UserProfileUpdateSuccessState extends UserProfileState {}
 
-class UpdateUserProfileFailedState extends UserProfileState {
+class UserProfileUpdateFailedState extends UserProfileState {
   final String errorMessage;
 
-  UpdateUserProfileFailedState({@required this.errorMessage});
+  UserProfileUpdateFailedState({@required this.errorMessage});
 }
 
-class FetchingUserProfileState extends UserProfileState {}
+class UserProfileFetchingState extends UserProfileState {}
 
-class FetchUserProfileSuccessfulState extends UserProfileState {
+class UserProfileFetchSuccessState extends UserProfileState {
   final UserProfileModel user;
 
-  FetchUserProfileSuccessfulState({this.user});
+  UserProfileFetchSuccessState({this.user});
 }
 
-class FetchUserProfileFailedState extends UserProfileState {
+class UserProfileFetchFailedState extends UserProfileState {
   final String errorMessage;
 
-  FetchUserProfileFailedState({@required this.errorMessage});
+  UserProfileFetchFailedState({@required this.errorMessage});
 }

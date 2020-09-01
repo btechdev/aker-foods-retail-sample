@@ -6,7 +6,8 @@ class UserProfileRemoteDataSource {
 
   UserProfileRemoteDataSource({this.apiClient});
 
-  Future<void> setupUserProfile(UserProfileModel user) async {
+  Future<void> setupUserProfile(
+      UserProfileModel user, String referralCode) async {
     // TODO(soham): Implement post call for setting up user profile
   }
 

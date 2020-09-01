@@ -12,8 +12,8 @@ class UserProfileRepositoryImpl implements UserProfileRepository {
       userProfileRemoteDataSource.fetchUserProfile();
 
   @override
-  Future<void> setupUserProfile(UserProfileModel user) =>
-      userProfileRemoteDataSource.setupUserProfile(user);
+  Future<void> setupUserProfile(UserProfileModel user, String referralCode) =>
+      userProfileRemoteDataSource.setupUserProfile(user, referralCode);
 
   @override
   Future<void> updateUserProfile(UserProfileModel user) =>

@@ -4,7 +4,7 @@ import 'package:aker_foods_retail/presentation/journey/user/bloc/user_profile_st
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class UserProfileBloc extends Bloc<UserProfileEvent, UserProfileState> {
-  final UserProfileUserCase userProfileUseCase;
+  final UserProfileUseCase userProfileUseCase;
 
   UserProfileBloc({this.userProfileUseCase}) : super(EmptyState());
 
@@ -20,22 +20,23 @@ class UserProfileBloc extends Bloc<UserProfileEvent, UserProfileState> {
   }
 
   Stream<UserProfileState> _handleFetchUserProfileEvent() async* {
-    yield FetchingUserProfileState();
+    yield UserProfileFetchingState();
     final user = await userProfileUseCase.fetchUserProfile();
-    yield FetchUserProfileSuccessfulState(user: user);
+    yield UserProfileFetchSuccessState(user: user);
   }
 
   Stream<UserProfileState> _handleSetupUserProfileEvent(
       SetupUserProfileEvent event) async* {
-    yield SettingUpUserProfileState();
-    await userProfileUseCase.setupUserProfile(event.user);
-    yield SetupUserProfileSuccessfulState();
+    yield UserProfileSettingUpState();
+    // await userProfileUseCase.setupUserProfile(event.user, event.referralCode);
+    await Future.delayed(const Duration(seconds: 5));
+    yield UserProfileSetupSuccessState();
   }
 
   Stream<UserProfileState> _handleUpdateUserProfileEvent(
       UpdateUserProfileEvent event) async* {
-    yield UpdatingUserProfileState();
+    yield UserProfileUpdatingState();
     await userProfileUseCase.updateUserProfile(event.user);
-    yield UpdateUserProfileSuccessfulState();
+    yield UserProfileUpdateSuccessState();
   }
 }
