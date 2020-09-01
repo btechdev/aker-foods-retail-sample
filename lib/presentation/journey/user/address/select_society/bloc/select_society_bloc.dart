@@ -8,10 +8,7 @@ import 'select_society_state.dart';
 class SelectSocietyBloc extends Bloc<SelectSocietyEvent, SelectSocietyState> {
   final UserAddressUseCase userAddressUseCase;
 
-  SelectSocietyBloc({this.userAddressUseCase});
-
-  @override
-  SelectSocietyState get initialState => EmptyState();
+  SelectSocietyBloc({this.userAddressUseCase}) : super(EmptyState());
 
   @override
   Stream<SelectSocietyState> mapEventToState(SelectSocietyEvent event) async* {

@@ -15,10 +15,8 @@ class FirebaseAuthBloc extends Bloc<FirebaseAuthEvent, FirebaseAuthState> {
   String _verificationId;
 
   FirebaseAuthBloc({@required this.authUseCase})
-      : assert(authUseCase != null, AssertionConstants.authUseCaseNotNull);
-
-  @override
-  FirebaseAuthState get initialState => FirebaseAuthInitialState();
+      : assert(authUseCase != null, AssertionConstants.authUseCaseNotNull),
+        super(FirebaseAuthInitialState());
 
   @override
   Stream<FirebaseAuthState> mapEventToState(FirebaseAuthEvent event) async* {

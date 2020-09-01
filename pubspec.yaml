@@ -41,7 +41,7 @@ dependencies:
 
   # Firebase
   firebase_auth: ^0.18.0+1
-  firebase_crashlytics: ^0.1.4+1
+  # firebase_crashlytics: ^0.1.4+1
 
   # Local Storage Data
   hive: ^1.4.0+1 # Local DB
