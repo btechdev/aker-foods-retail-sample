@@ -1,9 +1,12 @@
 import 'package:aker_foods_retail/common/injector/injector.dart';
 import 'package:aker_foods_retail/data/models/user_profile_model.dart';
 import 'package:aker_foods_retail/presentation/app/route_constants.dart';
+import 'package:aker_foods_retail/presentation/common_blocs/snack_bar_bloc/snack_bar_bloc.dart';
+import 'package:aker_foods_retail/presentation/common_blocs/snack_bar_bloc/snack_bar_event.dart';
 import 'package:aker_foods_retail/presentation/journey/user/bloc/user_profile_bloc.dart';
 import 'package:aker_foods_retail/presentation/journey/user/bloc/user_profile_event.dart';
 import 'package:aker_foods_retail/presentation/journey/user/bloc/user_profile_state.dart';
+import 'package:aker_foods_retail/presentation/widgets/custom_snack_bar/snack_bar_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:keyboard_avoider/keyboard_avoider.dart';
@@ -62,6 +65,10 @@ class _SetupProfileScreen extends State<SetupUserProfileScreen> {
 
   @override
   void dispose() {
+    _firstNameController.dispose();
+    _lastNameController.dispose();
+    _emailController.dispose();
+    _referralCodeController.dispose();
     super.dispose();
   }
 
@@ -85,8 +92,17 @@ class _SetupProfileScreen extends State<SetupUserProfileScreen> {
   void _checkState(BuildContext context, UserProfileState state) {
     if (state is UserProfileSetupSuccessState) {
       Navigator.pushNamed(context, RouteConstants.myAccount);
+      Injector.resolve<SnackBarBloc>().add(ShowSnackBarEvent(
+        text: 'User Profile created',
+        type: CustomSnackBarType.success,
+        position: CustomSnackBarPosition.top,
+      ));
     } else if (state is UserProfileSetupFailedState) {
-      // show snackbar
+      Injector.resolve<SnackBarBloc>().add(ShowSnackBarEvent(
+        text: state.errorMessage,
+        type: CustomSnackBarType.error,
+        position: CustomSnackBarPosition.top,
+      ));
     } else {}
   }
 
