@@ -6,6 +6,7 @@ import 'package:aker_foods_retail/presentation/common_blocs/snack_bar_bloc/snack
 import 'package:aker_foods_retail/presentation/journey/user/bloc/user_profile_bloc.dart';
 import 'package:aker_foods_retail/presentation/journey/user/bloc/user_profile_event.dart';
 import 'package:aker_foods_retail/presentation/journey/user/bloc/user_profile_state.dart';
+import 'package:aker_foods_retail/presentation/widgets/circular_loader_widget.dart';
 import 'package:aker_foods_retail/presentation/widgets/custom_snack_bar/snack_bar_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -79,13 +80,16 @@ class _SetupProfileScreen extends State<SetupUserProfileScreen> {
           appBar: _getAppBar(),
           body: KeyboardAvoider(
             autoScroll: true,
-            child: BlocListener<UserProfileBloc, UserProfileState>(
-              listener: _checkState,
-              child: BlocBuilder<UserProfileBloc, UserProfileState>(
-                builder: _getBody,
-              ),
-            ),
+            child: _getBodyWrappedWithBloc(),
           ),
+        ),
+      );
+
+  BlocListener<UserProfileBloc, UserProfileState> _getBodyWrappedWithBloc() =>
+      BlocListener<UserProfileBloc, UserProfileState>(
+        listener: _checkState,
+        child: BlocBuilder<UserProfileBloc, UserProfileState>(
+          builder: _getBody,
         ),
       );
 
@@ -158,12 +162,9 @@ class _SetupProfileScreen extends State<SetupUserProfileScreen> {
 
   SizedBox _inputFieldsVerticalSpacing() => SizedBox(height: 20.h);
 
-  Container _buttonWithContainer(BuildContext context, UserProfileState state) {
+  Widget _buttonWithContainer(BuildContext context, UserProfileState state) {
     if (state is UserProfileSettingUpState) {
-      return Container(
-        alignment: Alignment.center,
-        child: const CircularProgressIndicator(),
-      );
+      return const CircularLoaderWidget();
     } else {
       return Container(
         height: LayoutConstants.dimen_48.h,

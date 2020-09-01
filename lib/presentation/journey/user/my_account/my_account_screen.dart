@@ -2,6 +2,7 @@ import 'package:aker_foods_retail/common/injector/injector.dart';
 import 'package:aker_foods_retail/presentation/journey/user/bloc/user_profile_bloc.dart';
 import 'package:aker_foods_retail/presentation/journey/user/bloc/user_profile_event.dart';
 import 'package:aker_foods_retail/presentation/journey/user/bloc/user_profile_state.dart';
+import 'package:aker_foods_retail/presentation/widgets/empty_state_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -19,7 +20,7 @@ class MyAccountScreen extends StatefulWidget {
 }
 
 class _MyAccountScreenState extends State<MyAccountScreen> {
-  UserProfileBloc _userProfileBloc;
+  UserProfileBloc userProfileBloc;
 
   final options = [
     MyAccountOptionDataEntity(
@@ -50,31 +51,29 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
   @override
   void initState() {
     super.initState();
-    _userProfileBloc = Injector.resolve<UserProfileBloc>()
+    userProfileBloc = Injector.resolve<UserProfileBloc>()
       ..add(FetchUserProfileEvent());
   }
 
   @override
-  void dispose() {
-    _userProfileBloc?.close();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) => BlocProvider<UserProfileBloc>(
-        create: (context) => _userProfileBloc,
+        create: (context) => userProfileBloc,
         child: Scaffold(
           appBar: _getAppBar(context),
           body: Column(
             children: [
-              BlocBuilder<UserProfileBloc, UserProfileState>(
-                builder: _getUserProfile,
-              ),
+              _getUserProfileContainerWrappedWithBloc(),
               _getSettings(),
             ],
           ),
         ),
       );
+
+  BlocBuilder<UserProfileBloc, UserProfileState>
+      _getUserProfileContainerWrappedWithBloc() =>
+          BlocBuilder<UserProfileBloc, UserProfileState>(
+            builder: _getUserProfile,
+          );
 
   AppBar _getAppBar(BuildContext context) {
     return AppBar(
@@ -86,6 +85,22 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
     );
   }
 
+  Widget _getUserInfoWidget(UserProfileState state) =>
+      state is UserProfileFetchingState
+          ? _getLoadingContainer()
+          : state is UserProfileFetchSuccessState
+              ? _getUserDetailsContainer(context, state)
+              : const EmptyStateWidget();
+
+  Container _getLoadingContainer() {
+    return Container(
+      alignment: Alignment.center,
+      child: const CircularProgressIndicator(
+        valueColor: AlwaysStoppedAnimation<Color>(AppColor.white),
+      ),
+    );
+  }
+
   Container _getUserProfile(BuildContext context, UserProfileState state) {
     return Container(
       color: AppColor.primaryColor,
@@ -93,21 +108,11 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
         left: LayoutConstants.dimen_16.w,
         right: LayoutConstants.dimen_16.w,
         top: LayoutConstants.dimen_20.h,
-        bottom: LayoutConstants.dimen_4.h,
+        bottom: LayoutConstants.dimen_20.h,
       ),
-      margin: const EdgeInsets.all(0),
       child: Column(
         children: [
-          state is UserProfileFetchingState
-              ? Container(
-                  alignment: Alignment.center,
-                  child: const CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation<Color>(AppColor.white),
-                  ),
-                )
-              : state is UserProfileFetchSuccessState
-                  ? _getUserDetailsContainer(context, state)
-                  : Container(),
+          _getUserInfoWidget(state),
           SizedBox(height: LayoutConstants.dimen_8.h),
           _getAddressContainer(context)
         ],
@@ -135,9 +140,6 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
 
   Container _getAddressContainer(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(
-        vertical: 16.w,
-      ),
       padding: EdgeInsets.symmetric(
         horizontal: 8.w,
       ),
@@ -284,7 +286,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
   Column _getUserInfoColumn(UserProfileFetchSuccessState state) => Column(
         children: [
           Text(
-            '${state.user.salutation}'
+            '${state.user.salutation} '
             '${state.user.firstName} ${state.user.lastName}',
             style: Theme.of(context).textTheme.headline5.apply(
                   color: AppColor.white,
