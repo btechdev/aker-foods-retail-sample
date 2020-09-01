@@ -1,4 +1,9 @@
+import 'package:aker_foods_retail/common/injector/injector.dart';
+import 'package:aker_foods_retail/presentation/journey/user/bloc/user_profile_bloc.dart';
+import 'package:aker_foods_retail/presentation/journey/user/bloc/user_profile_event.dart';
+import 'package:aker_foods_retail/presentation/journey/user/bloc/user_profile_state.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../common/constants/layout_constants.dart';
 import '../../../../common/extensions/pixel_dimension_util_extensions.dart';
@@ -14,6 +19,8 @@ class MyAccountScreen extends StatefulWidget {
 }
 
 class _MyAccountScreenState extends State<MyAccountScreen> {
+  UserProfileBloc _userProfileBloc;
+
   final options = [
     MyAccountOptionDataEntity(
       icon: Icons.local_mall,
@@ -41,17 +48,33 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
   List<String> savedAddresses;
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: _getAppBar(context),
-      body: Column(
-        children: [
-          _getUserProfile(context),
-          _getSettings(),
-        ],
-      ),
-    );
+  void initState() {
+    super.initState();
+    _userProfileBloc = Injector.resolve<UserProfileBloc>()
+      ..add(FetchUserProfileEvent());
   }
+
+  @override
+  void dispose() {
+    _userProfileBloc?.close();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => BlocProvider<UserProfileBloc>(
+        create: (context) => _userProfileBloc,
+        child: Scaffold(
+          appBar: _getAppBar(context),
+          body: Column(
+            children: [
+              BlocBuilder<UserProfileBloc, UserProfileState>(
+                builder: _getUserProfile,
+              ),
+              _getSettings(),
+            ],
+          ),
+        ),
+      );
 
   AppBar _getAppBar(BuildContext context) {
     return AppBar(
@@ -63,19 +86,28 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
     );
   }
 
-  Container _getUserProfile(BuildContext context) {
+  Container _getUserProfile(BuildContext context, UserProfileState state) {
     return Container(
       color: AppColor.primaryColor,
       padding: EdgeInsets.only(
-        left: 16.w,
-        right: 16.w,
-        top: 20.h,
-        bottom: 4.h,
+        left: LayoutConstants.dimen_16.w,
+        right: LayoutConstants.dimen_16.w,
+        top: LayoutConstants.dimen_20.h,
+        bottom: LayoutConstants.dimen_4.h,
       ),
       margin: const EdgeInsets.all(0),
       child: Column(
         children: [
-          _getUserDetailsContainer(context),
+          state is UserProfileFetchingState
+              ? Container(
+                  alignment: Alignment.center,
+                  child: const CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(AppColor.white),
+                  ),
+                )
+              : state is UserProfileFetchSuccessState
+                  ? _getUserDetailsContainer(context, state)
+                  : Container(),
           SizedBox(height: LayoutConstants.dimen_8.h),
           _getAddressContainer(context)
         ],
@@ -219,7 +251,8 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
     }
   }
 
-  Column _getUserDetailsContainer(BuildContext context) {
+  Column _getUserDetailsContainer(
+      BuildContext context, UserProfileState state) {
     return Column(
       children: [
         Row(
@@ -243,22 +276,23 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
           ],
         ),
         SizedBox(height: LayoutConstants.dimen_16.h),
-        _getUserInfoColumn(),
+        _getUserInfoColumn(state),
       ],
     );
   }
 
-  Column _getUserInfoColumn() => Column(
+  Column _getUserInfoColumn(UserProfileFetchSuccessState state) => Column(
         children: [
           Text(
-            'Mr Full Name',
+            '${state.user.salutation}'
+            '${state.user.firstName} ${state.user.lastName}',
             style: Theme.of(context).textTheme.headline5.apply(
                   color: AppColor.white,
                 ),
           ),
           SizedBox(height: LayoutConstants.dimen_4.h),
           Text(
-            'full-name@gmail.com',
+            '${state.user.email}',
             style: Theme.of(context).textTheme.caption.apply(
                   color: AppColor.white87,
                 ),

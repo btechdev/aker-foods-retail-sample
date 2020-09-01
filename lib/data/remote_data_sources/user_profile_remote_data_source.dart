@@ -17,6 +17,11 @@ class UserProfileRemoteDataSource {
 
   Future<UserProfileModel> fetchUserProfile() async {
     // TODO(soham): Fetch current user profile
-    return UserProfileModel();
+    return UserProfileModel(
+        email: 'abc@gmail.com',
+        firstName: 'Sumit',
+        lastName: 'Thakre',
+        salutation: 'Mr',
+        phoneNumber: '+919000900099');
   }
 }

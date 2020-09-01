@@ -21,6 +21,7 @@ class UserProfileBloc extends Bloc<UserProfileEvent, UserProfileState> {
 
   Stream<UserProfileState> _handleFetchUserProfileEvent() async* {
     yield UserProfileFetchingState();
+    await Future.delayed(const Duration(seconds: 5));
     final user = await userProfileUseCase.fetchUserProfile();
     yield UserProfileFetchSuccessState(user: user);
   }
