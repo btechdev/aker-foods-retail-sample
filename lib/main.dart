@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:firebase_core/firebase_core.dart';
-// import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 import 'package:pedantic/pedantic.dart';
@@ -25,8 +24,10 @@ void main() {
 
   // Enable Crashlytics based on environment and
   // Pass all uncaught errors from the framework to Crashlytics.
-  // Crashlytics.instance.enableInDevMode = Configuration.shouldEnableCrashlytics;
-  // FlutterError.onError = Crashlytics.instance.recordFlutterError;
+  /*
+  Crashlytics.instance.enableInDevMode = Configuration.shouldEnableCrashlytics;
+  FlutterError.onError = Crashlytics.instance.recordFlutterError;
+  */
 
   // Only Light mode, need update if support darkmode
   unawaited(FlutterStatusbarcolor.setStatusBarWhiteForeground(false));
