@@ -29,7 +29,7 @@ class _SetupProfileScreen extends State<SetupUserProfileScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _referralCodeController = TextEditingController();
   String dropdownValue;
-  UserProfileBloc _userProfileBloc;
+  UserProfileBloc userProfileBloc;
 
   bool _validateInputFields() {
     if (_firstNameController.text.trim().isNotEmpty &&
@@ -50,7 +50,7 @@ class _SetupProfileScreen extends State<SetupUserProfileScreen> {
       );
 
   void _setupUserProfile() {
-    _userProfileBloc.add(
+    userProfileBloc.add(
       SetupUserProfileEvent(
         user: createUser,
         referralCode: _referralCodeController.text.trim(),
@@ -61,7 +61,7 @@ class _SetupProfileScreen extends State<SetupUserProfileScreen> {
   @override
   void initState() {
     super.initState();
-    _userProfileBloc = Injector.resolve<UserProfileBloc>();
+    userProfileBloc = Injector.resolve<UserProfileBloc>();
   }
 
   @override
@@ -75,7 +75,7 @@ class _SetupProfileScreen extends State<SetupUserProfileScreen> {
 
   @override
   Widget build(BuildContext context) => BlocProvider<UserProfileBloc>(
-        create: (context) => _userProfileBloc,
+        create: (context) => userProfileBloc,
         child: Scaffold(
           appBar: _getAppBar(),
           body: KeyboardAvoider(

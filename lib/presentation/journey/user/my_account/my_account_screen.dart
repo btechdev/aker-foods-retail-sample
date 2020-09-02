@@ -2,6 +2,8 @@ import 'package:aker_foods_retail/common/injector/injector.dart';
 import 'package:aker_foods_retail/presentation/journey/user/bloc/user_profile_bloc.dart';
 import 'package:aker_foods_retail/presentation/journey/user/bloc/user_profile_event.dart';
 import 'package:aker_foods_retail/presentation/journey/user/bloc/user_profile_state.dart';
+import 'package:aker_foods_retail/presentation/journey/user/edit_profile/edit_profile_screen.dart';
+import 'package:aker_foods_retail/presentation/widgets/circular_loader_widget.dart';
 import 'package:aker_foods_retail/presentation/widgets/empty_state_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -20,6 +22,7 @@ class MyAccountScreen extends StatefulWidget {
 }
 
 class _MyAccountScreenState extends State<MyAccountScreen> {
+  // ignore: close_sinks
   UserProfileBloc userProfileBloc;
 
   final options = [
@@ -95,9 +98,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
   Container _getLoadingContainer() {
     return Container(
       alignment: Alignment.center,
-      child: const CircularProgressIndicator(
-        valueColor: AlwaysStoppedAnimation<Color>(AppColor.white),
-      ),
+      child: const CircularLoaderWidget(),
     );
   }
 
@@ -273,7 +274,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
             Container(
               height: LayoutConstants.dimen_120.w,
               alignment: Alignment.topCenter,
-              child: _getEditUserInfoButton(),
+              child: _getEditUserInfoButton(state),
             ),
           ],
         ),
@@ -302,12 +303,18 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
         ],
       );
 
-  Widget _getEditUserInfoButton() => IconButton(
+  Widget _getEditUserInfoButton(UserProfileFetchSuccessState state) =>
+      IconButton(
         icon: Icon(
           Icons.edit,
           color: AppColor.white,
           size: LayoutConstants.dimen_20.w,
         ),
-        onPressed: () => Navigator.pushNamed(context, '/edit-profile'),
+        onPressed: () => Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => EditProfileScreen(user: state.user),
+          ),
+        ),
       );
 }
