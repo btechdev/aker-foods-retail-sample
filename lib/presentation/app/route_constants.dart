@@ -1,6 +1,7 @@
 class RouteConstants {
   //static const initial = '/';
   static const initial = enterPhoneNumber;
+  static const dashboard = '/dashboard';
 
   static const enterPhoneNumber = '/enter-phone-number';
   static const verifyOtp = '/verify-otp';

@@ -9,6 +9,7 @@ class ProfileTextFieldWidget extends StatelessWidget {
   final String hintText;
   final TextStyle hintStyle;
   final Function onTextChange;
+  final TextInputType textInputType;
   final TextEditingController controller;
 
   ProfileTextFieldWidget({
@@ -16,6 +17,7 @@ class ProfileTextFieldWidget extends StatelessWidget {
     this.hintText,
     this.hintStyle,
     this.onTextChange,
+    this.textInputType,
     this.controller,
   });
 
@@ -25,6 +27,8 @@ class ProfileTextFieldWidget extends StatelessWidget {
         height: LayoutConstants.dimen_52.h,
         decoration: LayoutConstants.inputBoxDecoration,
         child: TextField(
+          textAlign: TextAlign.start,
+          keyboardType: textInputType ?? TextInputType.text,
           style: Theme.of(context).textTheme.bodyText1,
           decoration: InputDecoration(
             prefixIcon: prefixIcon,

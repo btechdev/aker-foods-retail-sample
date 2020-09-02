@@ -1,10 +1,9 @@
-import 'package:flutter/material.dart';
-import 'package:keyboard_avoider/keyboard_avoider.dart';
-
 import 'package:aker_foods_retail/common/constants/layout_constants.dart';
 import 'package:aker_foods_retail/common/extensions/pixel_dimension_util_extensions.dart';
 import 'package:aker_foods_retail/presentation/theme/app_colors.dart';
 import 'package:aker_foods_retail/presentation/widgets/profile_text_field_widget.dart';
+import 'package:flutter/material.dart';
+import 'package:keyboard_avoider/keyboard_avoider.dart';
 
 class EditProfileScreen extends StatefulWidget {
   @override
@@ -52,6 +51,7 @@ class _UserProfileScreen extends State<EditProfileScreen> {
             _inputFieldsVerticalSpacing(),
             ProfileTextFieldWidget(
               hintText: 'Email',
+              textInputType: TextInputType.emailAddress,
               prefixIcon: _textFieldPrefixIcon(Icons.email),
             ),
             _inputFieldsVerticalSpacing(),
@@ -64,11 +64,12 @@ class _UserProfileScreen extends State<EditProfileScreen> {
 
   Icon _textFieldPrefixIcon(IconData data) => Icon(
         data,
-        size: 30.w,
         color: AppColor.primaryColor,
+        size: LayoutConstants.dimen_30.w,
       );
 
-  SizedBox _inputFieldsVerticalSpacing() => SizedBox(height: 20.h);
+  SizedBox _inputFieldsVerticalSpacing() =>
+      SizedBox(height: LayoutConstants.dimen_20.h);
 
   Container _buttonWithContainer() => Container(
         width: double.infinity,
@@ -78,7 +79,7 @@ class _UserProfileScreen extends State<EditProfileScreen> {
           disabledColor: Colors.lightGreen,
           onPressed: () => {},
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12.w),
+            borderRadius: BorderRadius.circular(LayoutConstants.dimen_12.w),
           ),
           child: Text(
             'SAVE',
@@ -92,15 +93,14 @@ class _UserProfileScreen extends State<EditProfileScreen> {
   Container _salutationDropdownContainer() => Container(
         width: double.infinity,
         height: LayoutConstants.dimen_52.h,
-        padding: EdgeInsets.symmetric(
-          horizontal: 12.w,
-          vertical: 12.h,
-        ),
+        alignment: Alignment.center,
+        padding: EdgeInsets.symmetric(horizontal: LayoutConstants.dimen_12.w),
         decoration: LayoutConstants.inputBoxDecoration,
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             _textFieldPrefixIcon(Icons.person),
-            SizedBox(width: 8.w),
+            SizedBox(width: LayoutConstants.dimen_8.w),
             Expanded(
               child: Directionality(
                 textDirection: TextDirection.ltr,
@@ -115,7 +115,7 @@ class _UserProfileScreen extends State<EditProfileScreen> {
                     ),
                     style: Theme.of(context).textTheme.bodyText1,
                     icon: const Icon(Icons.arrow_drop_down),
-                    iconSize: 24.w,
+                    iconSize: LayoutConstants.dimen_24.w,
                     elevation: 16,
                     onChanged: (String newValue) {
                       setState(() {
@@ -140,19 +140,19 @@ class _UserProfileScreen extends State<EditProfileScreen> {
   Container _phoneNumberContainer() => Container(
         width: double.infinity,
         height: LayoutConstants.dimen_52.h,
-        padding: EdgeInsets.symmetric(
-          horizontal: 12.w,
-          vertical: 12.h,
-        ),
+        alignment: Alignment.center,
+        padding: EdgeInsets.symmetric(horizontal: LayoutConstants.dimen_12.w),
         decoration: LayoutConstants.inputBoxDecoration,
         child: Row(
           children: [
             _textFieldPrefixIcon(Icons.phonelink_setup),
-            SizedBox(width: 8.w),
+            SizedBox(width: LayoutConstants.dimen_8.w),
             Expanded(
               child: Text(
                 '+91 **********',
-                style: Theme.of(context).textTheme.bodyText1,
+                style: Theme.of(context).textTheme.bodyText1.copyWith(
+                      color: AppColor.black54,
+                    ),
               ),
             ),
           ],

@@ -12,4 +12,4 @@ enum CustomSnackBarType { success, error }
 /// Indicates if snack bar is going to be shown at the [top] or [bottom]
 enum CustomSnackBarPosition { top, bottom }
 
-const int customSnackBarDefaultTimeDurationInSeconds = 5;
+const int customSnackBarDefaultTimeDurationInSeconds = 3;

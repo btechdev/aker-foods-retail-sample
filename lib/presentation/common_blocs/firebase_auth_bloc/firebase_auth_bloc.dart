@@ -45,6 +45,8 @@ class FirebaseAuthBloc extends Bloc<FirebaseAuthEvent, FirebaseAuthState> {
       yield PhoneNumberVerificationStartedState(phoneNumber: event.phoneNumber);
       await _verifyPhoneNumber(event.phoneNumber);
     } catch (e) {
+      debugPrint('FirebaseAuthBloc => ${e.message}');
+      debugPrint(e);
       yield PhoneNumberVerificationFailureState();
     }
   }
@@ -56,7 +58,10 @@ class FirebaseAuthBloc extends Bloc<FirebaseAuthEvent, FirebaseAuthState> {
       final user = await signInWithAuthCredential(event.authCredential);
       await authUseCase.saveUserAuthentication(user);
       yield AuthSuccessState(user: user);
+      debugPrint('AuthSuccessState IdToken => ''${user.idToken}');
     } catch (e) {
+      debugPrint('FirebaseAuthBloc => ${e.message}');
+      debugPrint(e);
       yield AuthFailedState(phoneNumber: event.phoneNumber);
     }
   }
@@ -83,6 +88,8 @@ class FirebaseAuthBloc extends Bloc<FirebaseAuthEvent, FirebaseAuthState> {
       debugPrint('OtpVerificationSuccessState PreferencesRefreshToken => '
           '$preferencesRefreshToken');
     } catch (e) {
+      debugPrint('FirebaseAuthBloc => ${e.message}');
+      debugPrint(e);
       yield AuthFailedState(phoneNumber: event.phoneNumber);
     }
   }
@@ -121,6 +128,7 @@ class FirebaseAuthBloc extends Bloc<FirebaseAuthEvent, FirebaseAuthState> {
   }
 
   void _onVerificationFailed(FirebaseAuthException authException) {
+    debugPrint('FirebaseAuthBloc => ${authException.message}');
     add(VerifyPhoneNumberFailedEvent(exception: authException));
   }
 

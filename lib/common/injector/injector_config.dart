@@ -10,6 +10,7 @@ import 'package:aker_foods_retail/domain/usecases/user_address_use_case.dart';
 import 'package:aker_foods_retail/network/api/api_client.dart';
 import 'package:aker_foods_retail/presentation/common_blocs/firebase_auth_bloc/firebase_auth_bloc.dart';
 import 'package:aker_foods_retail/presentation/common_blocs/snack_bar_bloc/snack_bar_bloc.dart';
+import 'package:aker_foods_retail/presentation/journey/dashboard/bloc/dashboard_bloc.dart';
 import 'package:aker_foods_retail/presentation/journey/user/address/select_society/bloc/select_society_bloc.dart';
 import 'package:kiwi/kiwi.dart';
 
@@ -41,6 +42,7 @@ abstract class InjectorConfig {
   /// ============ Register Blocs ============
   @Register.singleton(SnackBarBloc)
   @Register.singleton(FirebaseAuthBloc)
+  @Register.singleton(DashboardBloc)
   @Register.factory(SelectSocietyBloc)
   void _configureBlocs();
 
