@@ -14,14 +14,33 @@ class SelectSocietyBloc extends Bloc<SelectSocietyEvent, SelectSocietyState> {
   Stream<SelectSocietyState> mapEventToState(SelectSocietyEvent event) async* {
     if (event is FetchSocietiesFirstPageEvent) {
       yield* _handleFetchSocietiesFirstPageEvent();
+    } else if (event is SearchSocitiesEvent) {
+      yield* _handleSearchSocitiesEvent(event);
+    } else if (event is SearchSocitiesCancelEvent) {
+      yield* _handleFetchSocietiesFirstPageEvent();
     }
   }
 
   Stream<SelectSocietyState> _handleFetchSocietiesFirstPageEvent() async* {
     yield FetchingSocietiesState();
-    await Future.delayed(const Duration(seconds: 5));
+    await Future.delayed(const Duration(seconds: 2));
     final List<SocietyEntity> societies =
         await userAddressUseCase.getSocieties();
     yield SocietiesLoadedState(societies: societies);
+  }
+
+  Stream<SelectSocietyState> _handleSearchSocitiesEvent(
+      SearchSocitiesEvent event) async* {
+    yield SearchingSocietiesState();
+    final List<SocietyEntity> societies =
+        await userAddressUseCase.getSocieties();
+    final filteredSocieties = societies
+        .where((society) => society.name
+            .toLowerCase()
+            .contains(event.searchKeyword.toLowerCase()))
+        .toList();
+    yield filteredSocieties.isEmpty
+        ? SocitiesSearchFailedState()
+        : SocitiesSearchSuccessState(societies: filteredSocieties);
   }
 }
