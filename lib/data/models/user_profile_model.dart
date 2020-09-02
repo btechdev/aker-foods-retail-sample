@@ -28,4 +28,14 @@ class UserProfileModel extends UserProfileEntity {
         phoneNumber: jsonMap['phoneNumber'],
         userProfileImageUrl: jsonMap['userProfileImageUrl'],
       );
+
+  static Map<String, dynamic> toJson(UserProfileModel userProfileModel) => {
+        'salutation': userProfileModel.salutation,
+        'firstName': userProfileModel.firstName,
+        'lastName': userProfileModel.lastName,
+        'email': userProfileModel.email,
+        'phoneNumber': userProfileModel.phoneNumber,
+        'userProfileImageUrl': userProfileModel.userProfileImageUrl,
+        'referralCode': userProfileModel.referralCode,
+      };
 }
