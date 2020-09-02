@@ -27,6 +27,7 @@ class ProfileTextFieldWidget extends StatelessWidget {
         height: LayoutConstants.dimen_52.h,
         decoration: LayoutConstants.inputBoxDecoration,
         child: TextField(
+          controller: controller,
           textAlign: TextAlign.start,
           keyboardType: textInputType ?? TextInputType.text,
           style: Theme.of(context).textTheme.bodyText1,
