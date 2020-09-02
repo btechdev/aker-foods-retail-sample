@@ -5,6 +5,7 @@ class UserProfileEntity {
   final String email;
   final String phoneNumber;
   final String userProfileImageUrl;
+  final String referralCode;
 
   UserProfileEntity({
     this.salutation,
@@ -13,5 +14,6 @@ class UserProfileEntity {
     this.email,
     this.phoneNumber,
     this.userProfileImageUrl,
+    this.referralCode,
   });
 }

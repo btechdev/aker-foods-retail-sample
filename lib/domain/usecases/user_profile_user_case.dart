@@ -6,8 +6,8 @@ class UserProfileUseCase {
 
   UserProfileUseCase({this.userProfileRepository});
 
-  Future<void> setupUserProfile(UserProfileModel user, String referralCode) =>
-      userProfileRepository.setupUserProfile(user, referralCode);
+  Future<void> setupUserProfile(UserProfileModel user) =>
+      userProfileRepository.setupUserProfile(user);
 
   Future<UserProfileModel> fetchUserProfile() =>
       userProfileRepository.fetchUserProfile();

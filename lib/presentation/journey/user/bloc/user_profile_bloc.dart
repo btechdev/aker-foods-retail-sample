@@ -28,7 +28,7 @@ class UserProfileBloc extends Bloc<UserProfileEvent, UserProfileState> {
   Stream<UserProfileState> _handleSetupUserProfileEvent(
       SetupUserProfileEvent event) async* {
     yield UserProfileSettingUpState();
-    await userProfileUseCase.setupUserProfile(event.user, event.referralCode);
+    await userProfileUseCase.setupUserProfile(event.user);
     yield UserProfileSetupSuccessState();
   }
 

@@ -8,6 +8,7 @@ class UserProfileModel extends UserProfileEntity {
     String email,
     String phoneNumber,
     String userProfileImageUrl,
+    String referralCode,
   }) : super(
           salutation: salutation,
           firstName: firstName,
@@ -15,6 +16,7 @@ class UserProfileModel extends UserProfileEntity {
           email: email,
           phoneNumber: phoneNumber,
           userProfileImageUrl: userProfileImageUrl,
+          referralCode: referralCode,
         );
 
   factory UserProfileModel.fromJson(Map<String, dynamic> jsonMap) =>

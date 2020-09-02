@@ -47,13 +47,13 @@ class _SetupProfileScreen extends State<SetupUserProfileScreen> {
         firstName: _firstNameController.text.trim(),
         lastName: _lastNameController.text.trim(),
         salutation: dropdownValue,
+        referralCode: _referralCodeController.text.trim(),
       );
 
   void _setupUserProfile() {
     userProfileBloc.add(
       SetupUserProfileEvent(
         user: createUser,
-        referralCode: _referralCodeController.text.trim(),
       ),
     );
   }

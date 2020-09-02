@@ -206,37 +206,40 @@ class _UserProfileScreen extends State<EditProfileScreen> {
               child: Directionality(
                 textDirection: TextDirection.ltr,
                 child: DropdownButtonHideUnderline(
-                  child: DropdownButton<String>(
-                    value: dropdownValue,
-                    hint: Text(
-                      'Choose Title',
-                      style: Theme.of(context).textTheme.bodyText2.copyWith(
-                            color: AppColor.black54,
-                          ),
-                    ),
-                    style: Theme.of(context).textTheme.bodyText1,
-                    icon: const Icon(Icons.arrow_drop_down),
-                    iconSize: 24.w,
-                    elevation: 16,
-                    onChanged: (String newValue) {
-                      setState(() {
-                        dropdownValue = newValue;
-                      });
-                    },
-                    items: _listOfSalutations
-                        .map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
-                  ),
+                  child: _getDropDownButton(),
                 ),
               ),
             ),
           ],
         ),
       );
+
+  DropdownButton<String> _getDropDownButton() {
+    return DropdownButton<String>(
+      value: dropdownValue,
+      hint: Text(
+        'Choose Title',
+        style: Theme.of(context).textTheme.bodyText2.copyWith(
+              color: AppColor.black54,
+            ),
+      ),
+      style: Theme.of(context).textTheme.bodyText1,
+      icon: const Icon(Icons.arrow_drop_down),
+      iconSize: 24.w,
+      elevation: 16,
+      onChanged: (String newValue) {
+        setState(() {
+          dropdownValue = newValue;
+        });
+      },
+      items: _listOfSalutations.map<DropdownMenuItem<String>>((String value) {
+        return DropdownMenuItem<String>(
+          value: value,
+          child: Text(value),
+        );
+      }).toList(),
+    );
+  }
 
   Container _phoneNumberContainer() => Container(
         width: double.infinity,

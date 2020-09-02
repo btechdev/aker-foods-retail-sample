@@ -12,7 +12,6 @@ class UpdateUserProfileEvent extends UserProfileEvent {
 
 class SetupUserProfileEvent extends UserProfileEvent {
   final UserProfileModel user;
-  final String referralCode;
 
-  SetupUserProfileEvent({this.user, this.referralCode});
+  SetupUserProfileEvent({this.user});
 }
