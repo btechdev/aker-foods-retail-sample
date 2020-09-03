@@ -154,7 +154,6 @@ class _EnterOTPScreen extends State<EnterOtpScreen>
                 fieldWidth: LayoutConstants.dimen_40.w,
                 fieldStyle: FieldStyle.underline,
                 keyboardType: TextInputType.number,
-                //width: PixelDimensionUtil().uiWidthPx * 0.80,
                 style: Theme.of(context).textTheme.bodyText1,
                 textFieldAlignment: MainAxisAlignment.spaceAround,
                 onCompleted: (pin) {
@@ -222,7 +221,7 @@ class _EnterOTPScreen extends State<EnterOtpScreen>
       );
 
   void _verifySmsOtp() {
-    if (Configuration.isDev) {
+    if (!Configuration.isDev) {
       _navigateToDashboard();
     } else {
       _authBloc.add(AuthenticateWithSmsCodeEvent(

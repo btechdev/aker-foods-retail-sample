@@ -7,6 +7,7 @@ import 'package:aker_foods_retail/presentation/common_blocs/snack_bar_bloc/snack
 import 'package:aker_foods_retail/presentation/widgets/custom_snack_bar/snack_bar_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_segment/flutter_segment.dart';
 import 'package:keyboard_avoider/keyboard_avoider.dart';
 
 import '../../../common/extensions/pixel_dimension_util_extensions.dart';
@@ -28,6 +29,7 @@ class _EnterPhoneNumberScreen extends State<EnterPhoneNumberScreen> {
   @override
   void initState() {
     super.initState();
+    Segment.screen(screenName: 'EnterPhoneNumberScreen');
   }
 
   @override
@@ -173,6 +175,7 @@ class _EnterPhoneNumberScreen extends State<EnterPhoneNumberScreen> {
       );
 
   void _validateAndVerifyPhoneNumber() {
+    Segment.track(eventName: 'Get OTP button clicked');
     final phoneNumber = _textEditingController.text;
     if (phoneNumber.isNotNullAndEmpty &&
         phoneNumber.length == AppConstants.phoneNumberLength) {
