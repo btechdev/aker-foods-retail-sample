@@ -4,7 +4,7 @@ buildscript {
 	}
 	dependencies {
 		// OneSignal-Gradle-Plugin
-		classpath 'gradle.plugin.com.onesignal:onesignal-gradle-plugin:[0.12.8, 0.99.99]'
+		classpath 'gradle.plugin.com.onesignal:onesignal-gradle-plugin:0.12.8'
 	}
 }
 
@@ -57,7 +57,7 @@ android {
 		versionName flutterVersionName
 		testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 		manifestPlaceholders = [
-				onesignal_app_id: '15cc841b-f301-4663-a12e-9f5467eaf167',
+				onesignal_app_id               : '15cc841b-f301-4663-a12e-9f5467eaf167',
 				onesignal_google_project_number: 'REMOTE'
 		]
 	}
@@ -80,6 +80,7 @@ dependencies {
 	testImplementation 'junit:junit:4.12'
 	androidTestImplementation 'androidx.test:runner:1.1.1'
 	androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
-	implementation 'com.onesignal:OneSignal:[3.15.0, 3.99.99]'
+	implementation 'com.onesignal:OneSignal:3.15.3'
 }
 apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.google.firebase.crashlytics'

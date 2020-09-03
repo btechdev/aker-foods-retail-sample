@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
@@ -25,10 +26,8 @@ void main() {
 
   // Enable Crashlytics based on environment and
   // Pass all uncaught errors from the framework to Crashlytics.
-  /*
   Crashlytics.instance.enableInDevMode = Configuration.shouldEnableCrashlytics;
   FlutterError.onError = Crashlytics.instance.recordFlutterError;
-  */
 
   // Initialise OneSignal for push notification service
   _initialiseOneSignal();
@@ -39,8 +38,7 @@ void main() {
 
   runZoned(
     () => runApp(App()),
-    // TODO(Bhushan): Import crashlytics and uncomment this following code
-    //onError: Crashlytics.instance.recordError,
+    onError: Crashlytics.instance.recordError,
   );
 }
 
