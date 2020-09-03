@@ -1,6 +1,8 @@
 import 'package:aker_foods_retail/common/injector/injector.dart';
 import 'package:aker_foods_retail/presentation/journey/dashboard/bottom_navigation_bar_details.dart';
+import 'package:aker_foods_retail/presentation/journey/dashboard/home_page.dart';
 import 'package:aker_foods_retail/presentation/journey/user/my_account/my_account_screen.dart';
+import 'package:aker_foods_retail/presentation/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -34,7 +36,7 @@ class DashboardScreenState extends State<DashboardScreen> {
     super.initState();
     _pageController = PageController();
     _bottomNavigationPageWidgets = [
-      _dummyContainer('Home'),
+      HomePage(),
       _dummyContainer('Search'),
       _dummyContainer('Cart'),
       MyAccountScreen(),
@@ -56,6 +58,7 @@ class DashboardScreenState extends State<DashboardScreen> {
   }
 
   Widget _buildScaffold() => Scaffold(
+        backgroundColor: AppColor.white,
         body: _getScaffoldBody(),
         bottomNavigationBar: _getBottomNavBarWrappedWithBlocBuilder(),
       );
