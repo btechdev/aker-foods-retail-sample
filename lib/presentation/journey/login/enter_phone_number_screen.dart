@@ -1,12 +1,13 @@
 import 'package:aker_foods_retail/common/constants/app_constants.dart';
 import 'package:aker_foods_retail/common/constants/layout_constants.dart';
-import 'package:aker_foods_retail/presentation/app/route_constants.dart';
 import 'package:aker_foods_retail/common/injector/injector.dart';
+import 'package:aker_foods_retail/presentation/app/route_constants.dart';
 import 'package:aker_foods_retail/presentation/common_blocs/snack_bar_bloc/snack_bar_bloc.dart';
 import 'package:aker_foods_retail/presentation/common_blocs/snack_bar_bloc/snack_bar_event.dart';
 import 'package:aker_foods_retail/presentation/widgets/custom_snack_bar/snack_bar_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_segment/flutter_segment.dart';
 import 'package:keyboard_avoider/keyboard_avoider.dart';
 
 import '../../../common/extensions/pixel_dimension_util_extensions.dart';
@@ -22,11 +23,13 @@ class EnterPhoneNumberScreen extends StatefulWidget {
 }
 
 class _EnterPhoneNumberScreen extends State<EnterPhoneNumberScreen> {
+  final _focusNode = FocusNode();
   final _textEditingController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
+    Segment.screen(screenName: 'EnterPhoneNumberScreen');
   }
 
   @override
@@ -119,7 +122,9 @@ class _EnterPhoneNumberScreen extends State<EnterPhoneNumberScreen> {
   TextField _phoneNumberInputTextField() => TextField(
         maxLines: 1,
         keyboardType: TextInputType.number,
+        focusNode: _focusNode,
         controller: _textEditingController,
+        onChanged: _onPhoneNumberInputChanged,
         decoration: InputDecoration(
           focusedBorder: InputBorder.none,
           enabledBorder: InputBorder.none,
@@ -136,6 +141,12 @@ class _EnterPhoneNumberScreen extends State<EnterPhoneNumberScreen> {
         ],
         style: Theme.of(context).textTheme.bodyText1,
       );
+
+  void _onPhoneNumberInputChanged(String text) {
+    if (text?.length == AppConstants.phoneNumberLength) {
+      _focusNode?.unfocus();
+    }
+  }
 
   Text _phoneNumberInputBottomText() => Text(
         'We will send you OTP on this number',
@@ -164,6 +175,7 @@ class _EnterPhoneNumberScreen extends State<EnterPhoneNumberScreen> {
       );
 
   void _validateAndVerifyPhoneNumber() {
+    Segment.track(eventName: 'Get OTP button clicked');
     final phoneNumber = _textEditingController.text;
     if (phoneNumber.isNotNullAndEmpty &&
         phoneNumber.length == AppConstants.phoneNumberLength) {

@@ -90,7 +90,7 @@ class EnterNewAddressScreen extends StatelessWidget {
     );
   }
 
-  _navigateToSelectSociety(BuildContext context) async {
+  Future<void> _navigateToSelectSociety(BuildContext context) async {
     final society = await Navigator.pushNamed(
       context,
       RouteConstants.selectSociety,

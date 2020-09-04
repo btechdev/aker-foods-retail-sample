@@ -1,4 +1,12 @@
+import 'package:aker_foods_retail/common/injector/injector.dart';
+import 'package:aker_foods_retail/presentation/journey/user/bloc/user_profile_bloc.dart';
+import 'package:aker_foods_retail/presentation/journey/user/bloc/user_profile_event.dart';
+import 'package:aker_foods_retail/presentation/journey/user/bloc/user_profile_state.dart';
+import 'package:aker_foods_retail/presentation/journey/user/edit_profile/edit_profile_screen.dart';
+import 'package:aker_foods_retail/presentation/widgets/circular_loader_widget.dart';
+import 'package:aker_foods_retail/presentation/widgets/empty_state_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../common/constants/layout_constants.dart';
 import '../../../../common/extensions/pixel_dimension_util_extensions.dart';
@@ -14,6 +22,9 @@ class MyAccountScreen extends StatefulWidget {
 }
 
 class _MyAccountScreenState extends State<MyAccountScreen> {
+  // ignore: close_sinks
+  UserProfileBloc userProfileBloc;
+
   final options = [
     MyAccountOptionDataEntity(
       icon: Icons.local_mall,
@@ -41,17 +52,31 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
   List<String> savedAddresses;
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: _getAppBar(context),
-      body: Column(
-        children: [
-          _getUserProfile(context),
-          _getSettings(),
-        ],
-      ),
-    );
+  void initState() {
+    super.initState();
+    userProfileBloc = Injector.resolve<UserProfileBloc>()
+      ..add(FetchUserProfileEvent());
   }
+
+  @override
+  Widget build(BuildContext context) => BlocProvider<UserProfileBloc>(
+        create: (context) => userProfileBloc,
+        child: Scaffold(
+          appBar: _getAppBar(context),
+          body: Column(
+            children: [
+              _getUserProfileContainerWrappedWithBloc(),
+              _getSettings(),
+            ],
+          ),
+        ),
+      );
+
+  BlocBuilder<UserProfileBloc, UserProfileState>
+      _getUserProfileContainerWrappedWithBloc() =>
+          BlocBuilder<UserProfileBloc, UserProfileState>(
+            builder: _getUserProfile,
+          );
 
   AppBar _getAppBar(BuildContext context) {
     return AppBar(
@@ -63,19 +88,32 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
     );
   }
 
-  Container _getUserProfile(BuildContext context) {
+  Widget _getUserInfoWidget(UserProfileState state) =>
+      state is UserProfileFetchingState
+          ? _getLoadingContainer()
+          : state is UserProfileFetchSuccessState
+              ? _getUserDetailsContainer(context, state)
+              : const EmptyStateWidget();
+
+  Container _getLoadingContainer() {
+    return Container(
+      alignment: Alignment.center,
+      child: const CircularLoaderWidget(),
+    );
+  }
+
+  Container _getUserProfile(BuildContext context, UserProfileState state) {
     return Container(
       color: AppColor.primaryColor,
       padding: EdgeInsets.only(
-        left: 16.w,
-        right: 16.w,
-        top: 20.h,
-        bottom: 4.h,
+        left: LayoutConstants.dimen_16.w,
+        right: LayoutConstants.dimen_16.w,
+        top: LayoutConstants.dimen_20.h,
+        bottom: LayoutConstants.dimen_20.h,
       ),
-      margin: const EdgeInsets.all(0),
       child: Column(
         children: [
-          _getUserDetailsContainer(context),
+          _getUserInfoWidget(state),
           SizedBox(height: LayoutConstants.dimen_8.h),
           _getAddressContainer(context)
         ],
@@ -103,9 +141,6 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
 
   Container _getAddressContainer(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(
-        vertical: 16.w,
-      ),
       padding: EdgeInsets.symmetric(
         horizontal: 8.w,
       ),
@@ -219,7 +254,8 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
     }
   }
 
-  Column _getUserDetailsContainer(BuildContext context) {
+  Column _getUserDetailsContainer(
+      BuildContext context, UserProfileState state) {
     return Column(
       children: [
         Row(
@@ -238,27 +274,28 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
             Container(
               height: LayoutConstants.dimen_120.w,
               alignment: Alignment.topCenter,
-              child: _getEditUserInfoButton(),
+              child: _getEditUserInfoButton(state),
             ),
           ],
         ),
         SizedBox(height: LayoutConstants.dimen_16.h),
-        _getUserInfoColumn(),
+        _getUserInfoColumn(state),
       ],
     );
   }
 
-  Column _getUserInfoColumn() => Column(
+  Column _getUserInfoColumn(UserProfileFetchSuccessState state) => Column(
         children: [
           Text(
-            'Mr Full Name',
+            '${state.user.salutation} '
+            '${state.user.firstName} ${state.user.lastName}',
             style: Theme.of(context).textTheme.headline5.apply(
                   color: AppColor.white,
                 ),
           ),
           SizedBox(height: LayoutConstants.dimen_4.h),
           Text(
-            'full-name@gmail.com',
+            '${state.user.email}',
             style: Theme.of(context).textTheme.caption.apply(
                   color: AppColor.white87,
                 ),
@@ -266,12 +303,18 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
         ],
       );
 
-  Widget _getEditUserInfoButton() => IconButton(
+  Widget _getEditUserInfoButton(UserProfileFetchSuccessState state) =>
+      IconButton(
         icon: Icon(
           Icons.edit,
           color: AppColor.white,
           size: LayoutConstants.dimen_20.w,
         ),
-        onPressed: () => Navigator.pushNamed(context, '/edit-profile'),
+        onPressed: () => Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => EditProfileScreen(user: state.user),
+          ),
+        ),
       );
 }

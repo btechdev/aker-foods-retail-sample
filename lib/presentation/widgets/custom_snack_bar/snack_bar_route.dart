@@ -177,7 +177,7 @@ class SnackBarRoute<T> extends OverlayRoute<T> {
       if (_timer != null && _timer.isActive) {
         _timer.cancel();
       }
-      _timer = Timer(const Duration(seconds: 4), () {
+      _timer = Timer(Duration(seconds: customSnackBar.duration), () {
         if (isCurrent) {
           navigator.pop();
         } else if (isActive) {

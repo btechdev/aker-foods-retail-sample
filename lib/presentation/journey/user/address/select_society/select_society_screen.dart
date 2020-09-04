@@ -50,24 +50,16 @@ class SelectSocietyScreenState extends State<SelectSocietyScreen> {
 
   void _clearSearchTextField() {
     _searchFieldController.clear();
-    setState(() {
-      isSearching = false;
-    });
+    selectSocietyBloc.add(SearchSocitiesCancelEvent());
   }
 
   void _searchTextChanged(String text) {
-    if (_searchFieldController.text.isNotEmpty) {
-      setState(() {
-        _filteredSocieties = _societies
-            .where((society) =>
-                society.name.toLowerCase().contains(text.toLowerCase()))
-            .toList();
-        isSearching = true;
-      });
-    } else {
-      setState(() {
-        isSearching = false;
-      });
+    if (_searchFieldController.text.trim().isNotEmpty &&
+        _searchFieldController.text.trim().length > 3) {
+      selectSocietyBloc.add(SearchSocitiesEvent(
+          searchKeyword: _searchFieldController.text.trim()));
+    } else if (_searchFieldController.text.trim().isEmpty) {
+      selectSocietyBloc.add(FetchSocietiesFirstPageEvent());
     }
   }
 
@@ -84,7 +76,14 @@ class SelectSocietyScreenState extends State<SelectSocietyScreen> {
       return _loaderWithScaffold();
     } else if (state is SocietiesLoadedState) {
       _societies = state.societies;
-      return _buildSocietiesListWithScaffold(context);
+      return _buildSocietiesListWithScaffold(context, state);
+    } else if (state is SearchingSocietiesState ||
+        state is SocitiesSearchFailedState) {
+      _societies = [];
+      return _buildSocietiesListWithScaffold(context, state);
+    } else if (state is SocitiesSearchSuccessState) {
+      _societies = state.societies;
+      return _buildSocietiesListWithScaffold(context, state);
     }
     return Container();
   }
@@ -96,20 +95,40 @@ class SelectSocietyScreenState extends State<SelectSocietyScreen> {
         ),
       );
 
-  Widget _buildSocietiesListWithScaffold(BuildContext context) => Scaffold(
-        appBar: _getAppBar(context),
+  Widget _buildSocietiesListWithScaffold(
+          BuildContext context, SelectSocietyState state) =>
+      Scaffold(
+        appBar: _getAppBar(context, state),
         floatingActionButton: _getAddSocietyButton(),
         body: KeyboardAvoider(
-          child: _getListOfSocietyWidget(),
+          child: _getBody(context, state),
         ),
       );
 
-  Container _getListOfSocietyWidget() => Container(
+  Container _getBody(BuildContext context, SelectSocietyState state) {
+    if (state is SearchingSocietiesState) {
+      return Container(
+        alignment: Alignment.center,
+        child: const CircularProgressIndicator(),
+      );
+    } else if (state is SocitiesSearchFailedState) {
+      return Container(
+        alignment: Alignment.center,
+        child: Text(
+          'Society Not Found',
+          style: Theme.of(context).textTheme.headline4,
+        ),
+      );
+    } else {
+      return _getListOfSocietyWidget(state);
+    }
+  }
+
+  Container _getListOfSocietyWidget(SelectSocietyState state) => Container(
         child: ListView.separated(
           itemBuilder: (_, index) => _getListTile(index),
           separatorBuilder: (_, __) => const Divider(),
-          itemCount:
-              isSearching ? _filteredSocieties.length : _societies.length,
+          itemCount: _societies.length,
         ),
       );
 
@@ -117,7 +136,7 @@ class SelectSocietyScreenState extends State<SelectSocietyScreen> {
         title: _getListItemText(index),
         onTap: () => Navigator.pop(
           context,
-          isSearching ? _filteredSocieties[index] : _societies[index],
+          _societies[index],
         ),
       );
 
@@ -146,25 +165,34 @@ class SelectSocietyScreenState extends State<SelectSocietyScreen> {
     );
   }
 
-  AppBar _getAppBar(context) => AppBar(
+  AppBar _getAppBar(context, SelectSocietyState state) => AppBar(
         elevation: 1,
         title: _getSearchTextField(context),
         centerTitle: false,
         titleSpacing: 0,
-        actions: _getSearchActions(),
+        actions: _getSearchActions(state),
         backgroundColor: AppColor.white,
       );
 
-  List<Widget> _getSearchActions() => [
-        IconButton(
-          icon: Icon(
-            isSearching ? Icons.cancel : Icons.search,
-            color: AppColor.primaryColor,
-          ),
-          onPressed:
-              isSearching ? _clearSearchTextField : _inFocusSearchTextField,
+  List<Widget> _getSearchActions(SelectSocietyState state) {
+    return [
+      IconButton(
+        icon: Icon(
+          (state is SearchingSocietiesState ||
+                  state is SocitiesSearchSuccessState ||
+                  state is SocitiesSearchFailedState)
+              ? Icons.cancel
+              : Icons.search,
+          color: AppColor.primaryColor,
         ),
-      ];
+        onPressed: (state is SearchingSocietiesState ||
+                state is SocitiesSearchSuccessState ||
+                state is SocitiesSearchFailedState)
+            ? _clearSearchTextField
+            : _inFocusSearchTextField,
+      ),
+    ];
+  }
 
   TextField _getSearchTextField(context) {
     return TextField(

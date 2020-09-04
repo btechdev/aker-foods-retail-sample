@@ -1,6 +1,7 @@
 class RouteConstants {
   //static const initial = '/';
   static const initial = enterPhoneNumber;
+  static const dashboard = '/dashboard';
 
   static const enterPhoneNumber = '/enter-phone-number';
   static const verifyOtp = '/verify-otp';
@@ -8,5 +9,9 @@ class RouteConstants {
   static const editProfile = '/edit-profile';
   static const chooseLocation = '/choose-location';
   static const selectSociety = '/select-society';
+<<<<<<< HEAD
   static const checkoutOrder = '/checkout-order';
+=======
+  static const setupUserProfile = '/setup-user-profile';
+>>>>>>> develop
 }

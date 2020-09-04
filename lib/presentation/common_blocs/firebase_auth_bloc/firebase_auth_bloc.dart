@@ -5,6 +5,7 @@ import 'package:aker_foods_retail/domain/usecases/authentication_use_case.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 
 import 'firebase_auth_event.dart';
 import 'firebase_auth_state.dart';
@@ -45,6 +46,8 @@ class FirebaseAuthBloc extends Bloc<FirebaseAuthEvent, FirebaseAuthState> {
       yield PhoneNumberVerificationStartedState(phoneNumber: event.phoneNumber);
       await _verifyPhoneNumber(event.phoneNumber);
     } catch (e) {
+      debugPrint('FirebaseAuthBloc => ${e.message}');
+      debugPrint(e);
       yield PhoneNumberVerificationFailureState();
     }
   }
@@ -56,7 +59,12 @@ class FirebaseAuthBloc extends Bloc<FirebaseAuthEvent, FirebaseAuthState> {
       final user = await signInWithAuthCredential(event.authCredential);
       await authUseCase.saveUserAuthentication(user);
       yield AuthSuccessState(user: user);
+      debugPrint('AuthSuccessState IdToken => ''${user.idToken}');
+      debugPrint('AuthSuccessState UserID => ''${user.userId}');
+      await OneSignal.shared.setExternalUserId(user.userId);
     } catch (e) {
+      debugPrint('FirebaseAuthBloc => ${e.message}');
+      debugPrint(e);
       yield AuthFailedState(phoneNumber: event.phoneNumber);
     }
   }
@@ -82,7 +90,12 @@ class FirebaseAuthBloc extends Bloc<FirebaseAuthEvent, FirebaseAuthState> {
           '$preferencesIdToken');
       debugPrint('OtpVerificationSuccessState PreferencesRefreshToken => '
           '$preferencesRefreshToken');
+
+      debugPrint('OtpVerificationSuccessState UserID => ''${user.userId}');
+      await OneSignal.shared.setExternalUserId(user.userId);
     } catch (e) {
+      debugPrint('FirebaseAuthBloc => ${e.message}');
+      debugPrint(e);
       yield AuthFailedState(phoneNumber: event.phoneNumber);
     }
   }
@@ -121,6 +134,7 @@ class FirebaseAuthBloc extends Bloc<FirebaseAuthEvent, FirebaseAuthState> {
   }
 
   void _onVerificationFailed(FirebaseAuthException authException) {
+    debugPrint('FirebaseAuthBloc => ${authException.message}');
     add(VerifyPhoneNumberFailedEvent(exception: authException));
   }
 
