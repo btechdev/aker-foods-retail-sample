@@ -59,8 +59,8 @@ class FirebaseAuthBloc extends Bloc<FirebaseAuthEvent, FirebaseAuthState> {
       final user = await signInWithAuthCredential(event.authCredential);
       await authUseCase.saveUserAuthentication(user);
       yield AuthSuccessState(user: user);
-      debugPrint('AuthSuccessState IdToken => ''${user.idToken}');
-      debugPrint('AuthSuccessState UserID => ''${user.userId}');
+      debugPrint('AuthSuccessState IdToken => ' '${user.idToken}');
+      debugPrint('AuthSuccessState UserID => ' '${user.userId}');
       await OneSignal.shared.setExternalUserId(user.userId);
     } catch (e) {
       debugPrint('FirebaseAuthBloc => ${e.message}');
@@ -91,7 +91,7 @@ class FirebaseAuthBloc extends Bloc<FirebaseAuthEvent, FirebaseAuthState> {
       debugPrint('OtpVerificationSuccessState PreferencesRefreshToken => '
           '$preferencesRefreshToken');
 
-      debugPrint('OtpVerificationSuccessState UserID => ''${user.userId}');
+      debugPrint('OtpVerificationSuccessState UserID => ' '${user.userId}');
       await OneSignal.shared.setExternalUserId(user.userId);
     } catch (e) {
       debugPrint('FirebaseAuthBloc => ${e.message}');
@@ -116,8 +116,10 @@ class FirebaseAuthBloc extends Bloc<FirebaseAuthEvent, FirebaseAuthState> {
       AuthCredential authCredential) async {
     final user =
         await FirebaseAuth.instance.signInWithCredential(authCredential);
+    final isNewUser = user.additionalUserInfo?.isNewUser ?? true;
     final idToken = await user.user.getIdToken();
     return FirebaseAuthEntity(
+      isNewUser: isNewUser,
       userId: user.user.uid,
       idToken: idToken,
       refreshToken: user.user.refreshToken,

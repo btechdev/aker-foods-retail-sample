@@ -15,6 +15,7 @@ import '../../../common/extensions/pixel_dimension_util_extensions.dart';
 import '../../../common/utils/pixel_dimension_util.dart';
 import '../../theme/app_colors.dart';
 import '../../widgets/countdown_timer_text.dart';
+import 'setup_user_profile_screen.dart';
 
 class EnterOtpScreen extends StatefulWidget {
   EnterOtpScreen({Key key}) : super(key: key);
@@ -53,18 +54,23 @@ class _EnterOTPScreen extends State<EnterOtpScreen>
     FirebaseAuthState state,
   ) {
     if (state is AuthSuccessState) {
-      final user = state.user;
-      debugPrint('user id - $user');
-      _navigateToDashboard();
-      /*Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => SetupUserProfileScreen(),
-            fullscreenDialog: true,
-            maintainState: true),
-      );*/
+      debugPrint('AuthSuccessState');
+      if (state.user.isNewUser) {
+        debugPrint('New User');
+        _navigateToSetupProfile();
+      } else {
+        debugPrint('Old User');
+        _navigateToDashboard();
+      }
     } else if (state is OtpVerificationSuccessState) {
-      _navigateToDashboard();
+      debugPrint('OtpVerificationSuccessState');
+      if (state.user.isNewUser) {
+        debugPrint('New User');
+        _navigateToSetupProfile();
+      } else {
+        debugPrint('Old User');
+        _navigateToDashboard();
+      }
     } else {
       debugPrint('Error');
     }
@@ -233,4 +239,15 @@ class _EnterOTPScreen extends State<EnterOtpScreen>
 
   String _showLastCharacters(String string, int count) =>
       string.length >= count ? string.substring(string.length - count) : '';
+
+  void _navigateToSetupProfile() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        maintainState: true,
+        fullscreenDialog: true,
+        builder: (context) => SetupUserProfileScreen(),
+      ),
+    );
+  }
 }
