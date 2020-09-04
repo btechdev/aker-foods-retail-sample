@@ -32,6 +32,9 @@ dependencies:
   data_connection_checker: ^0.3.4 # To check if the device is connected to network
   cached_network_image: ^2.3.1
 
+  onesignal_flutter: ^2.0.0 # SDK for getting & processing push notifications
+  flutter_segment: ^2.2.2 # Flutter Segment SDK for analytics & tracking events
+
   # Widgets & Utils
   url_launcher: ^5.5.2 # Launching a URL in the mobile platform
   permission_handler: ^5.0.1+1 # For handling platform specific run-time permissions
@@ -41,7 +44,7 @@ dependencies:
 
   # Firebase
   firebase_auth: ^0.18.0+1
-  # firebase_crashlytics: ^0.1.4+1
+  firebase_crashlytics: ^0.1.4+1
 
   # Local Storage Data
   hive: ^1.4.0+1 # Local DB

@@ -15,6 +15,22 @@
       },
       "oauth_client": [
         {
+          "client_id": "267926914538-2uhlj0hs0r072dejdkn05a7r57oosotj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.akerfoods.aker_foods_retail",
+            "certificate_hash": "fd5147565d877372cd853036f236c0d56707619c"
+          }
+        },
+        {
+          "client_id": "267926914538-pqi1harljot948pd33h7r5cgk4g3jtbp.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.akerfoods.aker_foods_retail",
+            "certificate_hash": "63db608085e82ec225ccc58e24059b5fd213b233"
+          }
+        },
+        {
           "client_id": "267926914538-i43d97kg2t8rpbpoh7mgtncv0b1234eh.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
@@ -38,13 +54,6 @@
             {
               "client_id": "267926914538-7nhim1ob1j5s5bn6cgghs7fs7s5cv6bv.apps.googleusercontent.com",
               "client_type": 3
-            },
-            {
-              "client_id": "267926914538-7p03fjccb2148qvlu402c75eag9ma5ja.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.example.flutterOtpAuth"
-              }
             }
           ]
         }

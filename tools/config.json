@@ -8,7 +8,7 @@
 	},
 	"dev": {
 		"shouldEnableAllLogs": true,
-		"shouldEnableCrashlytics": false,
+		"shouldEnableCrashlytics": true,
 		"host": "https://dev-api.akerfoods.com",
 		"clientId": "abcdefghijkl",
 		"clientSecret": "abcdefghijkl",
@@ -16,7 +16,7 @@
 		"firebaseToken": "abcdefghijkl"
 	},
 	"qa": {
-		"shouldEnableAllLogs": false,
+		"shouldEnableAllLogs": true,
 		"shouldEnableCrashlytics": true,
 		"host": "https://qa-api.akerfoods.com",
 		"clientId": "abcdefghijkl",
