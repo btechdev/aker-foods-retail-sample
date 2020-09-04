@@ -1,5 +1,7 @@
 import 'package:aker_foods_retail/data/models/user_profile_model.dart';
 import 'package:aker_foods_retail/network/api/api_client.dart';
+import 'package:aker_foods_retail/network/api/api_endpoints.dart';
+import 'package:flutter/foundation.dart';
 
 class UserProfileRemoteDataSource {
   final ApiClient apiClient;
@@ -7,7 +9,13 @@ class UserProfileRemoteDataSource {
   UserProfileRemoteDataSource({this.apiClient});
 
   Future<void> setupUserProfile(UserProfileModel user) async {
-    // TODO(soham): Implement post call for setting up user profile
+    final Map<String, dynamic> payload = UserProfileModel.toJson(user);
+    final Map<String, Object> response =
+        apiClient.post(ApiEndpoints.userProfile, payload);
+    debugPrint('SetupUserProfile Response ==>');
+    response.forEach((key, value) {
+      debugPrint('$key = ${value?.toString()}');
+    });
   }
 
   Future<void> updateUserProfile(UserProfileModel user) async {
