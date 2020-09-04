@@ -33,7 +33,8 @@ class _$InjectorConfig extends InjectorConfig {
     final KiwiContainer container = KiwiContainer();
     container.registerFactory<AuthenticationRepository>((c) =>
         AuthenticationRepositoryImpl(
-            authenticationLocalDataSource: c<AuthenticationLocalDataSource>()));
+            authenticationLocalDataSource: c<AuthenticationLocalDataSource>(),
+            apiClient: c<ApiClient>()));
     container.registerFactory<UserAddressRepository>((c) =>
         UserAddressRepositoryImpl(
             userAddressRemoteDataSource: c<UserAddressRemoteDataSource>()));
