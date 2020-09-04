@@ -1,4 +1,5 @@
 import 'package:aker_foods_retail/common/constants/layout_constants.dart';
+import 'package:aker_foods_retail/presentation/app/route_constants.dart';
 import 'package:aker_foods_retail/presentation/journey/checkout/order_cart/bill_details_widget.dart';
 import 'package:aker_foods_retail/presentation/journey/checkout/order_cart/order_delivery_address.dart';
 import 'package:aker_foods_retail/presentation/journey/checkout/order_cart/order_delivery_selection.dart';
@@ -55,13 +56,17 @@ class _CheckoutOrderScreenState extends State<CheckoutOrderScreen> {
     );
   }
 
-  Container _getReferralContainer() => Container(
-        color: AppColor.grey,
-        height: LayoutConstants.dimen_60.h,
-        padding: EdgeInsets.symmetric(
-            horizontal: LayoutConstants.dimen_16.w,
-            vertical: LayoutConstants.dimen_8.h),
-        child: const ReferralCodeContainer(),
+  InkWell _getReferralContainer() => InkWell(
+        onTap: () =>
+            {Navigator.pushNamed(context, RouteConstants.applyReferralCode)},
+        child: Container(
+          color: AppColor.grey,
+          height: LayoutConstants.dimen_60.h,
+          padding: EdgeInsets.symmetric(
+              horizontal: LayoutConstants.dimen_16.w,
+              vertical: LayoutConstants.dimen_8.h),
+          child: const ReferralCodeContainer(),
+        ),
       );
 
   AppBar _getAppBar() => AppBar(

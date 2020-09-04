@@ -11,4 +11,5 @@ class RouteConstants {
   static const selectSociety = '/select-society';
   static const checkoutOrder = '/checkout-order';
   static const setupUserProfile = '/setup-user-profile';
+  static const applyReferralCode = '/apply-referral-code';
 }
