@@ -3,6 +3,18 @@ import 'package:aker_foods_retail/common/extensions/pixel_dimension_util_extensi
 import 'package:aker_foods_retail/common/utils/pixel_dimension_util.dart';
 import 'package:aker_foods_retail/presentation/theme/app_colors.dart';
 import 'package:flutter/material.dart';
+import 'package:sticky_headers/sticky_headers.dart';
+
+import 'product_grid_item_tile.dart';
+
+// TODO(Bhushan): Dummy product class for demo
+class _Product {
+  final String name;
+  final String quantity;
+  final String rate;
+
+  _Product(this.name, this.quantity, this.rate);
+}
 
 class HomePage extends StatefulWidget {
   @override
@@ -10,6 +22,20 @@ class HomePage extends StatefulWidget {
 }
 
 class HomePageState extends State<HomePage> {
+  List<String> dummyHeaders = [
+    'Vegetables',
+    'Fruits',
+    'Dairy',
+  ];
+  List<_Product> dummyProducts = [
+    _Product('Onion', '1 kg', '₹ 20'),
+    _Product('Tomato', '1 kg', '₹ 80'),
+    _Product('Potato', '1 kg', '₹ 25'),
+    _Product('Beat Root', '1 kg', '₹ 60'),
+    _Product('Carrot', '1 kg', '₹ 40'),
+    _Product('Cucumber', '1 kg', '₹ 40'),
+  ];
+
   @override
   Widget build(BuildContext context) => Scaffold(
         backgroundColor: AppColor.white,
@@ -55,13 +81,29 @@ class HomePageState extends State<HomePage> {
         ),
       );
 
-  Column _getHomePageContent() => Column(
+  /*Column _getHomePageContent() => Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           SizedBox(height: LayoutConstants.dimen_12.h),
           _bannerContainer(),
           _categoriesCard(),
+          SizedBox(height: LayoutConstants.dimen_12.h),
+          _homePageProductsGrid(),
         ],
+      );*/
+
+  SingleChildScrollView _getHomePageContent() => SingleChildScrollView(
+        primary: true,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            SizedBox(height: LayoutConstants.dimen_12.h),
+            _bannerContainer(),
+            _categoriesCard(),
+            SizedBox(height: LayoutConstants.dimen_12.h),
+            _homePageProductsGridListing(),
+          ],
+        ),
       );
 
   Container _bannerContainer() => Container(
@@ -158,6 +200,43 @@ class HomePageState extends State<HomePage> {
                 ),
           ),
         ],
+      );
+
+  /*GridView _homePageProductsGrid() => GridView.count(
+        shrinkWrap: true,
+        crossAxisCount: 2,
+        childAspectRatio: 1 / 1.25,
+        physics: const NeverScrollableScrollPhysics(),
+        children: const [
+          ProductGridItemTile('Onion', '1 kg', '₹ 20'),
+          ProductGridItemTile('Tomato', '1 kg', '₹ 80'),
+          ProductGridItemTile('Potato', '1 kg', '₹ 25'),
+          ProductGridItemTile('Beat Root', '1 kg', '₹ 60'),
+          ProductGridItemTile('Carrot', '1 kg', '₹ 40'),
+          ProductGridItemTile('Cucumber', '1 kg', '₹ 40'),
+        ],
+      );*/
+
+  Widget _homePageProductsGridListing() => ListView.builder(
+        shrinkWrap: true,
+        itemBuilder: (context, index) {
+          return StickyHeader(
+            header: Container(
+              color: AppColor.skyBlue.withOpacity(0.35),
+              padding:
+                  EdgeInsets.symmetric(horizontal: LayoutConstants.dimen_16.w),
+              alignment: Alignment.centerLeft,
+              child: Text(
+                dummyHeaders[index],
+                style: const TextStyle(color: Colors.white),
+              ),
+            ),
+            content: Container(
+              color: AppColor.primaryColor,
+              height: LayoutConstants.dimen_48.h,
+            ),
+          );
+        },
       );
 
 /*Material _categoryItem() => Material(

@@ -1,6 +1,6 @@
 import 'package:aker_foods_retail/common/injector/injector.dart';
 import 'package:aker_foods_retail/presentation/journey/dashboard/bottom_navigation_bar_details.dart';
-import 'package:aker_foods_retail/presentation/journey/dashboard/home_page.dart';
+import 'package:aker_foods_retail/presentation/journey/dashboard/home/home_page.dart';
 import 'package:aker_foods_retail/presentation/journey/user/my_account/my_account_screen.dart';
 import 'package:aker_foods_retail/presentation/theme/app_colors.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +16,7 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class DashboardScreenState extends State<DashboardScreen> {
-  PageController _pageController;
+  final PageController _pageController = PageController();
   List<Widget> _bottomNavigationPageWidgets;
 
   DashboardBottomNavigationBarData _navigationBarData;
@@ -34,7 +34,6 @@ class DashboardScreenState extends State<DashboardScreen> {
   @override
   void initState() {
     super.initState();
-    _pageController = PageController();
     _bottomNavigationPageWidgets = [
       HomePage(),
       _dummyContainer('Search'),
@@ -81,6 +80,10 @@ class DashboardScreenState extends State<DashboardScreen> {
     DashboardState state,
   ) {
     if (state is PageLoadedState) {
+      if (state?.pageIndex == null) {
+        return Container();
+      }
+
       _pageController.jumpToPage(state.pageIndex);
       return BottomNavigationBar(
         elevation: 32,
