@@ -4,7 +4,12 @@ import 'package:flutter/material.dart';
 import '../../../../common/extensions/pixel_dimension_util_extensions.dart';
 
 class OrderItemTile extends StatelessWidget {
-  const OrderItemTile({Key key}) : super(key: key);
+  final int id;
+  final Function onItemIncreased;
+  final Function onItemDecreased;
+
+  OrderItemTile({Key key, this.id, this.onItemIncreased, this.onItemDecreased})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) => Container(
@@ -25,7 +30,11 @@ class OrderItemTile extends StatelessWidget {
           Expanded(
             flex: 1,
             child: Container(
-              child: const OrderItemCounter(),
+              child: OrderItemCounter(
+                id: id,
+                onIncrement: onItemIncreased,
+                onDecrement: onItemDecreased,
+              ),
             ),
           )
         ],

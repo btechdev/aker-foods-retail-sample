@@ -4,16 +4,23 @@ import 'package:flutter/material.dart';
 import '../../../../common/extensions/pixel_dimension_util_extensions.dart';
 
 class OrderItemCounter extends StatefulWidget {
+  final Function onIncrement;
+  final Function onDecrement;
+  final int id;
+
   const OrderItemCounter({
     Key key,
+    this.onIncrement,
+    this.onDecrement,
+    this.id,
   }) : super(key: key);
 
   @override
   _OrderItemCounterState createState() => _OrderItemCounterState();
 }
 
-class _OrderItemCounterState extends State {
-  int _currentAmount = 0;
+class _OrderItemCounterState extends State<OrderItemCounter> {
+  int _currentAmount = 1;
   @override
   Widget build(BuildContext context) => Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -22,6 +29,7 @@ class _OrderItemCounterState extends State {
             onTap: () {
               setState(() {
                 _currentAmount -= 1;
+                widget.onDecrement( widget.id, _currentAmount);
               });
             },
             child: _getButtonContainer(icon: Icons.remove),
@@ -34,6 +42,7 @@ class _OrderItemCounterState extends State {
             onTap: () {
               setState(() {
                 _currentAmount += 1;
+                widget.onIncrement(widget.id, _currentAmount);
               });
             },
             child: _getButtonContainer(icon: Icons.add),

@@ -4,7 +4,14 @@ import 'package:flutter/material.dart';
 import '../../../../common/extensions/pixel_dimension_util_extensions.dart';
 
 class ReferralCodeContainer extends StatelessWidget {
-  const ReferralCodeContainer({Key key}) : super(key: key);
+  final String referralCode;
+  final Function onRemoveReferralCode;
+  final bool isReferralCodeApplied;
+
+  ReferralCodeContainer(
+      {this.referralCode,
+      this.onRemoveReferralCode,
+      @required this.isReferralCodeApplied});
 
   @override
   Widget build(BuildContext context) => Row(
@@ -24,22 +31,24 @@ class ReferralCodeContainer extends StatelessWidget {
       );
 
   Text _getDiscountAppliedText(BuildContext context) => Text(
-        'Promo/referral code applied successfully',
+        isReferralCodeApplied
+            ? 'Promo/referral code applied successfully'
+            : '',
         style: Theme.of(context).textTheme.caption.copyWith(
               fontSize: LayoutConstants.dimen_12.sp,
             ),
       );
 
   Text _getDiscountText(BuildContext context) => Text(
-        'DISCOUNT',
+        referralCode,
         style: Theme.of(context).textTheme.bodyText1,
       );
 
   FlatButton _getRemoveButtonContainer(BuildContext context) => FlatButton(
-        onPressed: () => {},
+        onPressed: isReferralCodeApplied ? onRemoveReferralCode : null,
         padding: EdgeInsets.only(left: LayoutConstants.dimen_16.w),
         child: Text(
-          'REMOVE',
+          isReferralCodeApplied ? 'REMOVE' : 'APPLY',
           style: Theme.of(context)
               .textTheme
               .bodyText1

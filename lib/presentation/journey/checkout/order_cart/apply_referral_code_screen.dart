@@ -62,7 +62,9 @@ class _ApplyReferralCodeScreenState extends State<ApplyReferralCodeScreen> {
             Expanded(
               child: _getPromocodeTextField(context),),
             FlatButton(
-              onPressed: () => {},
+              onPressed: () => {
+                Navigator.pop(context, _referralCodeController.text)
+              },
               child: Container(
                 width: LayoutConstants.dimen_80.w,
                 height: LayoutConstants.dimen_70.h,
@@ -136,7 +138,9 @@ class _ApplyReferralCodeScreenState extends State<ApplyReferralCodeScreen> {
               ],
             ),
             FlatButton(
-              onPressed: () => {},
+              onPressed: () => {
+                Navigator.pop(context, 'PROMOCODE50')
+              },
               child: Container(
                 width: LayoutConstants.dimen_80.w,
                 height: LayoutConstants.dimen_70.h,

@@ -19,6 +19,10 @@ class CheckoutOrderScreen extends StatefulWidget {
 }
 
 class _CheckoutOrderScreenState extends State<CheckoutOrderScreen> {
+  var items = ['abc', 'def', 'ghi'];
+  var referralCode = '';
+  var isReferralCodeApplied = false;
+
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: _getAppBar(),
@@ -40,7 +44,18 @@ class _CheckoutOrderScreenState extends State<CheckoutOrderScreen> {
       mainAxisAlignment: MainAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        Flexible(fit: FlexFit.loose, child: OrderItemList()),
+        Flexible(
+            fit: FlexFit.loose,
+            child: OrderItemList(
+              items: items,
+              onDecreased: (index, value) => {
+                debugPrint('$index $value'),
+                if (value == 0) {items.removeAt(index), setState(() {})}
+              },
+              onIncreased: (index, value) => {
+                debugPrint('$index $value'),
+              },
+            )),
         _getReferralContainer(),
         BillDetailsWidget(),
         const Divider(),
@@ -57,17 +72,41 @@ class _CheckoutOrderScreenState extends State<CheckoutOrderScreen> {
   }
 
   InkWell _getReferralContainer() => InkWell(
-        onTap: () =>
-            {Navigator.pushNamed(context, RouteConstants.applyReferralCode)},
+        onTap: _navigateToReferralCodeSelection,
         child: Container(
           color: AppColor.grey,
           height: LayoutConstants.dimen_60.h,
           padding: EdgeInsets.symmetric(
               horizontal: LayoutConstants.dimen_16.w,
               vertical: LayoutConstants.dimen_8.h),
-          child: const ReferralCodeContainer(),
+          child: ReferralCodeContainer(
+            isReferralCodeApplied: isReferralCodeApplied,
+            referralCode:
+                referralCode.isEmpty ? 'Apply Referral Code' : referralCode,
+            onRemoveReferralCode: _removeReferralCode,
+          ),
         ),
       );
+
+  Future<void> _navigateToReferralCodeSelection() async {
+    final code =
+        await Navigator.pushNamed(context, RouteConstants.applyReferralCode);
+    if (code is String) {
+      if (code.isNotEmpty) {
+        setState(() {
+          isReferralCodeApplied = true;
+          referralCode = code;
+        });
+      }
+    }
+  }
+
+  void _removeReferralCode() {
+    setState(() {
+      referralCode = '';
+      isReferralCodeApplied = false;
+    });
+  }
 
   AppBar _getAppBar() => AppBar(
         title: Text(
