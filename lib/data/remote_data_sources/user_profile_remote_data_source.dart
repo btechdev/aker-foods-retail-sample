@@ -12,7 +12,7 @@ class UserProfileRemoteDataSource {
     final Map<String, dynamic> payload = UserProfileModel.toJson(user);
     final Map<String, Object> response =
         apiClient.post(ApiEndpoints.userProfile, payload);
-    debugPrint('SetupUserProfile Response ==>');
+    debugPrint('Enter New address Response ==>');
     response.forEach((key, value) {
       debugPrint('$key = ${value?.toString()}');
     });

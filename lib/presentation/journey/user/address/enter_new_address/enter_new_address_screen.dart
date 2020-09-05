@@ -1,29 +1,123 @@
 import 'package:aker_foods_retail/common/constants/layout_constants.dart';
+import 'package:aker_foods_retail/common/injector/injector.dart';
+import 'package:aker_foods_retail/data/models/society_model.dart';
+import 'package:aker_foods_retail/data/models/user_address_model.dart';
+import 'package:aker_foods_retail/domain/entities/society_entity.dart';
+import 'package:aker_foods_retail/domain/entities/user_address_entity.dart';
 import 'package:aker_foods_retail/presentation/app/route_constants.dart';
+import 'package:aker_foods_retail/presentation/common_blocs/snack_bar_bloc/snack_bar_bloc.dart';
+import 'package:aker_foods_retail/presentation/common_blocs/snack_bar_bloc/snack_bar_event.dart';
+import 'package:aker_foods_retail/presentation/journey/user/address/enter_new_address/bloc/enter_new_address_bloc.dart';
+import 'package:aker_foods_retail/presentation/journey/user/address/enter_new_address/bloc/enter_new_address_event.dart';
+import 'package:aker_foods_retail/presentation/journey/user/address/enter_new_address/bloc/enter_new_address_state.dart';
+import 'package:aker_foods_retail/presentation/journey/user/address/select_society/bloc/address_tag_button.dart';
 import 'package:aker_foods_retail/presentation/theme/app_colors.dart';
+import 'package:aker_foods_retail/presentation/widgets/circular_loader_widget.dart';
+import 'package:aker_foods_retail/presentation/widgets/custom_snack_bar/snack_bar_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:keyboard_avoider/keyboard_avoider.dart';
 
 import '../../../../../common/extensions/pixel_dimension_util_extensions.dart';
 
-class EnterNewAddressScreen extends StatelessWidget {
+class EnterNewAddressScreen extends StatefulWidget {
   final ScrollController scrollController;
 
-  EnterNewAddressScreen({
-    this.scrollController,
-  }) : super();
+  EnterNewAddressScreen({this.scrollController});
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-        backgroundColor: AppColor.transparent,
-        body: KeyboardAvoider(
-          autoScroll: true,
-          child: _buildForm(context),
+  EnterNewAddressScreenState createState() => EnterNewAddressScreenState();
+}
+
+class EnterNewAddressScreenState extends State<EnterNewAddressScreen> {
+  final TextEditingController _flatDetailsTextController =
+      TextEditingController();
+  final TextEditingController _landmarkTextController = TextEditingController();
+  final TextEditingController _pincodeTextController = TextEditingController();
+  final mapLocation = LocationEntity(latitude: 22.22, longitude: 82.22);
+  var selectedSociety = SocietyModel(name: 'Society 1');
+  AddressTagType addressTagType;
+
+  // ignore: close_sinks
+  EnterNewAddressBloc enterNewAddressBloc;
+
+  bool get _validateFields {
+    if (_flatDetailsTextController.text.trim().isNotEmpty &&
+        _landmarkTextController.text.trim().isNotEmpty &&
+        _pincodeTextController.text.trim().isNotEmpty &&
+        mapLocation != null &&
+        selectedSociety.name != null &&
+        addressTagType != null) {
+      return true;
+    } else {
+      debugPrint(_flatDetailsTextController.text);
+      debugPrint(_landmarkTextController.text);
+      debugPrint(_pincodeTextController.text);
+      debugPrint(selectedSociety.name);
+      debugPrint(mapLocation.toString());
+      debugPrint(addressTagType.toString());
+      return false;
+    }
+  }
+
+  void _createNewAddress() {
+    var addressType = '';
+    switch (addressTagType) {
+      case AddressTagType.home:
+        addressType = 'Home';
+        break;
+      case AddressTagType.office:
+        addressType = 'Office';
+        break;
+      case AddressTagType.other:
+        addressType = 'Other';
+        break;
+    }
+    final newAddress = UserAddressModel(
+      label: addressType,
+      address1: _flatDetailsTextController.text.trim(),
+      address2: _landmarkTextController.text.trim(),
+      country: 'India',
+      city: 'Pune',
+      zipCode: double.parse(_pincodeTextController.text.trim()),
+      society: selectedSociety,
+      location: LocationModel(
+          latitude: mapLocation.latitude, longitude: mapLocation.longitude),
+    );
+
+    debugPrint(newAddress.address2);
+    enterNewAddressBloc.add(CreateNewAddressEvent(addressModel: newAddress));
+  }
+
+  void _showSnackbar() {
+    Injector.resolve<SnackBarBloc>().add(ShowSnackBarEvent(
+      text: 'Fields marked * must be filled',
+      type: CustomSnackBarType.error,
+      position: CustomSnackBarPosition.top,
+    ));
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    enterNewAddressBloc = Injector.resolve<EnterNewAddressBloc>();
+  }
+
+  @override
+  Widget build(BuildContext context) => BlocProvider<EnterNewAddressBloc>(
+        create: (context) => enterNewAddressBloc,
+        child: Scaffold(
+          backgroundColor: AppColor.transparent,
+          body: KeyboardAvoider(
+            autoScroll: true,
+            child: _getBodyWrappedWithBloc(),
+          ),
         ),
       );
 
-  Widget _buildForm(BuildContext context) => SingleChildScrollView(
-        controller: scrollController,
+  Widget _buildForm(BuildContext context, EnterNewAddressState state) =>
+      SingleChildScrollView(
+        controller: widget.scrollController,
         padding: EdgeInsets.only(
           left: LayoutConstants.dimen_16.w,
           right: LayoutConstants.dimen_16.w,
@@ -36,15 +130,26 @@ class EnterNewAddressScreen extends StatelessWidget {
             SizedBox(height: LayoutConstants.dimen_16.h),
             _getSelectedLocationContainer(context),
             const Divider(color: AppColor.grey),
-            _getTextFieldContainer(context, 'Flat/Building Details *', 'G502'),
+            _getTextFieldContainer(
+              context,
+              _flatDetailsTextController,
+              'Flat/Building Details *',
+            ),
             const Divider(color: AppColor.grey),
             _getSocietyFieldContainer(
-                context, 'Society Name *', 'Splendid County'),
+                context, 'Society Name *', selectedSociety.name),
             const Divider(color: AppColor.grey),
             _getTextFieldContainer(
-                context, 'Landmark *', 'Near Ganapati Bappa Temple'),
+              context,
+              _landmarkTextController,
+              'Landmark *',
+            ),
             const Divider(color: AppColor.grey),
-            _getTextFieldContainer(context, 'Pincode *', '411028'),
+            _getTextFieldContainer(
+              context,
+              _pincodeTextController,
+              'Pincode *',
+            ),
             const Divider(color: AppColor.grey),
             SizedBox(height: LayoutConstants.dimen_20.h),
             Text(
@@ -58,11 +163,29 @@ class EnterNewAddressScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 SizedBox(width: LayoutConstants.dimen_8.w),
-                _getAddressTagButton(context, 'Home'),
+                AddressTagButton(
+                  type: AddressTagType.home,
+                  title: 'Home',
+                  onSelect: () {
+                    addressTagType = AddressTagType.home;
+                  },
+                ),
                 SizedBox(width: LayoutConstants.dimen_8.w),
-                _getAddressTagButton(context, 'Work'),
+                AddressTagButton(
+                  type: AddressTagType.office,
+                  title: 'Office',
+                  onSelect: () {
+                    addressTagType = AddressTagType.office;
+                  },
+                ),
                 SizedBox(width: LayoutConstants.dimen_8.w),
-                _getAddressTagButton(context, 'Other'),
+                AddressTagButton(
+                  type: AddressTagType.other,
+                  title: 'Other',
+                  onSelect: () {
+                    addressTagType = AddressTagType.other;
+                  },
+                ),
               ],
             ),
             SizedBox(height: LayoutConstants.dimen_24.h),
@@ -70,6 +193,24 @@ class EnterNewAddressScreen extends StatelessWidget {
           ],
         ),
       );
+
+  BlocListener<EnterNewAddressBloc, EnterNewAddressState>
+      _getBodyWrappedWithBloc() =>
+          BlocListener<EnterNewAddressBloc, EnterNewAddressState>(
+            listener: (context, state) {
+              if (state is CreateNewAddressSuccessState) {
+                Navigator.pushNamed(context, RouteConstants.myAccount);
+                Injector.resolve<SnackBarBloc>().add(ShowSnackBarEvent(
+                  text: 'User Profile created',
+                  type: CustomSnackBarType.success,
+                  position: CustomSnackBarPosition.top,
+                ));
+              }
+            },
+            child: BlocBuilder<EnterNewAddressBloc, EnterNewAddressState>(
+              builder: _buildForm,
+            ),
+          );
 
   Row _getHeader(BuildContext context) {
     return Row(
@@ -95,7 +236,11 @@ class EnterNewAddressScreen extends StatelessWidget {
       context,
       RouteConstants.selectSociety,
     );
-    debugPrint(society);
+
+    if (society is SocietyEntity) {
+      selectedSociety = society;
+      enterNewAddressBloc.add(SelectSocietyEvent(selectedSociety: society));
+    }
   }
 
   Container _getSocietyFieldContainer(
@@ -120,16 +265,13 @@ class EnterNewAddressScreen extends StatelessWidget {
         ),
       );
 
-  Container _getTextFieldContainer(
-    BuildContext context,
-    String hintText,
-    String text,
-  ) =>
+  Container _getTextFieldContainer(BuildContext context,
+          TextEditingController controller, String hintText) =>
       Container(
         height: LayoutConstants.dimen_52.h,
         padding: EdgeInsets.only(top: LayoutConstants.dimen_8.h),
         child: TextField(
-          controller: TextEditingController()..text = text,
+          controller: controller,
           style: Theme.of(context).textTheme.bodyText1,
           decoration: _getInputDecoration(
             context: context,
@@ -154,40 +296,29 @@ class EnterNewAddressScreen extends StatelessWidget {
         focusedErrorBorder: InputBorder.none,
       );
 
-  FlatButton _getAddressTagButton(BuildContext context, String buttonText) =>
-      FlatButton(
-        padding: EdgeInsets.zero,
-        shape: RoundedRectangleBorder(
-          side: const BorderSide(color: AppColor.primaryColorDark),
-          borderRadius: BorderRadius.circular(LayoutConstants.dimen_20.w),
-        ),
-        onPressed: () => {},
-        child: Text(
-          buttonText,
-          style: Theme.of(context).textTheme.caption.copyWith(
-                fontWeight: FontWeight.bold,
-                color: AppColor.primaryColorDark,
-              ),
-        ),
-      );
-
-  Container _buttonWithContainer(BuildContext context) => Container(
-        width: double.infinity,
-        height: LayoutConstants.dimen_48.h,
-        child: RaisedButton(
-          color: AppColor.primaryColor,
-          disabledColor: Colors.lightGreen,
-          onPressed: () => {},
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12.w),
-          ),
-          child: Text(
-            'Save Address',
-            style: Theme.of(context).textTheme.button.copyWith(
-                  color: AppColor.white,
+  BlocBuilder _buttonWithContainer(BuildContext context) =>
+      BlocBuilder<EnterNewAddressBloc, EnterNewAddressState>(
+        builder: (context, state) => state is CreatingNewAddressState
+            ? const CircularLoaderWidget()
+            : Container(
+                width: double.infinity,
+                height: LayoutConstants.dimen_48.h,
+                child: RaisedButton(
+                  color: AppColor.primaryColor,
+                  disabledColor: Colors.lightGreen,
+                  onPressed: () =>
+                      _validateFields ? _createNewAddress() : _showSnackbar(),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12.w),
+                  ),
+                  child: Text(
+                    'Save Address',
+                    style: Theme.of(context).textTheme.button.copyWith(
+                          color: AppColor.white,
+                        ),
+                  ),
                 ),
-          ),
-        ),
+              ),
       );
 
   Container _getSelectedLocationContainer(BuildContext context) => Container(

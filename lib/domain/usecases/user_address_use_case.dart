@@ -1,3 +1,4 @@
+import 'package:aker_foods_retail/data/models/user_address_model.dart';
 import 'package:aker_foods_retail/domain/entities/society_entity.dart';
 import 'package:aker_foods_retail/domain/repositories/user_address_repository.dart';
 
@@ -8,4 +9,7 @@ class UserAddressUseCase {
 
   Future<List<SocietyEntity>> getSocieties() =>
       userAddressRepository.getSocieties();
+
+  Future<void> createNewAddress(UserAddressModel address) =>
+      userAddressRepository.createNewAddress(address);
 }

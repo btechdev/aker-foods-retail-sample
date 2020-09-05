@@ -20,4 +20,9 @@ class SocietyModel extends SocietyEntity {
         id: jsonMap['id'],
         name: jsonMap['name'],
       );
+
+  static Map<String, dynamic> toJson(SocietyModel societyModel) => {
+    'id': societyModel.id,
+    'name': societyModel.name,
+  };
 }

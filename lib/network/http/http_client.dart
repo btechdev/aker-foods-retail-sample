@@ -70,7 +70,7 @@ class HttpClient {
       'Method: POST\n'
       'Header: ${parseDataAndSplitString(requestHeader)}\n'
       'Url: ${getParsedUrl(path)}\n'
-      'jsonBody: ${parseDataAndSplitString(jsonBody)}'
+      'jsonBody: ${parseDataAndSplitString(jsonBody)}\n'
       'encodedBody: ${parseDataAndSplitString(encodedBody)}',
     );
 

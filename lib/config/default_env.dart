@@ -1,5 +1,5 @@
 class DefaultConfig {
-  static const host = 'https://dev-api.akerretail.com/api/v1/';
+  static const host = 'https://dev-api.akerretail.com/api/v1';
   static const token = 'abcde';
   static const clientId = 'abcdefghijkl';
   static const clientSecret = 'abcdefghijkl';

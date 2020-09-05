@@ -23,17 +23,14 @@ class SelectSocietyBloc extends Bloc<SelectSocietyEvent, SelectSocietyState> {
 
   Stream<SelectSocietyState> _handleFetchSocietiesFirstPageEvent() async* {
     yield FetchingSocietiesState();
-    await Future.delayed(const Duration(seconds: 2));
-    final List<SocietyEntity> societies =
-        await userAddressUseCase.getSocieties();
+    final societies = await userAddressUseCase.getSocieties();
     yield SocietiesLoadedState(societies: societies);
   }
 
   Stream<SelectSocietyState> _handleSearchSocitiesEvent(
       SearchSocitiesEvent event) async* {
     yield SearchingSocietiesState();
-    final List<SocietyEntity> societies =
-        await userAddressUseCase.getSocieties();
+    final societies = await userAddressUseCase.getSocieties();
     final filteredSocieties = societies
         .where((society) => society.name
             .toLowerCase()
