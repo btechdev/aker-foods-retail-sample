@@ -1,5 +1,9 @@
 import 'package:aker_foods_retail/common/constants/layout_constants.dart';
+import 'package:aker_foods_retail/common/injector/injector.dart';
+import 'package:aker_foods_retail/presentation/common_blocs/snack_bar_bloc/snack_bar_bloc.dart';
+import 'package:aker_foods_retail/presentation/common_blocs/snack_bar_bloc/snack_bar_event.dart';
 import 'package:aker_foods_retail/presentation/theme/app_colors.dart';
+import 'package:aker_foods_retail/presentation/widgets/custom_snack_bar/snack_bar_constants.dart';
 import 'package:flutter/material.dart';
 import '../../../../common/extensions/pixel_dimension_util_extensions.dart';
 
@@ -13,7 +17,7 @@ class OrderDeliverySelection extends StatefulWidget {
 }
 
 class _OrderDeliverySelectionState extends State<OrderDeliverySelection> {
-  var _deliveryMethod = OrderDeliveryMethod.express;
+  var _deliveryMethod = OrderDeliveryMethod.scheduled;
 
   @override
   Widget build(BuildContext context) {
@@ -47,9 +51,11 @@ class _OrderDeliverySelectionState extends State<OrderDeliverySelection> {
 
   FlatButton _getExpressButton(BuildContext context) => FlatButton(
         onPressed: () => {
-          setState(() {
-            _deliveryMethod = OrderDeliveryMethod.express;
-          })
+          Injector.resolve<SnackBarBloc>().add(ShowSnackBarEvent(
+            text: 'Coming Soon',
+            type: CustomSnackBarType.error,
+            position: CustomSnackBarPosition.top,
+          ))
         },
         padding: EdgeInsets.all(LayoutConstants.dimen_8.w),
         color: _deliveryMethod == OrderDeliveryMethod.express

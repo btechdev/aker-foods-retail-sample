@@ -1,4 +1,5 @@
 import 'package:aker_foods_retail/common/injector/injector.dart';
+import 'package:aker_foods_retail/presentation/journey/checkout/order_cart/checkout_order_screen.dart';
 import 'package:aker_foods_retail/presentation/journey/dashboard/bottom_navigation_bar_details.dart';
 import 'package:aker_foods_retail/presentation/journey/user/my_account/my_account_screen.dart';
 import 'package:flutter/material.dart';
@@ -36,7 +37,7 @@ class DashboardScreenState extends State<DashboardScreen> {
     _bottomNavigationPageWidgets = [
       _dummyContainer('Home'),
       _dummyContainer('Search'),
-      _dummyContainer('Cart'),
+      CheckoutOrderScreen(),
       MyAccountScreen(),
     ];
   }

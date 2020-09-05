@@ -74,7 +74,7 @@ class _CheckoutOrderScreenState extends State<CheckoutOrderScreen> {
   InkWell _getReferralContainer() => InkWell(
         onTap: _navigateToReferralCodeSelection,
         child: Container(
-          color: AppColor.grey,
+          color: AppColor.grey25,
           height: LayoutConstants.dimen_60.h,
           padding: EdgeInsets.symmetric(
               horizontal: LayoutConstants.dimen_16.w,
