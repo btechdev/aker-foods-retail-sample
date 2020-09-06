@@ -1,6 +1,5 @@
 import 'package:aker_foods_retail/common/injector/injector.dart';
 import 'package:aker_foods_retail/presentation/journey/dashboard/bottom_navigation_bar_details.dart';
-import 'package:aker_foods_retail/presentation/journey/dashboard/home/home_page.dart';
 import 'package:aker_foods_retail/presentation/journey/user/my_account/my_account_screen.dart';
 import 'package:aker_foods_retail/presentation/theme/app_colors.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'bloc/dashboard_bloc.dart';
 import 'bloc/dashboard_event.dart';
 import 'bloc/dashboard_state.dart';
+import 'home/home_page_copy.dart';
 
 class DashboardScreen extends StatefulWidget {
   @override
