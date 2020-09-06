@@ -1,3 +1,4 @@
+import 'package:aker_foods_retail/common/exceptions/server_exception.dart';
 import 'package:aker_foods_retail/domain/usecases/user_profile_user_case.dart';
 import 'package:aker_foods_retail/presentation/journey/user/bloc/user_profile_event.dart';
 import 'package:aker_foods_retail/presentation/journey/user/bloc/user_profile_state.dart';
@@ -27,9 +28,19 @@ class UserProfileBloc extends Bloc<UserProfileEvent, UserProfileState> {
 
   Stream<UserProfileState> _handleSetupUserProfileEvent(
       SetupUserProfileEvent event) async* {
-    yield UserProfileSettingUpState();
-    await userProfileUseCase.setupUserProfile(event.user);
-    yield UserProfileSetupSuccessState();
+    try {
+      yield UserProfileSettingUpState();
+      await userProfileUseCase.setupUserProfile(event.user);
+      yield UserProfileSetupSuccessState();
+    } catch (e) {
+      if (e is ServerException) {
+        yield UserProfileSetupFailedState(errorMessage: e.message);
+      } else {
+        yield UserProfileSetupFailedState(
+          errorMessage: 'Unknown error occurred',
+        );
+      }
+    }
   }
 
   Stream<UserProfileState> _handleUpdateUserProfileEvent(
