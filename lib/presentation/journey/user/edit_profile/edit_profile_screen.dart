@@ -61,7 +61,7 @@ class _UserProfileScreen extends State<EditProfileScreen> {
 
   void _checkState(BuildContext context, UserProfileState state) {
     if (state is UserProfileUpdateSuccessState) {
-      Navigator.pop(context);
+      Navigator.pop(context, state);
       Injector.resolve<SnackBarBloc>().add(ShowSnackBarEvent(
         text: 'User Profile updated',
         type: CustomSnackBarType.success,
