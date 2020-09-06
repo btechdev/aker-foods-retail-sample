@@ -10,7 +10,7 @@ import 'package:aker_foods_retail/presentation/common_blocs/snack_bar_bloc/snack
 import 'package:aker_foods_retail/presentation/journey/user/address/enter_new_address/bloc/enter_new_address_bloc.dart';
 import 'package:aker_foods_retail/presentation/journey/user/address/enter_new_address/bloc/enter_new_address_event.dart';
 import 'package:aker_foods_retail/presentation/journey/user/address/enter_new_address/bloc/enter_new_address_state.dart';
-import 'package:aker_foods_retail/presentation/journey/user/address/select_society/bloc/address_tag_button.dart';
+import 'package:aker_foods_retail/presentation/journey/user/address/select_society/address_tag_button.dart';
 import 'package:aker_foods_retail/presentation/theme/app_colors.dart';
 import 'package:aker_foods_retail/presentation/widgets/circular_loader_widget.dart';
 import 'package:aker_foods_retail/presentation/widgets/custom_snack_bar/snack_bar_constants.dart';
@@ -30,12 +30,11 @@ class EnterNewAddressScreen extends StatefulWidget {
 }
 
 class EnterNewAddressScreenState extends State<EnterNewAddressScreen> {
-  final TextEditingController _flatDetailsTextController =
-      TextEditingController();
-  final TextEditingController _landmarkTextController = TextEditingController();
-  final TextEditingController _pincodeTextController = TextEditingController();
+   TextEditingController _flatDetailsTextController;
+   TextEditingController _landmarkTextController;
+   TextEditingController _pincodeTextController;
   final mapLocation = LocationEntity(latitude: 22.22, longitude: 82.22);
-  var selectedSociety = SocietyModel(name: 'Society 1');
+   SocietyModel selectedSociety;
   AddressTagType addressTagType;
 
   // ignore: close_sinks
@@ -46,16 +45,10 @@ class EnterNewAddressScreenState extends State<EnterNewAddressScreen> {
         _landmarkTextController.text.trim().isNotEmpty &&
         _pincodeTextController.text.trim().isNotEmpty &&
         mapLocation != null &&
-        selectedSociety.name != null &&
+        selectedSociety != null &&
         addressTagType != null) {
       return true;
     } else {
-      debugPrint(_flatDetailsTextController.text);
-      debugPrint(_landmarkTextController.text);
-      debugPrint(_pincodeTextController.text);
-      debugPrint(selectedSociety.name);
-      debugPrint(mapLocation.toString());
-      debugPrint(addressTagType.toString());
       return false;
     }
   }
@@ -75,17 +68,16 @@ class EnterNewAddressScreenState extends State<EnterNewAddressScreen> {
     }
     final newAddress = UserAddressModel(
       label: addressType,
-      address1: _flatDetailsTextController.text.trim(),
-      address2: _landmarkTextController.text.trim(),
+      address1: _flatDetailsTextController.text,
+      address2: _landmarkTextController.text,
       country: 'India',
       city: 'Pune',
-      zipCode: double.parse(_pincodeTextController.text.trim()),
+      zipCode: double.parse(_pincodeTextController.text),
       society: selectedSociety,
       location: LocationModel(
           latitude: mapLocation.latitude, longitude: mapLocation.longitude),
     );
 
-    debugPrint(newAddress.address2);
     enterNewAddressBloc.add(CreateNewAddressEvent(addressModel: newAddress));
   }
 
@@ -101,6 +93,9 @@ class EnterNewAddressScreenState extends State<EnterNewAddressScreen> {
   void initState() {
     super.initState();
     enterNewAddressBloc = Injector.resolve<EnterNewAddressBloc>();
+     _flatDetailsTextController = TextEditingController();
+     _landmarkTextController = TextEditingController();
+     _pincodeTextController = TextEditingController();
   }
 
   @override
@@ -137,7 +132,7 @@ class EnterNewAddressScreenState extends State<EnterNewAddressScreen> {
             ),
             const Divider(color: AppColor.grey),
             _getSocietyFieldContainer(
-                context, 'Society Name *', selectedSociety.name),
+                context, 'Society Name *', selectedSociety?.name ?? ''),
             const Divider(color: AppColor.grey),
             _getTextFieldContainer(
               context,
@@ -203,6 +198,12 @@ class EnterNewAddressScreenState extends State<EnterNewAddressScreen> {
                 Injector.resolve<SnackBarBloc>().add(ShowSnackBarEvent(
                   text: 'User Profile created',
                   type: CustomSnackBarType.success,
+                  position: CustomSnackBarPosition.top,
+                ));
+              } else if (state is CreateNewAddressFailedState) {
+                Injector.resolve<SnackBarBloc>().add(ShowSnackBarEvent(
+                  text: state.errorMessage,
+                  type: CustomSnackBarType.error,
                   position: CustomSnackBarPosition.top,
                 ));
               }

@@ -1,4 +1,3 @@
-import 'package:aker_foods_retail/domain/entities/society_entity.dart';
 import 'package:aker_foods_retail/domain/usecases/user_address_use_case.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

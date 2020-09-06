@@ -14,6 +14,7 @@ class UserAddressModel extends UserAddressEntity {
       : super(
           label: label,
           address1: address1,
+          address2: address2,
           zipCode: zipCode,
           city: city,
           country: country,

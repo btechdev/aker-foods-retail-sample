@@ -74,12 +74,18 @@ class HttpClient {
       'encodedBody: ${parseDataAndSplitString(encodedBody)}',
     );
 
-    final Response response = await _client.post(
+    final response = await _client.post(
       getParsedUrl(path),
       body: encodedBody,
       headers: requestHeader,
     );
-    return HttpUtil.getResponse(response);
+
+    try {
+      final httpResponse = HttpUtil.getResponse(response);
+      return httpResponse;
+    } catch (error) {
+      rethrow;
+    }
   }
 
   dynamic patch(

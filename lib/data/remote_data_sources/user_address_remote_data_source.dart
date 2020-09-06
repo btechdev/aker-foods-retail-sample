@@ -11,18 +11,24 @@ class UserAddressRemoteDataSource {
   UserAddressRemoteDataSource({this.apiClient});
 
   Future<List<SocietyModel>> getSocieties() async {
-    final map = apiClient.get(ApiEndpoints.newAddress);
-  	return SocietyModel.fromListJson(map);
-    // TODO(Bhushan): Remove when API integrated
+    final map = await apiClient.get(ApiEndpoints.socities);
+    final socities = SocietyModel.fromListJson(map);
+    return socities;
   }
-  
+
   Future<void> createNewAddress(UserAddressModel address) async {
     final payload = UserAddressModel.toJson(address);
-    final Map<String, Object> response =
-    apiClient.post(ApiEndpoints.newAddress, payload);
-    debugPrint('SetupUserProfile Response ==>');
-    response.forEach((key, value) {
-      debugPrint('$key = ${value?.toString()}');
-    });
+
+    try {
+      final Map<String, Object> response =
+          await apiClient.post(ApiEndpoints.newAddress, payload);
+      debugPrint('SetupUserProfile Response ==>');
+      response.forEach((key, value) {
+        debugPrint('$key = ${value?.toString()}');
+      });
+      return response;
+    } catch (error) {
+      rethrow;
+    }
   }
 }

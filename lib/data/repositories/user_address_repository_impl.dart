@@ -9,10 +9,10 @@ class UserAddressRepositoryImpl implements UserAddressRepository {
   UserAddressRepositoryImpl({this.userAddressRemoteDataSource});
 
   @override
-  Future<List<SocietyModel>> getSocieties() =>
+  Future<List<SocietyModel>> getSocieties() async =>
       userAddressRemoteDataSource.getSocieties();
 
   @override
-  Future<void> createNewAddress(UserAddressModel addressModel) =>
+  Future<void> createNewAddress(UserAddressModel addressModel) async =>
       userAddressRemoteDataSource.createNewAddress(addressModel);
 }

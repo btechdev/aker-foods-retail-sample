@@ -7,9 +7,9 @@ class UserAddressUseCase {
 
   UserAddressUseCase({this.userAddressRepository});
 
-  Future<List<SocietyEntity>> getSocieties() =>
+  Future<List<SocietyEntity>> getSocieties() async =>
       userAddressRepository.getSocieties();
 
-  Future<void> createNewAddress(UserAddressModel address) =>
+  Future<void> createNewAddress(UserAddressModel address) async =>
       userAddressRepository.createNewAddress(address);
 }

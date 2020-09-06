@@ -2,7 +2,7 @@ import 'package:aker_foods_retail/domain/entities/society_entity.dart';
 
 class SocietyModel extends SocietyEntity {
   SocietyModel({
-    String id,
+    int id,
     String name,
   }) : super(
           id: id,
@@ -10,10 +10,10 @@ class SocietyModel extends SocietyEntity {
         );
 
   static List<SocietyModel> fromListJson(Map<String, dynamic> jsonMap) {
-    final List<dynamic> societyMapList = jsonMap['societies'];
-    return societyMapList
-        .map((societyMap) => SocietyModel.fromJson(societyMap))
-        .toList();
+    final List<dynamic> societyMapList = jsonMap['results'];
+    final list =  societyMapList
+        .map((societyMap) => SocietyModel.fromJson(societyMap)).toList();
+    return list;
   }
 
   factory SocietyModel.fromJson(Map<String, dynamic> jsonMap) => SocietyModel(

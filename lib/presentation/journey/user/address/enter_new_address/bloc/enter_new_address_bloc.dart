@@ -1,3 +1,4 @@
+import 'package:aker_foods_retail/common/exceptions/server_error_exception.dart';
 import 'package:aker_foods_retail/domain/usecases/user_address_use_case.dart';
 import 'package:aker_foods_retail/presentation/journey/user/address/enter_new_address/bloc/enter_new_address_event.dart';
 import 'package:aker_foods_retail/presentation/journey/user/address/enter_new_address/bloc/enter_new_address_state.dart';
@@ -20,8 +21,14 @@ class EnterNewAddressBloc extends Bloc<UserAddressEvent, EnterNewAddressState> {
   Stream<EnterNewAddressState> _handleCreateNewAddressEvent(
       CreateNewAddressEvent event) async* {
     yield CreatingNewAddressState();
-    await userAddressUseCase.createNewAddress(event.addressModel);
-    yield CreateNewAddressSuccessState();
+    try {
+      await userAddressUseCase.createNewAddress(event.addressModel);
+      yield CreateNewAddressSuccessState();
+    } catch (error) {
+      if (error is ServerErrorException) {
+        yield CreateNewAddressFailedState(errorMessage: error.message);
+      }
+    }
   }
 
   Stream<EnterNewAddressState> _handleSocietySelectedEvent(
