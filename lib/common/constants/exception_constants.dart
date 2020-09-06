@@ -1,5 +1,5 @@
 class ExceptionConstants {
-  static const int badRequestCode = 40;
+  static const int badRequestCode = 400;
   static const int unauthorizedCode = 401;
   static const int forbiddenCode = 403;
   static const int notFoundCode = 404;
