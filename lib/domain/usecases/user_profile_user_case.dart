@@ -6,12 +6,12 @@ class UserProfileUseCase {
 
   UserProfileUseCase({this.userProfileRepository});
 
-  Future<void> setupUserProfile(UserProfileModel user) =>
+  Future<void> setupUserProfile(UserProfileModel user) async =>
       userProfileRepository.setupUserProfile(user);
 
-  Future<UserProfileModel> fetchUserProfile() =>
+  Future<UserProfileModel> fetchUserProfile() async =>
       userProfileRepository.fetchUserProfile();
 
-  Future<void> updateUserProfile(UserProfileModel user) =>
+  Future<void> updateUserProfile(UserProfileModel user) async =>
       userProfileRepository.updateUserProfile(user);
 }

@@ -1,6 +1,6 @@
 {
 	"environmentVariables": {
-		"host": "https://dev-api.akerfoods.com",
+		"host": "https://dev-api.akerretail.com/api/v1/",
 		"clientId": "abcdefghijkl",
 		"clientSecret": "abcdefghijkl",
 		"assetHost": "https://dev-assets.akerfoods.com",
@@ -9,7 +9,7 @@
 	"dev": {
 		"shouldEnableAllLogs": true,
 		"shouldEnableCrashlytics": true,
-		"host": "https://dev-api.akerfoods.com",
+		"host": "https://dev-api.akerretail.com/api/v1/",
 		"clientId": "abcdefghijkl",
 		"clientSecret": "abcdefghijkl",
 		"assetHost": "https://dev-assets.akerfoods.com",

@@ -1,5 +1,5 @@
 class SocietyEntity {
-  final String id;
+  final int id;
   final String name;
 
   SocietyEntity({

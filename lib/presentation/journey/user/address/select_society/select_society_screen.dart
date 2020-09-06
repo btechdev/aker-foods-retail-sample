@@ -1,4 +1,5 @@
 import 'package:aker_foods_retail/common/injector/injector.dart';
+import 'package:aker_foods_retail/data/models/society_model.dart';
 import 'package:aker_foods_retail/domain/entities/society_entity.dart';
 import 'package:aker_foods_retail/presentation/journey/user/address/select_society/bloc/select_society_bloc.dart';
 import 'package:aker_foods_retail/presentation/journey/user/address/select_society/bloc/select_society_state.dart';
@@ -153,7 +154,10 @@ class SelectSocietyScreenState extends State<SelectSocietyScreen> {
         showDialog(
           context: context,
           builder: (_) => AddNewSocietyDialog(
-            onAdd: (value) => {debugPrint(value)},
+            onAdd: (value) => Navigator.pop(
+              context,
+              SocietyModel(name: value),
+            ),
           ),
         )
       },

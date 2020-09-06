@@ -310,11 +310,20 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
           color: AppColor.white,
           size: LayoutConstants.dimen_20.w,
         ),
-        onPressed: () => Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => EditProfileScreen(user: state.user),
-          ),
-        ),
+        onPressed: () => _navigateToEditProfile(state),
       );
+
+  Future<void> _navigateToEditProfile(
+      UserProfileFetchSuccessState state) async {
+    final incomingState = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => EditProfileScreen(user: state.user),
+      ),
+    );
+
+    if(incomingState is UserProfileUpdateSuccessState) {
+      userProfileBloc.add(FetchUserProfileEvent());
+    }
+  }
 }

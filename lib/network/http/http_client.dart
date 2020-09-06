@@ -1,17 +1,17 @@
 import 'dart:convert';
 import 'dart:io' as io;
 
-import 'package:http/http.dart';
-import 'package:http/io_client.dart';
-import 'package:http_parser/http_parser.dart';
-import 'package:meta/meta.dart';
-import 'package:mime/mime.dart';
-
 import 'package:aker_foods_retail/common/extensions/string_extensions.dart';
 import 'package:aker_foods_retail/config/configuration.dart';
 import 'package:aker_foods_retail/network/http/http_constants.dart';
 import 'package:aker_foods_retail/network/http/http_method_enum.dart';
 import 'package:aker_foods_retail/network/http/http_util.dart';
+import 'package:flutter/foundation.dart';
+import 'package:http/http.dart';
+import 'package:http/io_client.dart';
+import 'package:http_parser/http_parser.dart';
+import 'package:meta/meta.dart';
+import 'package:mime/mime.dart';
 
 class HttpClient {
   IOClient _client;
@@ -38,19 +38,20 @@ class HttpClient {
     Map<String, dynamic> overrideHeader = const {},
   }) async {
     final Map<String, String> requestHeader = {...header, ...overrideHeader};
+
+    // TODO(Bhushan): Find a better way to log this data (eg. interceptor)
+    debugPrint(
+      'HTTP request\n'
+      'Header: ${parseDataAndSplitString(requestHeader)}\n'
+      'Method: GET\n'
+      'Url: ${getParsedUrl(path)}',
+    );
+
     final Response response = await _client.get(
       getParsedUrl(path),
       headers: requestHeader,
     );
     return HttpUtil.getResponse(response);
-  }
-
-  Future<Response> downloadFile(String path) async {
-    final Response response = await _client.get(
-      getParsedUrl(path),
-      headers: header,
-    );
-    return HttpUtil.getFileResponse(response);
   }
 
   dynamic post(
@@ -59,15 +60,32 @@ class HttpClient {
     Map<String, dynamic> overrideHeader = const {},
   }) async {
     final Map<String, String> requestHeader = {...header, ...overrideHeader};
+    final contentType = requestHeader[HttpConstants.contentType];
 
-    final Response response = await _client.post(
+    final jsonBody = json.encode(data);
+    final encodedBody = HttpUtil.encodeRequestBody(data, contentType);
+
+    debugPrint(
+      'HTTP request\n'
+      'Method: POST\n'
+      'Header: ${parseDataAndSplitString(requestHeader)}\n'
+      'Url: ${getParsedUrl(path)}\n'
+      'jsonBody: ${parseDataAndSplitString(jsonBody)}\n'
+      'encodedBody: ${parseDataAndSplitString(encodedBody)}',
+    );
+
+    final response = await _client.post(
       getParsedUrl(path),
-      body: HttpUtil.encodeRequestBody(
-          data, requestHeader[HttpConstants.contentType]),
+      body: encodedBody,
       headers: requestHeader,
     );
 
-    return HttpUtil.getResponse(response);
+    try {
+      final httpResponse = HttpUtil.getResponse(response);
+      return httpResponse;
+    } catch (error) {
+      rethrow;
+    }
   }
 
   dynamic patch(
@@ -76,41 +94,53 @@ class HttpClient {
     Map<String, dynamic> overrideHeader = const {},
   }) async {
     final Map<String, String> requestHeader = {...header, ...overrideHeader};
+
+    debugPrint(
+      'HTTP request\n'
+      'Method: PATCH\n'
+      'Header: ${parseDataAndSplitString(requestHeader)}\n'
+      'Url: ${getParsedUrl(path)}\n'
+      'Data: ${parseDataAndSplitString(data)}',
+    );
+
     final Response response = await _client.patch(
       getParsedUrl(path),
       body: HttpUtil.encodeRequestBody(
           data, requestHeader[HttpConstants.contentType]),
       headers: requestHeader,
     );
-
     return HttpUtil.getResponse(response);
   }
 
   dynamic put(String path, dynamic data) async {
+    debugPrint(
+      'HTTP request\n'
+      'Method: PUT\n'
+      'Header: ${parseDataAndSplitString(header)}\n'
+      'Url: ${getParsedUrl(path)}\n'
+      'Data: ${parseDataAndSplitString(data)}',
+    );
+
     final Response response = await _client.put(
       getParsedUrl(path),
       body: json.encode(data),
       headers: header,
     );
-
     return HttpUtil.getResponse(response);
   }
 
   dynamic delete(String path) async {
+    debugPrint(
+      'HTTP request\n'
+      'Method: DELETE\n'
+      'Header: ${parseDataAndSplitString(header)}\n'
+      'Url: ${getParsedUrl(path)}\n',
+    );
+
     final Response response = await _client.delete(
       getParsedUrl(path),
       headers: header,
     );
-    return HttpUtil.getResponse(response);
-  }
-
-  dynamic deleteWithBody(String path, dynamic data) async {
-    final request = Request('DELETE', getParsedUrl(path));
-    header.forEach((key, value) {
-      request.headers[key] = value;
-    });
-    request.body = jsonEncode(data);
-    final response = await _client.send(request).then(Response.fromStream);
     return HttpUtil.getResponse(response);
   }
 

@@ -1,4 +1,3 @@
-import 'package:aker_foods_retail/domain/entities/society_entity.dart';
 import 'package:aker_foods_retail/domain/usecases/user_address_use_case.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -23,17 +22,14 @@ class SelectSocietyBloc extends Bloc<SelectSocietyEvent, SelectSocietyState> {
 
   Stream<SelectSocietyState> _handleFetchSocietiesFirstPageEvent() async* {
     yield FetchingSocietiesState();
-    await Future.delayed(const Duration(seconds: 2));
-    final List<SocietyEntity> societies =
-        await userAddressUseCase.getSocieties();
+    final societies = await userAddressUseCase.getSocieties();
     yield SocietiesLoadedState(societies: societies);
   }
 
   Stream<SelectSocietyState> _handleSearchSocitiesEvent(
       SearchSocitiesEvent event) async* {
     yield SearchingSocietiesState();
-    final List<SocietyEntity> societies =
-        await userAddressUseCase.getSocieties();
+    final societies = await userAddressUseCase.getSocieties();
     final filteredSocieties = societies
         .where((society) => society.name
             .toLowerCase()

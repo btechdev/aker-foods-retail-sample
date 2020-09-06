@@ -23,7 +23,7 @@ class SetupUserProfileScreen extends StatefulWidget {
 }
 
 class _SetupProfileScreen extends State<SetupUserProfileScreen> {
-  final _listOfSalutations = ['Mr', 'Mrs', 'Miss'];
+  final _listOfSalutations = ['Mr', 'Miss'];
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
@@ -42,19 +42,17 @@ class _SetupProfileScreen extends State<SetupUserProfileScreen> {
     }
   }
 
-  UserProfileModel get createUser => UserProfileModel(
-        email: _emailController.text.trim(),
+  UserProfileModel get userProfileModel => UserProfileModel(
+        salutation: dropdownValue,
         firstName: _firstNameController.text.trim(),
         lastName: _lastNameController.text.trim(),
-        salutation: dropdownValue,
+        email: _emailController.text.trim(),
         referralCode: _referralCodeController.text.trim(),
       );
 
   void _setupUserProfile() {
     userProfileBloc.add(
-      SetupUserProfileEvent(
-        user: createUser,
-      ),
+      SetupUserProfileEvent(user: userProfileModel),
     );
   }
 
@@ -177,7 +175,7 @@ class _SetupProfileScreen extends State<SetupUserProfileScreen> {
             borderRadius: BorderRadius.circular(12.w),
           ),
           child: Text(
-            'CONTINUE',
+            'Create Profile'.toUpperCase(),
             style: Theme.of(context).textTheme.button.copyWith(
                   color: AppColor.white,
                 ),

@@ -15,6 +15,7 @@ import 'package:aker_foods_retail/network/api/api_client.dart';
 import 'package:aker_foods_retail/presentation/common_blocs/firebase_auth_bloc/firebase_auth_bloc.dart';
 import 'package:aker_foods_retail/presentation/common_blocs/snack_bar_bloc/snack_bar_bloc.dart';
 import 'package:aker_foods_retail/presentation/journey/dashboard/bloc/dashboard_bloc.dart';
+import 'package:aker_foods_retail/presentation/journey/user/address/enter_new_address/bloc/enter_new_address_bloc.dart';
 import 'package:aker_foods_retail/presentation/journey/user/address/select_society/bloc/select_society_bloc.dart';
 import 'package:aker_foods_retail/presentation/journey/user/bloc/user_profile_bloc.dart';
 import 'package:kiwi/kiwi.dart';
@@ -50,6 +51,7 @@ abstract class InjectorConfig {
   @Register.singleton(DashboardBloc)
   @Register.factory(SelectSocietyBloc)
   @Register.factory(UserProfileBloc)
+  @Register.factory(EnterNewAddressBloc)
   void _configureBlocs();
 
   /// ============ Register UseCases ============

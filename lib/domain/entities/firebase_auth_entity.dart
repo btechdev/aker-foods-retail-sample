@@ -1,4 +1,5 @@
 class FirebaseAuthEntity {
+  final bool isNewUser;
   final String userId;
   final String idToken;
   final String refreshToken;
@@ -6,6 +7,7 @@ class FirebaseAuthEntity {
   final String phoneNumber;
 
   FirebaseAuthEntity({
+    this.isNewUser = true,
     this.userId,
     this.idToken,
     this.refreshToken,

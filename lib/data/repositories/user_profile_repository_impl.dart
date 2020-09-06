@@ -8,14 +8,14 @@ class UserProfileRepositoryImpl implements UserProfileRepository {
   UserProfileRepositoryImpl({this.userProfileRemoteDataSource});
 
   @override
-  Future<UserProfileModel> fetchUserProfile() =>
+  Future<UserProfileModel> fetchUserProfile() async =>
       userProfileRemoteDataSource.fetchUserProfile();
 
   @override
-  Future<void> setupUserProfile(UserProfileModel user) =>
+  Future<void> setupUserProfile(UserProfileModel user) async =>
       userProfileRemoteDataSource.setupUserProfile(user);
 
   @override
-  Future<void> updateUserProfile(UserProfileModel user) =>
+  Future<void> updateUserProfile(UserProfileModel user) async =>
       userProfileRemoteDataSource.updateUserProfile(user);
 }
