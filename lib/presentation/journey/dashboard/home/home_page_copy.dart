@@ -1,6 +1,9 @@
 import 'package:aker_foods_retail/common/constants/layout_constants.dart';
 import 'package:aker_foods_retail/common/extensions/pixel_dimension_util_extensions.dart';
 import 'package:aker_foods_retail/common/utils/pixel_dimension_util.dart';
+import 'package:aker_foods_retail/common/utils/widget_util.dart';
+import 'package:aker_foods_retail/presentation/app/route_constants.dart';
+import 'package:aker_foods_retail/presentation/journey/user/address/change_address_mode_selection_bottom_sheet.dart';
 import 'package:aker_foods_retail/presentation/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 
@@ -43,8 +46,9 @@ class HomePageState extends State<HomePage> {
 
   AppBar _getAppBar() => AppBar(
         elevation: 8,
+        titleSpacing: 0,
         centerTitle: false,
-        title: _addressContainer(),
+        title: _addressWidget(),
         backgroundColor: AppColor.white,
         actions: [
           IconButton(
@@ -52,34 +56,63 @@ class HomePageState extends State<HomePage> {
               Icons.notifications,
               color: AppColor.primaryColor,
             ),
-            onPressed: () => {},
+            onPressed: () => Navigator.of(context)
+                .pushNamed(RouteConstants.notificationsList),
           ),
         ],
       );
 
-  Container _addressContainer() => Container(
-        alignment: Alignment.center,
-        width: double.infinity,
-        height: LayoutConstants.dimen_56.h,
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.location_on,
-              color: AppColor.primaryColor,
-              size: LayoutConstants.dimen_30.w,
-            ),
-            SizedBox(width: LayoutConstants.dimen_8.w),
-            Expanded(
-              child: Text(
-                'Splendid County, Lohegaon, Dhanori',
-                overflow: TextOverflow.ellipsis,
-                style: Theme.of(context).textTheme.bodyText1,
-              ),
-            ),
-          ],
+  Widget _addressWidget() => wrapWithMaterialInkWell(
+        context: context,
+        borderRadius: BorderRadius.circular(LayoutConstants.dimen_8.w),
+        onTap: _showAddressesListingBottomSheet,
+        child: Container(
+          alignment: Alignment.center,
+          height: LayoutConstants.dimen_56.h,
+          child: Row(
+            children: [
+              _addressWidgetIconContainer(),
+              _addressWidgetExpandedText(),
+            ],
+          ),
         ),
       );
+
+  Container _addressWidgetIconContainer() => Container(
+        alignment: Alignment.center,
+        width: LayoutConstants.dimen_56.h,
+        height: LayoutConstants.dimen_56.h,
+        child: Icon(
+          Icons.location_on,
+          color: AppColor.primaryColor,
+          size: LayoutConstants.dimen_30.w,
+        ),
+      );
+
+  Expanded _addressWidgetExpandedText() => Expanded(
+        child: Text(
+          'Splendid County, Lohegaon, Dhanori',
+          overflow: TextOverflow.ellipsis,
+          style: Theme.of(context).textTheme.bodyText1,
+        ),
+      );
+
+  Future _showAddressesListingBottomSheet() {
+    final List<String> savedAddresses = List();
+    for (int i = 0; i < 10; i++) {
+      savedAddresses.add('Address ${i + 1}');
+    }
+    return showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      isDismissible: true,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(LayoutConstants.dimen_12.w),
+      ),
+      builder: (BuildContext context) =>
+          ChangeAddressModeSelectionBottomSheet(savedAddresses: savedAddresses),
+    );
+  }
 
   Widget _getHomePageContent() => CustomScrollView(
         primary: true,
