@@ -2,12 +2,14 @@ import 'package:aker_foods_retail/common/injector/injector.dart';
 import 'package:aker_foods_retail/presentation/journey/checkout/order_cart/checkout_order_screen.dart';
 import 'package:aker_foods_retail/presentation/journey/dashboard/bottom_navigation_bar_details.dart';
 import 'package:aker_foods_retail/presentation/journey/user/my_account/my_account_screen.dart';
+import 'package:aker_foods_retail/presentation/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'bloc/dashboard_bloc.dart';
 import 'bloc/dashboard_event.dart';
 import 'bloc/dashboard_state.dart';
+import 'home/home_page_copy.dart';
 
 class DashboardScreen extends StatefulWidget {
   @override
@@ -15,7 +17,7 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class DashboardScreenState extends State<DashboardScreen> {
-  PageController _pageController;
+  final PageController _pageController = PageController();
   List<Widget> _bottomNavigationPageWidgets;
 
   DashboardBottomNavigationBarData _navigationBarData;
@@ -33,9 +35,8 @@ class DashboardScreenState extends State<DashboardScreen> {
   @override
   void initState() {
     super.initState();
-    _pageController = PageController();
     _bottomNavigationPageWidgets = [
-      _dummyContainer('Home'),
+      HomePage(),
       _dummyContainer('Search'),
       CheckoutOrderScreen(),
       MyAccountScreen(),
@@ -57,6 +58,7 @@ class DashboardScreenState extends State<DashboardScreen> {
   }
 
   Widget _buildScaffold() => Scaffold(
+        backgroundColor: AppColor.white,
         body: _getScaffoldBody(),
         bottomNavigationBar: _getBottomNavBarWrappedWithBlocBuilder(),
       );
@@ -79,6 +81,10 @@ class DashboardScreenState extends State<DashboardScreen> {
     DashboardState state,
   ) {
     if (state is PageLoadedState) {
+      if (state?.pageIndex == null) {
+        return Container();
+      }
+
       _pageController.jumpToPage(state.pageIndex);
       return BottomNavigationBar(
         elevation: 32,

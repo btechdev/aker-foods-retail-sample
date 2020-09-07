@@ -53,7 +53,7 @@ class AppTextTheme {
   static final TextStyle subtitle1 = TextStyle(
     fontSize: 16.sp,
     color: AppColor.black,
-    fontWeight: FontWeight.normal,
+    fontWeight: FontWeight.w500,
     fontStyle: FontStyle.normal,
   );
 

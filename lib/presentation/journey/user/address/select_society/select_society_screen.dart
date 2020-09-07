@@ -171,9 +171,9 @@ class SelectSocietyScreenState extends State<SelectSocietyScreen> {
 
   AppBar _getAppBar(context, SelectSocietyState state) => AppBar(
         elevation: 1,
-        title: _getSearchTextField(context),
-        centerTitle: false,
         titleSpacing: 0,
+        centerTitle: false,
+        title: _getSearchTextField(context),
         actions: _getSearchActions(state),
         backgroundColor: AppColor.white,
       );
