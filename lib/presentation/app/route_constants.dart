@@ -10,4 +10,5 @@ class RouteConstants {
   static const chooseLocation = '/choose-location';
   static const selectSociety = '/select-society';
   static const setupUserProfile = '/setup-user-profile';
+  static const notificationsList = '/notifications-list';
 }
