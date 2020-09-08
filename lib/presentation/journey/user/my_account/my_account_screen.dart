@@ -36,14 +36,6 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
       subtitle: 'Rs 1000',
     ),
     MyAccountOptionDataEntity(
-      icon: Icons.location_city,
-      title: 'My Addresses',
-    ),
-    MyAccountOptionDataEntity(
-      icon: Icons.question_answer,
-      title: 'Support and FAQ',
-    ),
-    MyAccountOptionDataEntity(
       icon: Icons.offline_pin,
       title: 'Logout',
     )
@@ -322,7 +314,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
       ),
     );
 
-    if(incomingState is UserProfileUpdateSuccessState) {
+    if (incomingState is UserProfileUpdateSuccessState) {
       userProfileBloc.add(FetchUserProfileEvent());
     }
   }
