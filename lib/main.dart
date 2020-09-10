@@ -15,14 +15,15 @@ import 'config/configuration.dart';
 import 'presentation/app.dart';
 
 void main() {
+  // Load configuration from secret environment
+  Configuration().setConfigurationValues(secret_config.environment);
+
   InjectorConfig.setup();
   WidgetsFlutterBinding.ensureInitialized();
   Firebase.initializeApp();
+
   // Initialize shared preferences wrapper
   unawaited(Injector.resolve<LocalPreferences>().init());
-
-  // Load configuration from secret environment
-  Configuration().setConfigurationValues(secret_config.environment);
 
   // Enable Crashlytics based on environment and
   // Pass all uncaught errors from the framework to Crashlytics.
@@ -30,7 +31,7 @@ void main() {
   FlutterError.onError = Crashlytics.instance.recordFlutterError;
 
   // Initialise OneSignal for push notification service
-  _initialiseOneSignal();
+  unawaited(_initialiseOneSignal());
 
   // Configure only to support Light mode. If Dark mode is needed, update this
   unawaited(FlutterStatusbarcolor.setStatusBarWhiteForeground(false));
@@ -42,37 +43,11 @@ void main() {
   );
 }
 
-void _initialiseOneSignal() {
-  OneSignal.shared.setLogLevel(OSLogLevel.verbose, OSLogLevel.none);
+Future<void> _initialiseOneSignal() async {
+  await OneSignal.shared.setLogLevel(OSLogLevel.info, OSLogLevel.none);
 
   // Keep this parameter to `true` if you want to adhere to GDPR privacy consent
-  OneSignal.shared.setRequiresUserPrivacyConsent(false);
-
-  final iOSSettings = {
-    OSiOSSettings.autoPrompt: false,
-    OSiOSSettings.inAppLaunchUrl: false,
-    OSiOSSettings.promptBeforeOpeningPushUrl: true
-  };
-  OneSignal.shared.init(
-    '15cc841b-f301-4663-a12e-9f5467eaf167',
-    iOSSettings: iOSSettings,
-  );
-
-  OneSignal.shared
-      .setInFocusDisplayType(OSNotificationDisplayType.notification);
-
-  // This function will show the iOS push notification prompt.
-  // It is recommended removing the following code and instead using an
-  // In-App Message to prompt for notification permission.
-  OneSignal.shared
-      .promptUserForPushNotificationPermission(fallbackToSettings: true);
-}
-
-/*Future<void> _initialiseOneSignal() async {
-  await OneSignal.shared.setLogLevel(OSLogLevel.verbose, OSLogLevel.verbose);
-
-  // Keep this parameter to `true` if you want to adhere to GDPR privacy consent
-  await OneSignal.shared.setRequiresUserPrivacyConsent(true);
+  await OneSignal.shared.setRequiresUserPrivacyConsent(false);
 
   final iOSSettings = {
     OSiOSSettings.autoPrompt: false,
@@ -87,7 +62,9 @@ void _initialiseOneSignal() {
   await OneSignal.shared
       .setInFocusDisplayType(OSNotificationDisplayType.notification);
 
-  // The promptForPushNotificationsWithUserResponse function will show the iOS push notification prompt. We recommend removing the following code and instead using an In-App Message to prompt for notification permission
+  // This function will show the iOS push notification prompt.
+  // It is recommended removing the following code and instead using an
+  // In-App Message to prompt for notification permission.
   await OneSignal.shared
       .promptUserForPushNotificationPermission(fallbackToSettings: true);
-}*/
+}

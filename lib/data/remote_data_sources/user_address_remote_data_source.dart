@@ -11,7 +11,7 @@ class UserAddressRemoteDataSource {
   UserAddressRemoteDataSource({this.apiClient});
 
   Future<List<SocietyModel>> getSocieties() async {
-    final map = await apiClient.get(ApiEndpoints.socities);
+    final map = await apiClient.get(ApiEndpoints.societies);
     final socities = SocietyModel.fromListJson(map);
     return socities;
   }

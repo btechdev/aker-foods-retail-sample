@@ -17,9 +17,8 @@ class _$InjectorConfig extends InjectorConfig {
         (c) => SelectSocietyBloc(userAddressUseCase: c<UserAddressUseCase>()));
     container.registerFactory(
         (c) => UserProfileBloc(userProfileUseCase: c<UserProfileUseCase>()));
-    container.registerFactory(
-            (c) => EnterNewAddressBloc(userAddressUseCase: c<UserAddressUseCase>()));
-
+    container.registerFactory((c) =>
+        EnterNewAddressBloc(userAddressUseCase: c<UserAddressUseCase>()));
   }
 
   void _configureUseCases() {
@@ -60,13 +59,11 @@ class _$InjectorConfig extends InjectorConfig {
         (c) => UserProfileRemoteDataSource(apiClient: c<ApiClient>()));
   }
 
-  void _configureClients() {
-    final KiwiContainer container = KiwiContainer();
-    container.registerSingleton((c) => ApiClient());
-  }
-
   void _configureCommon() {
     final KiwiContainer container = KiwiContainer();
+    container.registerSingleton((c) => ApiClient());
     container.registerSingleton((c) => LocalPreferences());
+    container.registerSingleton(
+        (c) => FirebaseAuthUtils(authUseCase: c<AuthenticationUseCase>()));
   }
 }

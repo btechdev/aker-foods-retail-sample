@@ -6,12 +6,19 @@ import 'package:aker_foods_retail/common/exceptions/not_found_exception.dart';
 import 'package:aker_foods_retail/common/exceptions/server_error_exception.dart';
 import 'package:aker_foods_retail/common/exceptions/unauthorized_exception.dart';
 import 'package:aker_foods_retail/common/extensions/string_extensions.dart';
+import 'package:aker_foods_retail/common/injector/injector.dart';
+import 'package:aker_foods_retail/common/utils/firebase_auth_utils.dart';
+import 'package:aker_foods_retail/network/api/api_client.dart';
+import 'package:aker_foods_retail/network/api/api_header_constants.dart';
 import 'package:aker_foods_retail/network/http/http_constants.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart';
 
 class HttpUtil {
   static const unknownError = 'UNKNOWN_ERROR';
+
+  static bool _hasAttemptedRefreshAuthorization = false;
+  static Response _apiRequestResponse;
 
   static dynamic encodeRequestBody(dynamic data, String contentType) {
     return contentType == HttpConstants.jsonContentType
@@ -44,10 +51,7 @@ class HttpUtil {
         );
 
       case 401:
-        throw UnauthorisedException(
-          getErrorMessage(json.decode(response.body)),
-          url: response.request.url.toString(),
-        );
+        return _retryRequestAfterRefreshAuthorization(response);
 
       case 403:
         throw ForbiddenException(
@@ -90,5 +94,60 @@ class HttpUtil {
       return result['error']['message'];
     }
     return unknownError;
+  }
+
+  static dynamic _retryRequestAfterRefreshAuthorization(
+      Response response) async {
+    if (_hasAttemptedRefreshAuthorization) {
+      _hasAttemptedRefreshAuthorization = false;
+      throw UnauthorisedException(
+        getErrorMessage(json.decode(_apiRequestResponse.body)),
+        url: _apiRequestResponse?.request?.url?.toString(),
+      );
+    }
+
+    _apiRequestResponse = response;
+    final Request request = response.request;
+
+    final String newIdToken = await _refreshIdTokenAndUpdateDependencies();
+    return _executeNewRequestWithUpdatedApiClient(request, newIdToken);
+  }
+
+  static Future<String> _refreshIdTokenAndUpdateDependencies() async {
+    final firebaseAuthUtils = Injector.resolve<FirebaseAuthUtils>();
+    final String newIdToken =
+        await firebaseAuthUtils.refreshFirebaseIdTokenAndUpdate();
+    debugPrint('=====> Firebase IdToken Refreshed =====>'
+        '\nNew Token: $newIdToken');
+    return newIdToken;
+  }
+
+  static dynamic _executeNewRequestWithUpdatedApiClient(
+      Request request, String newIdToken) async {
+    try {
+      // NOTE: New request needs to be created as the `request` is already
+      // finalized and `send()` can not finalize the already finalized request.
+      final Request newRequest = Request(request.method, request.url);
+      newRequest.headers[HttpConstants.authorization] =
+          '$firebaseTokenPrefix $newIdToken';
+      newRequest
+        ..encoding = request.encoding
+        ..body = request.body
+        ..bodyBytes = request.bodyBytes
+        ..followRedirects = request.followRedirects
+        ..maxRedirects = request.maxRedirects
+        ..persistentConnection = request.persistentConnection;
+
+      // TODO(Bhushan): Handle body fields for content-type =>
+      //  "application/x-www-form-urlencoded"
+
+      final apiClient = Injector.resolve<ApiClient>();
+      final Response newResponse = await apiClient.send(newRequest);
+      return getResponse(newResponse);
+    } catch (e) {
+      debugPrint('NewRequest caught ==> $e');
+      debugPrint('NewRequest caught string ==> ${e?.toString()}');
+      rethrow;
+    }
   }
 }

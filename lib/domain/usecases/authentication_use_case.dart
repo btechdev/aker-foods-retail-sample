@@ -15,6 +15,9 @@ class AuthenticationUseCase {
       authenticationRepository
           .saveUserAuthentication(FirebaseAuthModel.fromEntity(user));
 
+  Future<bool> updateFirebaseIdToken(String idToken) =>
+      authenticationRepository.updateFirebaseIdToken(idToken);
+
   Future<String> getUserAuthIdToken() =>
       authenticationRepository.getUserAuthIdToken();
 

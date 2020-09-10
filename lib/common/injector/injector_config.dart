@@ -1,4 +1,5 @@
 import 'package:aker_foods_retail/common/local_preferences/local_preferences.dart';
+import 'package:aker_foods_retail/common/utils/firebase_auth_utils.dart';
 import 'package:aker_foods_retail/data/local_data_sources/authentication_local_data_source.dart';
 import 'package:aker_foods_retail/data/remote_data_sources/user_address_remote_data_source.dart';
 import 'package:aker_foods_retail/data/remote_data_sources/user_profile_remote_data_source.dart';
@@ -41,7 +42,6 @@ abstract class InjectorConfig {
     _configureRepositories();
     _configureLocalDataSources();
     _configureRemoteDataSources();
-    _configureClients();
     _configureCommon();
   }
 
@@ -84,11 +84,9 @@ abstract class InjectorConfig {
   @Register.factory(UserProfileRemoteDataSource)
   void _configureRemoteDataSources();
 
-  /// ============ Register Clients ============
-  @Register.singleton(ApiClient)
-  void _configureClients();
-
   /// ============ Register Common Classes ============
+  @Register.singleton(ApiClient)
   @Register.singleton(LocalPreferences)
+  @Register.singleton(FirebaseAuthUtils)
   void _configureCommon();
 }

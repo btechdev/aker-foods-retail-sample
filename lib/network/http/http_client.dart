@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'dart:io' as io;
+import 'dart:io' as dart_io;
 
 import 'package:aker_foods_retail/common/extensions/string_extensions.dart';
 import 'package:aker_foods_retail/config/configuration.dart';
@@ -19,10 +19,10 @@ class HttpClient {
   Map<String, String> header;
 
   HttpClient({@required this.host, @required this.header}) {
-    final httpClient = io.HttpClient()
+    final httpClient = dart_io.HttpClient()
       ..badCertificateCallback =
-          (io.X509Certificate cert, String host, int port) =>
-              io.Platform.isAndroid;
+          (dart_io.X509Certificate cert, String host, int port) =>
+              dart_io.Platform.isAndroid;
     _client = IOClient(httpClient);
   }
 
@@ -33,6 +33,18 @@ class HttpClient {
   String parseDataAndSplitString(dynamic data) =>
       json.encode(data).splitLongStringForLogging();
 
+  dynamic send(Request request) async {
+    debugPrint(
+      '====> Retrying HTTP request\n'
+      'Method: ${request.method}\n'
+      'Header: ${parseDataAndSplitString(request.headers)}\n'
+      'Url: ${getParsedUrl(request.url.path)}',
+    );
+
+    final IOStreamedResponse streamedResponse = await _client.send(request);
+    return Response.fromStream(streamedResponse);
+  }
+
   dynamic get(
     String path, {
     Map<String, dynamic> overrideHeader = const {},
@@ -42,8 +54,8 @@ class HttpClient {
     // TODO(Bhushan): Find a better way to log this data (eg. interceptor)
     debugPrint(
       'HTTP request\n'
-      'Header: ${parseDataAndSplitString(requestHeader)}\n'
       'Method: GET\n'
+      'Header: ${parseDataAndSplitString(requestHeader)}\n'
       'Url: ${getParsedUrl(path)}',
     );
 
@@ -145,7 +157,7 @@ class HttpClient {
   }
 
   dynamic uploadFile(
-      String path, Map<String, io.File> mapFile, Map<String, dynamic> data,
+      String path, Map<String, dart_io.File> mapFile, Map<String, dynamic> data,
       [HttpMethodType method = HttpMethodType.post,
       Map<String, dynamic> overrideHeader]) async {
     final request = MultipartRequest(
