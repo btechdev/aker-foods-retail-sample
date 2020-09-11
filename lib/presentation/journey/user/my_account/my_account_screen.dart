@@ -1,4 +1,5 @@
 import 'package:aker_foods_retail/common/injector/injector.dart';
+import 'package:aker_foods_retail/presentation/app/route_constants.dart';
 import 'package:aker_foods_retail/presentation/journey/user/bloc/user_profile_bloc.dart';
 import 'package:aker_foods_retail/presentation/journey/user/bloc/user_profile_event.dart';
 import 'package:aker_foods_retail/presentation/journey/user/bloc/user_profile_state.dart';
@@ -34,6 +35,10 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
       icon: Icons.account_balance_wallet,
       title: 'My Wallet',
       subtitle: 'Rs 1000',
+    ),
+    MyAccountOptionDataEntity(
+      icon: Icons.code,
+      title: 'Referral',
     ),
     MyAccountOptionDataEntity(
       icon: Icons.offline_pin,
@@ -238,7 +243,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
         debugPrint('My Wallet');
         break;
       case 2:
-        debugPrint('Support and FAQ');
+        Navigator.pushNamed(context, RouteConstants.referral);
         break;
       case 3:
         debugPrint('Logout');

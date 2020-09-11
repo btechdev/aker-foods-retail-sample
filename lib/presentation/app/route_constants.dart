@@ -13,4 +13,5 @@ class RouteConstants {
   static const setupUserProfile = '/setup-user-profile';
   static const applyReferralCode = '/apply-referral-code';
   static const notificationsList = '/notifications-list';
+  static const referral = '/referral';
 }
