@@ -12,4 +12,13 @@ class UserAddressUseCase {
 
   Future<void> createNewAddress(AddressModel address) async =>
       userAddressRepository.createNewAddress(address);
+
+  Future<List<AddressModel>> getAddresses() async =>
+      userAddressRepository.getAddresses();
+
+  Future<AddressModel> getSelectedAddress() async =>
+      userAddressRepository.getSelectedAddress();
+
+  Future<bool> setSelectedAddress(AddressModel addressModel) async =>
+      userAddressRepository.setSelectedAddress(addressModel);
 }

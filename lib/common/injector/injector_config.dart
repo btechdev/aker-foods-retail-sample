@@ -1,6 +1,7 @@
 import 'package:aker_foods_retail/common/local_preferences/local_preferences.dart';
 import 'package:aker_foods_retail/common/utils/firebase_auth_utils.dart';
 import 'package:aker_foods_retail/data/local_data_sources/authentication_local_data_source.dart';
+import 'package:aker_foods_retail/data/local_data_sources/user_address_local_data_source.dart';
 import 'package:aker_foods_retail/data/remote_data_sources/user_address_remote_data_source.dart';
 import 'package:aker_foods_retail/data/remote_data_sources/user_order_remote_data_source.dart';
 import 'package:aker_foods_retail/data/remote_data_sources/user_profile_remote_data_source.dart';
@@ -25,6 +26,7 @@ import 'package:aker_foods_retail/presentation/common_blocs/firebase_auth_bloc/f
 import 'package:aker_foods_retail/presentation/common_blocs/snack_bar_bloc/snack_bar_bloc.dart';
 import 'package:aker_foods_retail/presentation/journey/dashboard/bloc/dashboard_bloc.dart';
 import 'package:aker_foods_retail/presentation/journey/orders/bloc/user_order_bloc.dart';
+import 'package:aker_foods_retail/presentation/journey/user/address/change_address/bloc/change_address_bloc.dart';
 import 'package:aker_foods_retail/presentation/journey/user/address/enter_new_address/bloc/enter_new_address_bloc.dart';
 import 'package:aker_foods_retail/presentation/journey/user/address/select_society/bloc/select_society_bloc.dart';
 import 'package:aker_foods_retail/presentation/journey/user/bloc/user_profile_bloc.dart';
@@ -62,6 +64,7 @@ abstract class InjectorConfig {
   @Register.factory(SelectSocietyBloc)
   @Register.factory(UserProfileBloc)
   @Register.factory(EnterNewAddressBloc)
+  @Register.factory(ChangeAddressBloc)
   @Register.factory(UserTransactionBloc)
   @Register.factory(UserOrderBloc)
   void _configureBlocs();
@@ -99,6 +102,7 @@ abstract class InjectorConfig {
 
   /// ============ Register LocalDataSources ============
   @Register.factory(AuthenticationLocalDataSource)
+  @Register.factory(UserAddressLocalDataSource)
   void _configureLocalDataSources();
 
   /// ============ Register RemoteDataSources ============

@@ -1,4 +1,5 @@
 import 'package:aker_foods_retail/common/injector/injector.dart';
+import 'package:aker_foods_retail/data/models/address_model.dart';
 import 'package:aker_foods_retail/presentation/app/route_constants.dart';
 import 'package:aker_foods_retail/presentation/journey/user/bloc/user_profile_bloc.dart';
 import 'package:aker_foods_retail/presentation/journey/user/bloc/user_profile_event.dart';
@@ -46,7 +47,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
     )
   ];
 
-  List<String> savedAddresses;
+  List<AddressModel> savedAddresses;
 
   @override
   void initState() {
@@ -180,10 +181,6 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
   }
 
   Future _getLocationSelectionBottomSheet(BuildContext context) {
-    savedAddresses = List();
-    for (int i = 0; i < 10; i++) {
-      savedAddresses.add('Address ${i + 1}');
-    }
     return showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -192,7 +189,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
         borderRadius: BorderRadius.circular(LayoutConstants.dimen_12.w),
       ),
       builder: (BuildContext context) =>
-          ChangeAddressModeSelectionBottomSheet(savedAddresses: savedAddresses),
+          ChangeAddressModeSelectionBottomSheet(),
     );
   }
 

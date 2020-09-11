@@ -19,25 +19,26 @@
 import 'package:aker_foods_retail/domain/entities/society_entity.dart';
 
 class AddressEntity {
+  int id;
   final String label;
   final String address1;
   final String address2;
-  final double zipCode;
+  final String zipCode;
   final String city;
   final String country;
   final SocietyEntity society;
   final LocationEntity location;
 
-  AddressEntity({
-    this.label,
-    this.address1,
-    this.address2,
-    this.zipCode,
-    this.city,
-    this.country,
-    this.society,
-    this.location
-});
+  AddressEntity(
+      {this.id,
+      this.label,
+      this.address1,
+      this.address2,
+      this.zipCode,
+      this.city,
+      this.country,
+      this.society,
+      this.location});
 }
 
 class LocationEntity {

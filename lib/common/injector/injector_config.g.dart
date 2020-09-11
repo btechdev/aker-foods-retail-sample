@@ -19,6 +19,8 @@ class _$InjectorConfig extends InjectorConfig {
         (c) => UserProfileBloc(userProfileUseCase: c<UserProfileUseCase>()));
     container.registerFactory((c) =>
         EnterNewAddressBloc(userAddressUseCase: c<UserAddressUseCase>()));
+    container.registerFactory(
+        (c) => ChangeAddressBloc(userAddressUseCase: c<UserAddressUseCase>()));
     container.registerFactory((c) => UserTransactionBloc(
         userTransactionUseCase: c<UserTransactionUseCase>()));
     container.registerFactory(
@@ -47,7 +49,8 @@ class _$InjectorConfig extends InjectorConfig {
             apiClient: c<ApiClient>()));
     container.registerFactory<UserAddressRepository>((c) =>
         UserAddressRepositoryImpl(
-            userAddressRemoteDataSource: c<UserAddressRemoteDataSource>()));
+            userAddressRemoteDataSource: c<UserAddressRemoteDataSource>(),
+            userAddressLocalDataSource: c<UserAddressLocalDataSource>()));
     container.registerFactory<UserProfileRepository>((c) =>
         UserProfileRepositoryImpl(
             userProfileRemoteDataSource: c<UserProfileRemoteDataSource>()));
@@ -64,6 +67,8 @@ class _$InjectorConfig extends InjectorConfig {
     final KiwiContainer container = KiwiContainer();
     container.registerFactory((c) =>
         AuthenticationLocalDataSource(localPreferences: c<LocalPreferences>()));
+    container.registerFactory((c) =>
+        UserAddressLocalDataSource(localPreferences: c<LocalPreferences>()));
   }
 
   void _configureRemoteDataSources() {

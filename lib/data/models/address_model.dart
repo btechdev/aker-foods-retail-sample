@@ -3,15 +3,17 @@ import 'package:aker_foods_retail/domain/entities/address_entity.dart';
 
 class AddressModel extends AddressEntity {
   AddressModel({
+    int id,
     String label,
     String address1,
     String address2,
-    double zipCode,
+    String zipCode,
     String city,
     String country,
     SocietyModel society,
     LocationModel location,
   }) : super(
+          id: id,
           label: label,
           address1: address1,
           address2: address2,
@@ -22,7 +24,16 @@ class AddressModel extends AddressEntity {
           location: location,
         );
 
+  static List<AddressModel> fromListJson(Map<String, dynamic> jsonMap) {
+    final List<dynamic> addressMapList = jsonMap['results'];
+    final list = addressMapList
+        .map((addressMap) => AddressModel.fromJson(addressMap))
+        .toList();
+    return list;
+  }
+
   factory AddressModel.fromJson(Map<String, dynamic> jsonMap) => AddressModel(
+        id: jsonMap['id'],
         label: jsonMap['label'],
         address1: jsonMap['address1'],
         address2: jsonMap['address2'],
@@ -34,13 +45,14 @@ class AddressModel extends AddressEntity {
       );
 
   static Map<String, dynamic> toJson(AddressModel userAddressModel) => {
+        'id': userAddressModel.id,
         'label': userAddressModel.label,
         'address1': userAddressModel.address1,
         'address2': userAddressModel.address2,
         'city': userAddressModel.city,
         'country': userAddressModel.country,
         'zip_code': userAddressModel.zipCode,
-        'society': SocietyModel.toJson(userAddressModel.society),
+        'society_detail': SocietyModel.toJson(userAddressModel.society),
         'location': LocationModel.toJson(userAddressModel.location),
       };
 }

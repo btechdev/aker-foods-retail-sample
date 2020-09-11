@@ -72,7 +72,7 @@ class EnterNewAddressScreenState extends State<EnterNewAddressScreen> {
       address2: _landmarkTextController.text,
       country: 'India',
       city: 'Pune',
-      zipCode: double.parse(_pincodeTextController.text),
+      zipCode: _pincodeTextController.text,
       society: selectedSociety,
       location: LocationModel(
           latitude: mapLocation.latitude, longitude: mapLocation.longitude),

@@ -98,10 +98,6 @@ class HomePageState extends State<HomePage> {
       );
 
   Future _showAddressesListingBottomSheet() {
-    final List<String> savedAddresses = List();
-    for (int i = 0; i < 10; i++) {
-      savedAddresses.add('Address ${i + 1}');
-    }
     return showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -110,7 +106,7 @@ class HomePageState extends State<HomePage> {
         borderRadius: BorderRadius.circular(LayoutConstants.dimen_12.w),
       ),
       builder: (BuildContext context) =>
-          ChangeAddressModeSelectionBottomSheet(savedAddresses: savedAddresses),
+          ChangeAddressModeSelectionBottomSheet(),
     );
   }
 

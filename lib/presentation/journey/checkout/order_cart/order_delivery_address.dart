@@ -1,6 +1,7 @@
 import 'package:aker_foods_retail/common/constants/layout_constants.dart';
 import 'package:aker_foods_retail/presentation/journey/user/address/change_address_mode_selection_bottom_sheet.dart';
 import 'package:flutter/material.dart';
+
 import '../../../../common/extensions/pixel_dimension_util_extensions.dart';
 
 class OrderDeliveryAddressSelection extends StatefulWidget {
@@ -13,8 +14,6 @@ class OrderDeliveryAddressSelection extends StatefulWidget {
 
 class _OrderDeliveryAddressSelectionState
     extends State<OrderDeliveryAddressSelection> {
-  List<String> savedAddresses;
-
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -54,10 +53,6 @@ class _OrderDeliveryAddressSelectionState
       );
 
   Future _getLocationSelectionBottomSheet(BuildContext context) {
-    savedAddresses = List();
-    for (int i = 0; i < 10; i++) {
-      savedAddresses.add('Address ${i + 1}');
-    }
     return showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -69,7 +64,7 @@ class _OrderDeliveryAddressSelectionState
         ),
       ),
       builder: (BuildContext context) =>
-          ChangeAddressModeSelectionBottomSheet(savedAddresses: savedAddresses),
+          ChangeAddressModeSelectionBottomSheet(),
     );
   }
 }

@@ -1,13 +1,16 @@
 import 'package:aker_foods_retail/common/constants/layout_constants.dart';
 import 'package:aker_foods_retail/common/extensions/pixel_dimension_util_extensions.dart';
+import 'package:aker_foods_retail/data/models/address_model.dart';
 import 'package:aker_foods_retail/presentation/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 
 class ChangeAddressScreen extends StatelessWidget {
   final ScrollController scrollController;
-  final List<String> savedAddresses;
+  final List<AddressModel> savedAddresses;
+  final AddressModel currentAddress;
   final Function onSearchTapped;
   final Function onAddressTypeSelection;
+  final Function onSelectAddress;
 
   final titles = ['Use current location', 'Add address'];
   final icons = [Icons.navigation, Icons.add];
@@ -17,6 +20,8 @@ class ChangeAddressScreen extends StatelessWidget {
     this.savedAddresses,
     this.onSearchTapped,
     this.onAddressTypeSelection,
+    this.currentAddress,
+    this.onSelectAddress,
   });
 
   /*@override
@@ -81,8 +86,34 @@ class ChangeAddressScreen extends StatelessWidget {
 
       default:
         return ListTile(
-          title: Text(savedAddresses[index - 7]),
+          title: Text(savedAddresses[index - 7].address1),
+          subtitle: Text(savedAddresses[index - 7].address2),
+          trailing: _getTrailing(index),
+          onTap: () {
+            onSelectAddress(savedAddresses[index - 7]);
+          },
         );
+    }
+  }
+
+  Widget _getTrailing(int index) {
+    if (savedAddresses.isNotEmpty && currentAddress != null) {
+      if (savedAddresses[index - 7].id == currentAddress.id) {
+        return Icon(
+          Icons.check,
+          color: AppColor.primaryColor,
+        );
+      } else {
+        return Icon(
+          Icons.check,
+          color: AppColor.transparent,
+        );
+      }
+    } else {
+      return Icon(
+        Icons.check,
+        color: AppColor.transparent,
+      );
     }
   }
 
