@@ -237,10 +237,10 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
   void _navigateTo(int index) {
     switch (index) {
       case 0:
-        debugPrint('My Orders');
+        Navigator.pushNamed(context, RouteConstants.myOrders);
         break;
       case 1:
-        debugPrint('My Wallet');
+        Navigator.pushNamed(context, RouteConstants.myWalletTransactions);
         break;
       case 2:
         Navigator.pushNamed(context, RouteConstants.referral);

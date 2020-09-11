@@ -2,23 +2,33 @@ import 'package:aker_foods_retail/common/local_preferences/local_preferences.dar
 import 'package:aker_foods_retail/common/utils/firebase_auth_utils.dart';
 import 'package:aker_foods_retail/data/local_data_sources/authentication_local_data_source.dart';
 import 'package:aker_foods_retail/data/remote_data_sources/user_address_remote_data_source.dart';
+import 'package:aker_foods_retail/data/remote_data_sources/user_order_remote_data_source.dart';
 import 'package:aker_foods_retail/data/remote_data_sources/user_profile_remote_data_source.dart';
+import 'package:aker_foods_retail/data/remote_data_sources/user_transaction_remote_datasource.dart';
 import 'package:aker_foods_retail/data/repositories/authentication_repository_impl.dart';
 import 'package:aker_foods_retail/data/repositories/user_address_repository_impl.dart';
+import 'package:aker_foods_retail/data/repositories/user_order_repository_impl.dart';
 import 'package:aker_foods_retail/data/repositories/user_profile_repository_impl.dart';
+import 'package:aker_foods_retail/data/repositories/user_transaction_repository_impl.dart';
 import 'package:aker_foods_retail/domain/repositories/authentication_repository.dart';
 import 'package:aker_foods_retail/domain/repositories/user_address_repository.dart';
+import 'package:aker_foods_retail/domain/repositories/user_order_repository.dart';
 import 'package:aker_foods_retail/domain/repositories/user_profile_repository.dart';
+import 'package:aker_foods_retail/domain/repositories/user_transaction_repository.dart';
 import 'package:aker_foods_retail/domain/usecases/authentication_use_case.dart';
 import 'package:aker_foods_retail/domain/usecases/user_address_use_case.dart';
+import 'package:aker_foods_retail/domain/usecases/user_order_use_case.dart';
 import 'package:aker_foods_retail/domain/usecases/user_profile_user_case.dart';
+import 'package:aker_foods_retail/domain/usecases/user_transaction_use_case.dart';
 import 'package:aker_foods_retail/network/api/api_client.dart';
 import 'package:aker_foods_retail/presentation/common_blocs/firebase_auth_bloc/firebase_auth_bloc.dart';
 import 'package:aker_foods_retail/presentation/common_blocs/snack_bar_bloc/snack_bar_bloc.dart';
 import 'package:aker_foods_retail/presentation/journey/dashboard/bloc/dashboard_bloc.dart';
+import 'package:aker_foods_retail/presentation/journey/orders/bloc/user_order_bloc.dart';
 import 'package:aker_foods_retail/presentation/journey/user/address/enter_new_address/bloc/enter_new_address_bloc.dart';
 import 'package:aker_foods_retail/presentation/journey/user/address/select_society/bloc/select_society_bloc.dart';
 import 'package:aker_foods_retail/presentation/journey/user/bloc/user_profile_bloc.dart';
+import 'package:aker_foods_retail/presentation/journey/wallet/bloc/user_transaction_bloc.dart';
 import 'package:kiwi/kiwi.dart';
 
 part 'injector_config.g.dart';
@@ -52,12 +62,16 @@ abstract class InjectorConfig {
   @Register.factory(SelectSocietyBloc)
   @Register.factory(UserProfileBloc)
   @Register.factory(EnterNewAddressBloc)
+  @Register.factory(UserTransactionBloc)
+  @Register.factory(UserOrderBloc)
   void _configureBlocs();
 
   /// ============ Register UseCases ============
   @Register.factory(AuthenticationUseCase)
   @Register.factory(UserAddressUseCase)
   @Register.factory(UserProfileUseCase)
+  @Register.factory(UserTransactionUseCase)
+  @Register.factory(UserOrderUseCase)
   void _configureUseCases();
 
   /// ============ Register Repositories ============
@@ -73,6 +87,14 @@ abstract class InjectorConfig {
     UserProfileRepository,
     from: UserProfileRepositoryImpl,
   )
+  @Register.factory(
+    UserTransactionRepository,
+    from: UserTransactionRepositoryImpl,
+  )
+  @Register.factory(
+    UserOrderRepository,
+    from: UserOrderRepositoryImpl,
+  )
   void _configureRepositories();
 
   /// ============ Register LocalDataSources ============
@@ -82,6 +104,8 @@ abstract class InjectorConfig {
   /// ============ Register RemoteDataSources ============
   @Register.factory(UserAddressRemoteDataSource)
   @Register.factory(UserProfileRemoteDataSource)
+  @Register.factory(UserTransactionRemoteDataSource)
+  @Register.factory(UserOrderRemoteDataSource)
   void _configureRemoteDataSources();
 
   /// ============ Register Common Classes ============

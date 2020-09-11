@@ -12,6 +12,13 @@ class RouteConstants {
   static const checkoutOrder = '/checkout-order';
   static const setupUserProfile = '/setup-user-profile';
   static const applyReferralCode = '/apply-referral-code';
+
+  static const myOrders = '/my-orders';
+
+  static const myWalletTransactions = '/my-wallet-transactions';
+  static const myWalletCashbackOffers = '/my-wallet-cashback-offers';
+  static const myWalletAddMoney = '/my-wallet-add-money';
+
   static const notificationsList = '/notifications-list';
   static const referral = '/referral';
 }

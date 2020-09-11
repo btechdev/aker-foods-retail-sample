@@ -19,6 +19,10 @@ class _$InjectorConfig extends InjectorConfig {
         (c) => UserProfileBloc(userProfileUseCase: c<UserProfileUseCase>()));
     container.registerFactory((c) =>
         EnterNewAddressBloc(userAddressUseCase: c<UserAddressUseCase>()));
+    container.registerFactory((c) => UserTransactionBloc(
+        userTransactionUseCase: c<UserTransactionUseCase>()));
+    container.registerFactory(
+        (c) => UserOrderBloc(userOrderUseCase: c<UserOrderUseCase>()));
   }
 
   void _configureUseCases() {
@@ -29,6 +33,10 @@ class _$InjectorConfig extends InjectorConfig {
         UserAddressUseCase(userAddressRepository: c<UserAddressRepository>()));
     container.registerFactory((c) =>
         UserProfileUseCase(userProfileRepository: c<UserProfileRepository>()));
+    container.registerFactory((c) => UserTransactionUseCase(
+        userTransactionRepository: c<UserTransactionRepository>()));
+    container.registerFactory(
+        (c) => UserOrderUseCase(userOrderRepository: c<UserOrderRepository>()));
   }
 
   void _configureRepositories() {
@@ -43,6 +51,13 @@ class _$InjectorConfig extends InjectorConfig {
     container.registerFactory<UserProfileRepository>((c) =>
         UserProfileRepositoryImpl(
             userProfileRemoteDataSource: c<UserProfileRemoteDataSource>()));
+    container.registerFactory<UserTransactionRepository>((c) =>
+        UserTransactionRepositoryImpl(
+            userTransactionRemoteDataSource:
+                c<UserTransactionRemoteDataSource>()));
+    container.registerFactory<UserOrderRepository>((c) =>
+        UserOrderRepositoryImpl(
+            userOrderRemoteDataSource: c<UserOrderRemoteDataSource>()));
   }
 
   void _configureLocalDataSources() {
@@ -57,6 +72,10 @@ class _$InjectorConfig extends InjectorConfig {
         (c) => UserAddressRemoteDataSource(apiClient: c<ApiClient>()));
     container.registerFactory(
         (c) => UserProfileRemoteDataSource(apiClient: c<ApiClient>()));
+    container.registerFactory(
+        (c) => UserTransactionRemoteDataSource(apiClient: c<ApiClient>()));
+    container.registerFactory(
+        (c) => UserOrderRemoteDataSource(apiClient: c<ApiClient>()));
   }
 
   void _configureCommon() {

@@ -1,5 +1,6 @@
 import 'package:aker_foods_retail/common/constants/layout_constants.dart';
 import 'package:aker_foods_retail/presentation/journey/checkout/order_cart/order_item_tile.dart';
+import 'package:aker_foods_retail/presentation/journey/orders/my_order_out_of_stock_cell.dart';
 import 'package:flutter/material.dart';
 import '../../../../common/extensions/pixel_dimension_util_extensions.dart';
 
@@ -20,12 +21,16 @@ class _OrderItemListState extends State<OrderItemList> {
   Widget build(BuildContext context) {
     return Container(
       child: ListView.builder(
-        itemBuilder: (_, index) =>
-            OrderItemTile(
-              id: index,
-              onItemIncreased: widget.onIncreased,
-              onItemDecreased: widget.onDecreased,
-            ),
+        itemBuilder: (_, index) => index % 2 == 0
+            ? MyOrderOutOfStockCell(
+                onDelete: () => {},
+                onNotify: () => {},
+              )
+            : OrderItemTile(
+                id: index,
+                onItemIncreased: widget.onIncreased,
+                onItemDecreased: widget.onDecreased,
+              ),
         itemCount: widget.items.length,
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),

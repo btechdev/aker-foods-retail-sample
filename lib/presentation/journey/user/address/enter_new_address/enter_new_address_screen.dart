@@ -1,9 +1,9 @@
 import 'package:aker_foods_retail/common/constants/layout_constants.dart';
 import 'package:aker_foods_retail/common/injector/injector.dart';
 import 'package:aker_foods_retail/data/models/society_model.dart';
-import 'package:aker_foods_retail/data/models/user_address_model.dart';
+import 'package:aker_foods_retail/data/models/address_model.dart';
 import 'package:aker_foods_retail/domain/entities/society_entity.dart';
-import 'package:aker_foods_retail/domain/entities/user_address_entity.dart';
+import 'package:aker_foods_retail/domain/entities/address_entity.dart';
 import 'package:aker_foods_retail/presentation/app/route_constants.dart';
 import 'package:aker_foods_retail/presentation/common_blocs/snack_bar_bloc/snack_bar_bloc.dart';
 import 'package:aker_foods_retail/presentation/common_blocs/snack_bar_bloc/snack_bar_event.dart';
@@ -66,7 +66,7 @@ class EnterNewAddressScreenState extends State<EnterNewAddressScreen> {
         addressType = 'Other';
         break;
     }
-    final newAddress = UserAddressModel(
+    final newAddress = AddressModel(
       label: addressType,
       address1: _flatDetailsTextController.text,
       address2: _landmarkTextController.text,

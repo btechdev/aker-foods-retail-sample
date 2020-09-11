@@ -1,12 +1,12 @@
 
 
 import 'package:aker_foods_retail/data/models/society_model.dart';
-import 'package:aker_foods_retail/data/models/user_address_model.dart';
+import 'package:aker_foods_retail/data/models/address_model.dart';
 
 abstract class UserAddressEvent {}
 
 class CreateNewAddressEvent extends UserAddressEvent {
-  final UserAddressModel addressModel;
+  final AddressModel addressModel;
 
   CreateNewAddressEvent({this.addressModel});
 }

@@ -11,7 +11,7 @@ class UserProfileRemoteDataSource {
   Future<void> setupUserProfile(UserProfileModel user) async {
     final payload = UserProfileModel.toJson(user);
     final Map<String, Object> response =
-    await apiClient.post(ApiEndpoints.userProfile, payload);
+        await apiClient.post(ApiEndpoints.userProfile, payload);
     debugPrint('Enter New address Response ==>');
     response.forEach((key, value) {
       debugPrint('$key = ${value?.toString()}');
@@ -21,7 +21,7 @@ class UserProfileRemoteDataSource {
   Future<void> updateUserProfile(UserProfileModel user) async {
     final payload = UserProfileModel.toJson(user);
     final Map<String, Object> response =
-    await apiClient.post(ApiEndpoints.userProfile, payload);
+        await apiClient.post(ApiEndpoints.userProfile, payload);
     debugPrint('Enter New address Response ==>');
     response.forEach((key, value) {
       debugPrint('$key = ${value?.toString()}');
@@ -29,10 +29,7 @@ class UserProfileRemoteDataSource {
   }
 
   Future<UserProfileModel> fetchUserProfile() async {
-    final response = await apiClient.get(
-        ApiEndpoints.userProfile);
-
+    final response = await apiClient.get(ApiEndpoints.userProfile);
     return UserProfileModel.fromJson(response);
-
   }
 }

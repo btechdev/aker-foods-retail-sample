@@ -18,7 +18,7 @@
 
 import 'package:aker_foods_retail/domain/entities/society_entity.dart';
 
-class UserAddressEntity {
+class AddressEntity {
   final String label;
   final String address1;
   final String address2;
@@ -28,7 +28,7 @@ class UserAddressEntity {
   final SocietyEntity society;
   final LocationEntity location;
 
-  UserAddressEntity({
+  AddressEntity({
     this.label,
     this.address1,
     this.address2,

@@ -1,17 +1,17 @@
 import 'package:aker_foods_retail/data/models/society_model.dart';
-import 'package:aker_foods_retail/domain/entities/user_address_entity.dart';
+import 'package:aker_foods_retail/domain/entities/address_entity.dart';
 
-class UserAddressModel extends UserAddressEntity {
-  UserAddressModel(
-      {String label,
-      String address1,
-      String address2,
-      double zipCode,
-      String city,
-      String country,
-      SocietyModel society,
-      LocationModel location})
-      : super(
+class AddressModel extends AddressEntity {
+  AddressModel({
+    String label,
+    String address1,
+    String address2,
+    double zipCode,
+    String city,
+    String country,
+    SocietyModel society,
+    LocationModel location,
+  }) : super(
           label: label,
           address1: address1,
           address2: address2,
@@ -22,8 +22,7 @@ class UserAddressModel extends UserAddressEntity {
           location: location,
         );
 
-  factory UserAddressModel.fromJson(Map<String, dynamic> jsonMap) =>
-      UserAddressModel(
+  factory AddressModel.fromJson(Map<String, dynamic> jsonMap) => AddressModel(
         label: jsonMap['label'],
         address1: jsonMap['address1'],
         address2: jsonMap['address2'],
@@ -34,7 +33,7 @@ class UserAddressModel extends UserAddressEntity {
         location: LocationModel.fromJson(jsonMap),
       );
 
-  static Map<String, dynamic> toJson(UserAddressModel userAddressModel) => {
+  static Map<String, dynamic> toJson(AddressModel userAddressModel) => {
         'label': userAddressModel.label,
         'address1': userAddressModel.address1,
         'address2': userAddressModel.address2,
@@ -46,10 +45,14 @@ class UserAddressModel extends UserAddressEntity {
       };
 }
 
-
 class LocationModel extends LocationEntity {
-  LocationModel({double latitude, double longitude})
-      : super(latitude: latitude, longitude: longitude);
+  LocationModel({
+    double latitude,
+    double longitude,
+  }) : super(
+          latitude: latitude,
+          longitude: longitude,
+        );
 
   factory LocationModel.fromJson(Map<String, dynamic> jsonMap) =>
       LocationModel(latitude: jsonMap['lat'], longitude: jsonMap['long']);

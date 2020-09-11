@@ -127,7 +127,7 @@ class _CheckoutOrderScreenState extends State<CheckoutOrderScreen> {
           color: AppColor.primaryColor,
           onPressed: () => {},
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12.w),
+            borderRadius: BorderRadius.circular(LayoutConstants.dimen_12.w),
           ),
           child: Text(
             'Proceed to pay',
