@@ -25,6 +25,8 @@ class _$InjectorConfig extends InjectorConfig {
         userTransactionUseCase: c<UserTransactionUseCase>()));
     container.registerFactory(
         (c) => UserOrderBloc(userOrderUseCase: c<UserOrderUseCase>()));
+    container.registerFactory(
+        (c) => ProductsBloc(productsUseCase: c<ProductsUseCase>()));
   }
 
   void _configureUseCases() {
@@ -39,6 +41,7 @@ class _$InjectorConfig extends InjectorConfig {
         userTransactionRepository: c<UserTransactionRepository>()));
     container.registerFactory(
         (c) => UserOrderUseCase(userOrderRepository: c<UserOrderRepository>()));
+    container.registerFactory((c) => ProductsUseCase(c<ProductsRepository>()));
   }
 
   void _configureRepositories() {
@@ -61,6 +64,8 @@ class _$InjectorConfig extends InjectorConfig {
     container.registerFactory<UserOrderRepository>((c) =>
         UserOrderRepositoryImpl(
             userOrderRemoteDataSource: c<UserOrderRemoteDataSource>()));
+    container
+        .registerFactory<ProductsRepository>((c) => ProductsRepositoryImpl());
   }
 
   void _configureLocalDataSources() {

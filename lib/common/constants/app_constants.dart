@@ -1,5 +1,8 @@
 class AppConstants {
-	static const phoneNumberLength = 10;
-	static const firebaseAuthRequestTimeoutDuration = Duration(seconds: 60);
-	static const rupeeSymbol = '₹';
+  static const phoneNumberLength = 10;
+  static const searchMinTextLength = 3;
+
+  static const firebaseAuthRequestTimeoutDuration = Duration(minutes: 1);
+
+  static const rupeeSymbol = '₹';
 }
