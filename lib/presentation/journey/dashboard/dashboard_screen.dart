@@ -10,7 +10,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'bloc/dashboard_bloc.dart';
 import 'bloc/dashboard_event.dart';
 import 'bloc/dashboard_state.dart';
-import 'home/home_page_copy.dart';
+import 'home/home_page.dart';
 
 class DashboardScreen extends StatefulWidget {
   @override
