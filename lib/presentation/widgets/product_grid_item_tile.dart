@@ -78,7 +78,6 @@ class ProductGridItemTileState extends State<ProductGridItemTile> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            SizedBox(height: LayoutConstants.dimen_8.h),
             Container(
               height: LayoutConstants.dimen_52.h,
               child: Text(
