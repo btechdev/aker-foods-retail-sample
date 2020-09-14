@@ -5,4 +5,6 @@ class AppConstants {
   static const firebaseAuthRequestTimeoutDuration = Duration(minutes: 1);
 
   static const rupeeSymbol = '₹';
+
+  static const unknownError = 'Unknown error occurred';
 }

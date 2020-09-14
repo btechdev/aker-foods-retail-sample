@@ -138,7 +138,7 @@ class _WalletTransactionsScreenState extends State<WalletTransactionsScreen> {
         itemCount: 6,
         shrinkWrap: true,
         itemBuilder: (context, index) => Container(
-          height: LayoutConstants.dimen_128.h,
+          height: LayoutConstants.dimen_130.h,
           padding: EdgeInsets.symmetric(
             vertical: LayoutConstants.dimen_12.h,
           ),

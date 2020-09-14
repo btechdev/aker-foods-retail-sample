@@ -93,7 +93,11 @@ class _SetupProfileScreen extends State<SetupUserProfileScreen> {
 
   void _checkState(BuildContext context, UserProfileState state) {
     if (state is UserProfileSetupSuccessState) {
-      Navigator.pushNamed(context, RouteConstants.dashboard);
+      Navigator.pushNamedAndRemoveUntil(
+        context,
+        RouteConstants.dashboard,
+        (_) => false,
+      );
       Injector.resolve<SnackBarBloc>().add(ShowSnackBarEvent(
         text: 'User Profile created',
         type: CustomSnackBarType.success,
@@ -104,13 +108,11 @@ class _SetupProfileScreen extends State<SetupUserProfileScreen> {
         text: state.errorMessage,
         type: CustomSnackBarType.error,
       ));
-    } else {
-      // TODO(Bhushan): Handle other states that are listened for
-      Navigator.pushNamed(context, RouteConstants.dashboard);
     }
   }
 
   AppBar _getAppBar() => AppBar(
+        elevation: LayoutConstants.appBarDefaultElevation,
         backgroundColor: AppColor.white,
         title: Text(
           'Profile Details',
