@@ -14,6 +14,7 @@ class RouteConstants {
   static const applyReferralCode = '/apply-referral-code';
 
   static const myOrders = '/my-orders';
+  static const orderDetails = '/order-details';
 
   static const myWalletTransactions = '/my-wallet-transactions';
   static const myWalletCashbackOffers = '/my-wallet-cashback-offers';

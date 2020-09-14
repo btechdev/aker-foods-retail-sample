@@ -7,8 +7,14 @@ class OrderItemTile extends StatelessWidget {
   final int id;
   final Function onItemIncreased;
   final Function onItemDecreased;
+  final bool isForDetail;
 
-  OrderItemTile({Key key, this.id, this.onItemIncreased, this.onItemDecreased})
+  OrderItemTile(
+      {Key key,
+      this.id,
+      this.onItemIncreased,
+      this.onItemDecreased,
+      this.isForDetail})
       : super(key: key);
 
   @override
@@ -27,7 +33,8 @@ class OrderItemTile extends StatelessWidget {
             flex: 2,
             child: _getItemDetail(context),
           ),
-          Expanded(
+          if(!isForDetail)
+            Expanded(
             flex: 1,
             child: Container(
               child: OrderItemCounter(

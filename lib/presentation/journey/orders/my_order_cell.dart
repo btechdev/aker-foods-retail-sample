@@ -6,40 +6,48 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import '../../../common/extensions/pixel_dimension_util_extensions.dart';
 
 class MyOrderCell extends StatelessWidget {
+  final Function onTap;
+  final int index;
+
+  MyOrderCell({this.onTap, this.index});
+
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        Container(
-          height: LayoutConstants.dimen_200.h,
-          color: AppColor.white,
-          padding: EdgeInsets.symmetric(
-              horizontal: LayoutConstants.dimen_16.w,
-              vertical: LayoutConstants.dimen_8.h),
-          child: _getRow(context),
-        ),
-        Divider(
-          height: LayoutConstants.dimen_1.h,
-        ),
-        Container(
-          height: LayoutConstants.dimen_40.h,
-          color: AppColor.white,
-          padding: EdgeInsets.symmetric(
-              horizontal: LayoutConstants.dimen_16.w,
-              vertical: LayoutConstants.dimen_8.h),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              _getRatingBar(),
-              _getReorderButton(context),
-            ],
+    return GestureDetector(
+      onTap: onTap,
+      child: Column(
+        children: <Widget>[
+          Container(
+            height: LayoutConstants.dimen_200.h,
+            color: AppColor.white,
+            padding: EdgeInsets.symmetric(
+                horizontal: LayoutConstants.dimen_16.w,
+                vertical: LayoutConstants.dimen_8.h),
+            child: _getRow(context),
           ),
-        ),
-        Divider(
-          height: LayoutConstants.dimen_16.h,
-          color: AppColor.transparent,
-        ),
-      ],
+          Divider(
+            height: LayoutConstants.dimen_1.h,
+          ),
+          Container(
+            height: LayoutConstants.dimen_40.h,
+            color: AppColor.white,
+            padding: EdgeInsets.symmetric(
+                horizontal: LayoutConstants.dimen_16.w,
+                vertical: LayoutConstants.dimen_8.h),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                _getRatingBar(),
+                _getReorderButton(context),
+              ],
+            ),
+          ),
+          Divider(
+            height: LayoutConstants.dimen_16.h,
+            color: AppColor.transparent,
+          ),
+        ],
+      ),
     );
   }
 
@@ -47,7 +55,7 @@ class MyOrderCell extends StatelessWidget {
         onPressed: () => {},
         child: Container(
           alignment: Alignment.centerRight,
-          width: LayoutConstants.dimen_80.w,
+          padding: EdgeInsets.symmetric(horizontal: LayoutConstants.dimen_16.w),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
@@ -57,6 +65,7 @@ class MyOrderCell extends StatelessWidget {
               ),
               Text(
                 'Reorder',
+                textAlign: TextAlign.end,
                 style: Theme.of(context)
                     .textTheme
                     .caption
@@ -102,7 +111,7 @@ class MyOrderCell extends StatelessWidget {
       );
 
   Container _getItemDetailsContainer(BuildContext context) => Container(
-        width: PixelDimensionUtil().uiWidthPx * 0.75,
+        width: PixelDimensionUtil().uiWidthPx * 0.65,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
@@ -111,7 +120,8 @@ class MyOrderCell extends StatelessWidget {
               height: LayoutConstants.dimen_8.h,
             ),
             _getItemDetails(context,
-                'Something, Something, Something, Something, Something,Something, Something, Something, Something, Something'),
+                'Something, Something, Something, Something, Something,'
+                    'Something, Something, Something, Something, Something'),
             SizedBox(
               height: LayoutConstants.dimen_8.h,
             ),
@@ -124,33 +134,38 @@ class MyOrderCell extends StatelessWidget {
         ),
       );
 
-  Container _getNavigateToDetailsContainer(BuildContext context) => Container(
-        child: Column(
-          children: <Widget>[
-            Container(
-              height: LayoutConstants.dimen_30.h,
-              padding: EdgeInsets.all(LayoutConstants.dimen_4.w),
-              decoration: BoxDecoration(
-                border: Border.all(
-                    color: AppColor.primaryColor,
-                    width: LayoutConstants.dimen_1.w),
-                borderRadius: BorderRadius.circular(LayoutConstants.dimen_4.w),
-              ),
-              child: Text(
-                'Delivered',
-                style: Theme.of(context).textTheme.subtitle2.copyWith(
+  Expanded _getNavigateToDetailsContainer(BuildContext context) => Expanded(
+        flex: 2,
+        child: Container(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: <Widget>[
+              Container(
+                height: LayoutConstants.dimen_30.h,
+                padding: EdgeInsets.all(LayoutConstants.dimen_4.w),
+                decoration: BoxDecoration(
+                  border: Border.all(
                       color: AppColor.primaryColor,
-                    ),
+                      width: LayoutConstants.dimen_1.w),
+                  borderRadius:
+                      BorderRadius.circular(LayoutConstants.dimen_4.w),
+                ),
+                child: Text(
+                  'Delivered',
+                  style: Theme.of(context).textTheme.subtitle2.copyWith(
+                        color: AppColor.primaryColor,
+                      ),
+                ),
               ),
-            ),
-            SizedBox(
-              height: LayoutConstants.dimen_30.h,
-            ),
-            Icon(
-              Icons.chevron_right,
-              color: AppColor.primaryColor,
-            )
-          ],
+              SizedBox(
+                height: LayoutConstants.dimen_30.h,
+              ),
+              Icon(
+                Icons.chevron_right,
+                color: AppColor.primaryColor,
+              )
+            ],
+          ),
         ),
       );
 
