@@ -1,3 +1,5 @@
+import 'package:aker_foods_retail/common/extensions/string_extensions.dart';
+import 'package:aker_foods_retail/common/local_preferences/local_preferences.dart';
 import 'package:aker_foods_retail/common/utils/pixel_dimension_util.dart';
 import 'package:aker_foods_retail/presentation/app/app_bloc_listeners.dart';
 import 'package:aker_foods_retail/presentation/app/route_constants.dart';
@@ -11,6 +13,9 @@ import 'theme/app_themes.dart';
 class App extends StatelessWidget {
   final GlobalKey<NavigatorState> _navigatorStateGlobalKey =
       GlobalKey<NavigatorState>();
+  final LocalPreferences localPreferences;
+
+  App(this.localPreferences);
 
   @override
   Widget build(BuildContext context) => MaterialApp(
@@ -39,6 +44,21 @@ class App extends StatelessWidget {
         title: 'Aker Foods Retail',
         theme: AppTheme.defaultTheme(),
         routes: Routes.getAll(),
-        initialRoute: RouteConstants.initial,
+        initialRoute: appInitialRoute,
       );
+
+  String get appInitialRoute {
+    final String idToken =
+        localPreferences.get(PreferencesKeys.firebaseIdToken);
+    if (idToken.isNullOrEmpty) {
+      return RouteConstants.enterPhoneNumber;
+    }
+
+    final bool userIsNew = localPreferences.get(PreferencesKeys.userIsNew);
+    if (userIsNew) {
+      return RouteConstants.setupUserProfile;
+    }
+
+    return RouteConstants.dashboard;
+  }
 }

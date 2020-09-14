@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:pedantic/pedantic.dart';
@@ -14,16 +15,17 @@ import 'common/local_preferences/local_preferences.dart';
 import 'config/configuration.dart';
 import 'presentation/app.dart';
 
-void main() {
+Future<void> main() async {
   // Load configuration from secret environment
   Configuration().setConfigurationValues(secret_config.environment);
 
   InjectorConfig.setup();
   WidgetsFlutterBinding.ensureInitialized();
-  Firebase.initializeApp();
+  await Firebase.initializeApp();
 
   // Initialize shared preferences wrapper
-  unawaited(Injector.resolve<LocalPreferences>().init());
+  final localPreferences = Injector.resolve<LocalPreferences>();
+  await localPreferences.init();
 
   // Enable Crashlytics based on environment and
   // Pass all uncaught errors from the framework to Crashlytics.
@@ -33,12 +35,17 @@ void main() {
   // Initialise OneSignal for push notification service
   unawaited(_initialiseOneSignal());
 
+  // Set application for portrait device orientation
+  unawaited(
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]),
+  );
+
   // Configure only to support Light mode. If Dark mode is needed, update this
   unawaited(FlutterStatusbarcolor.setStatusBarWhiteForeground(false));
   unawaited(FlutterStatusbarcolor.setStatusBarColor(Colors.transparent));
 
   runZoned(
-    () => runApp(App()),
+    () => runApp(App(localPreferences)),
     onError: Crashlytics.instance.recordError,
   );
 }
