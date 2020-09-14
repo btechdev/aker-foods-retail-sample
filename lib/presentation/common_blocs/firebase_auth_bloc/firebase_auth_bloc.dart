@@ -84,12 +84,8 @@ class FirebaseAuthBloc extends Bloc<FirebaseAuthEvent, FirebaseAuthState> {
       yield OtpVerificationSuccessState(user: user);
 
       final preferencesIdToken = await authUseCase.getUserAuthIdToken();
-      final preferencesRefreshToken =
-          await authUseCase.getUserAuthRefreshToken();
       debugPrint('OtpVerificationSuccessState PreferencesIdToken => '
           '$preferencesIdToken');
-      debugPrint('OtpVerificationSuccessState PreferencesRefreshToken => '
-          '$preferencesRefreshToken');
 
       debugPrint('OtpVerificationSuccessState UserID => ' '${user.userId}');
       await OneSignal.shared.setExternalUserId(user.userId);

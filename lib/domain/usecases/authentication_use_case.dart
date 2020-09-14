@@ -21,6 +21,5 @@ class AuthenticationUseCase {
   Future<String> getUserAuthIdToken() =>
       authenticationRepository.getUserAuthIdToken();
 
-  Future<String> getUserAuthRefreshToken() =>
-      authenticationRepository.getUserAuthRefreshToken();
+  Future<bool> getNewUserFlag() => authenticationRepository.getNewUserFlag();
 }

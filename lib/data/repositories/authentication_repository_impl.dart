@@ -16,7 +16,7 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
   Future<bool> saveUserAuthentication(FirebaseAuthModel user) async {
     final result1 = await authenticationLocalDataSource.setUserUid(user.userId);
     final result2 =
-        await authenticationLocalDataSource.setRefreshToken(user.refreshToken);
+        await authenticationLocalDataSource.setNewUserFlag(user.isNewUser);
     final result3 = await updateFirebaseIdToken(user.idToken);
     return result1 && result2 && result3;
   }
@@ -35,7 +35,7 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
   }
 
   @override
-  Future<String> getUserAuthRefreshToken() async {
-    return authenticationLocalDataSource.getRefreshToken();
+  Future<bool> getNewUserFlag() async {
+    return authenticationLocalDataSource.getNewUserFlag();
   }
 }
