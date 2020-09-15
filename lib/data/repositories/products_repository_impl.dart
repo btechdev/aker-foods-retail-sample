@@ -10,7 +10,7 @@ class ProductsRepositoryImpl implements ProductsRepository {
 
   static List<ProductModel> dummyProducts = [
     ProductModel(
-        name: 'Onion On Onion Onion Onion', quantity: '1 kg', price: 20),
+        name: 'Onion Onion Onion Onion Onion', quantity: '1 kg', price: 20),
     ProductModel(name: 'Tomato', quantity: '1 kg', price: 80, discount: 0.10),
     ProductModel(name: 'Potato', quantity: '1 kg', price: 25),
     ProductModel(

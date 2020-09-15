@@ -21,15 +21,13 @@ class _MyOrderOutOfStockCellState extends State<MyOrderOutOfStockCell> {
   Widget build(BuildContext context) => Card(
         elevation: 0,
         color: AppColor.orangeDark.withOpacity(0.10),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(LayoutConstants.dimen_8.w),
-        ),
+        shape: LayoutConstants.borderlessRoundedRectangle,
         child: Container(
           height: LayoutConstants.dimen_140.h,
           alignment: Alignment.center,
           padding: EdgeInsets.symmetric(
-            horizontal: LayoutConstants.dimen_16.w,
-            vertical: LayoutConstants.dimen_8.h,
+            horizontal: LayoutConstants.dimen_12.w,
+            vertical: LayoutConstants.dimen_12.h,
           ),
           child: _productDetailsRow(context),
         ),
@@ -38,38 +36,34 @@ class _MyOrderOutOfStockCellState extends State<MyOrderOutOfStockCell> {
   Row _productDetailsRow(BuildContext context) => Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          _productImageClippedRect(),
           Expanded(
-            flex: 1,
-            child: _productImageClippedRect(),
-          ),
-          Expanded(
-            flex: 1,
+            flex: 3,
             child: _productDetailsContainer(context),
           ),
           Expanded(
-            flex: 1,
+            flex: 2,
             child: _actionsColumn(context),
           )
         ],
       );
 
-  /*Container _productDetailsContainer(BuildContext context) => Container(
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _productImageClippedRect(),
-            SizedBox(width: LayoutConstants.dimen_12.w),
-            ProductInfoPrice(product: ProductsRepositoryImpl.dummyProducts[0]),
-            //_getItemPriceQuantityContainer(context)
+  ClipRRect _productImageClippedRect() => ClipRRect(
+        borderRadius: LayoutConstants.defaultBorderRadius,
+        child: Stack(
+          children: <Widget>[
+            _productImage(),
+            _outOfStockOverlayContainer(),
           ],
         ),
-      );*/
+      );
 
   Container _productDetailsContainer(BuildContext context) => Container(
         alignment: Alignment.center,
         padding: EdgeInsets.only(left: LayoutConstants.dimen_12.w),
-        child:
-            ProductInfoPrice(product: ProductsRepositoryImpl.dummyProducts[0]),
+        child: ProductInfoPrice(
+          product: ProductsRepositoryImpl.dummyProducts[0],
+        ),
       );
 
   Column _actionsColumn(BuildContext context) => Column(
@@ -77,27 +71,12 @@ class _MyOrderOutOfStockCellState extends State<MyOrderOutOfStockCell> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
           IconButton(
-            icon: Icon(
-              Icons.delete,
-              color: AppColor.black54,
-            ),
+            icon: Icon(Icons.delete, color: AppColor.black54),
+            padding: EdgeInsets.zero,
             onPressed: widget.onDelete,
           ),
-          Container(
-            padding: EdgeInsets.only(bottom: LayoutConstants.dimen_12.h),
-            child: NotifyMeButton(onPressed: widget.onNotify),
-          ),
+          NotifyMeButton(onPressed: widget.onNotify),
         ],
-      );
-
-  ClipRRect _productImageClippedRect() => ClipRRect(
-        borderRadius: BorderRadius.circular(LayoutConstants.dimen_12.w),
-        child: Stack(
-          children: <Widget>[
-            _productImage(),
-            _outOfStockOverlayContainer(),
-          ],
-        ),
       );
 
   Image _productImage() => Image.asset(
@@ -120,31 +99,9 @@ class _MyOrderOutOfStockCellState extends State<MyOrderOutOfStockCell> {
           child: Text(
             'Out of stock',
             style: Theme.of(context).textTheme.subtitle2.copyWith(
-                  color: AppColor.black87,
+                  color: AppColor.black54,
                 ),
           ),
         ),
-      );
-
-  Column _getItemPriceQuantityContainer(BuildContext context) => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Onion',
-            style: Theme.of(context).textTheme.bodyText1,
-          ),
-          Text(
-            '1 kg',
-            style: Theme.of(context).textTheme.subtitle1,
-          ),
-          SizedBox(height: LayoutConstants.dimen_16.h),
-          Text(
-            'Rs 22',
-            style: Theme.of(context).textTheme.bodyText1.copyWith(
-                  color: AppColor.orangeDark,
-                  fontWeight: FontWeight.w600,
-                ),
-          )
-        ],
       );
 }
