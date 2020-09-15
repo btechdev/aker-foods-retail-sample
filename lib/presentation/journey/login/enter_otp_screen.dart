@@ -1,6 +1,5 @@
 import 'package:aker_foods_retail/common/constants/layout_constants.dart';
 import 'package:aker_foods_retail/common/injector/injector.dart';
-import 'package:aker_foods_retail/config/configuration.dart';
 import 'package:aker_foods_retail/presentation/app/route_constants.dart';
 import 'package:aker_foods_retail/presentation/common_blocs/firebase_auth_bloc/firebase_auth_bloc.dart';
 import 'package:aker_foods_retail/presentation/common_blocs/firebase_auth_bloc/firebase_auth_event.dart';
@@ -227,14 +226,10 @@ class _EnterOTPScreen extends State<EnterOtpScreen>
       );
 
   void _verifySmsOtp() {
-    if (Configuration.isDev) {
-      _navigateToDashboard();
-    } else {
-      _authBloc.add(AuthenticateWithSmsCodeEvent(
-        phoneNumber: phoneNumber,
-        smsCode: _smsCode,
-      ));
-    }
+    _authBloc.add(AuthenticateWithSmsCodeEvent(
+      phoneNumber: phoneNumber,
+      smsCode: _smsCode,
+    ));
   }
 
   String _showLastCharacters(String string, int count) =>

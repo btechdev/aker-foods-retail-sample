@@ -1,15 +1,22 @@
 import 'package:aker_foods_retail/common/constants/layout_constants.dart';
 import 'package:aker_foods_retail/presentation/journey/checkout/order_cart/order_item_counter.dart';
 import 'package:flutter/material.dart';
+
 import '../../../../common/extensions/pixel_dimension_util_extensions.dart';
 
 class OrderItemTile extends StatelessWidget {
   final int id;
   final Function onItemIncreased;
   final Function onItemDecreased;
+  final bool isForDetail;
 
-  OrderItemTile({Key key, this.id, this.onItemIncreased, this.onItemDecreased})
-      : super(key: key);
+  OrderItemTile({
+    Key key,
+    this.id,
+    this.onItemIncreased,
+    this.onItemDecreased,
+    this.isForDetail = false,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) => Container(
@@ -27,16 +34,17 @@ class OrderItemTile extends StatelessWidget {
             flex: 2,
             child: _getItemDetail(context),
           ),
-          Expanded(
-            flex: 1,
-            child: Container(
-              child: OrderItemCounter(
-                id: id,
-                onIncrement: onItemIncreased,
-                onDecrement: onItemDecreased,
+          if (!isForDetail)
+            Expanded(
+              flex: 1,
+              child: Container(
+                child: OrderItemCounter(
+                  id: id,
+                  onIncrement: onItemIncreased,
+                  onDecrement: onItemDecreased,
+                ),
               ),
-            ),
-          )
+            )
         ],
       );
 

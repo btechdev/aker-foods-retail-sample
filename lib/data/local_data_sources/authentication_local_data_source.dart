@@ -35,16 +35,16 @@ class AuthenticationLocalDataSource {
         PreferencesKeys.firebaseIdToken,
       );
 
-  String getRefreshToken() => localPreferences.get(
-        PreferencesKeys.refreshToken,
+  bool getNewUserFlag() => localPreferences.get(
+        PreferencesKeys.userIsNew,
       );
 
-  Future<bool> setRefreshToken(String refreshToken) => localPreferences.set(
-        PreferencesKeys.refreshToken,
-        refreshToken,
+  Future<bool> setNewUserFlag(bool userIsNew) => localPreferences.set(
+        PreferencesKeys.userIsNew,
+        userIsNew,
       );
 
-  Future<bool> removeRefreshToken() => localPreferences.remove(
-        PreferencesKeys.refreshToken,
+  Future<bool> removeNewUserFlag() => localPreferences.remove(
+        PreferencesKeys.userIsNew,
       );
 }

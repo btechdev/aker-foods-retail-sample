@@ -1,36 +1,20 @@
 {
 	"environmentVariables": {
-		"host": "https://dev-api.akerretail.com/",
-		"clientId": "abcdefghijkl",
-		"clientSecret": "abcdefghijkl",
-		"assetHost": "https://dev-assets.akerfoods.com",
-		"firebaseToken": "abcdefghijkl"
+		"host": "https://dev-api.akerretail.com/"
 	},
 	"dev": {
 		"shouldEnableAllLogs": true,
 		"shouldEnableCrashlytics": true,
-		"host": "https://dev-api.akerretail.com/",
-		"clientId": "abcdefghijkl",
-		"clientSecret": "abcdefghijkl",
-		"assetHost": "https://dev-assets.akerfoods.com",
-		"firebaseToken": "abcdefghijkl"
+		"host": "https://dev-api.akerretail.com/"
 	},
 	"qa": {
 		"shouldEnableAllLogs": true,
 		"shouldEnableCrashlytics": true,
-		"host": "https://qa-api.akerretail.com/",
-		"clientId": "abcdefghijkl",
-		"clientSecret": "abcdefghijkl",
-		"assetHost": "https://qa-assets.akerfoods.com",
-		"firebaseToken": "abcdefghijkl"
+		"host": "https://qa-api.akerretail.com/"
 	},
 	"prod": {
 		"shouldEnableAllLogs": false,
 		"shouldEnableCrashlytics": true,
-		"host": "https://api.akerretail.com/",
-		"clientId": "abcdefghijkl",
-		"clientSecret": "abcdefghijkl",
-		"assetHost": "https://prod-assets.akerfoods.com",
-		"firebaseToken": "abcdefghijkl"
+		"host": "https://api.akerretail.com/"
 	}
 }
