@@ -35,14 +35,20 @@ class DashboardScreenState extends State<DashboardScreen> {
   }
 
   @override
+  void dispose() {
+    _pageController?.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     _navigationBarData = DashboardBottomNavigationBarData(context);
     return BlocProvider<DashboardBloc>(
       lazy: false,
-      create: (context) => Injector.resolve<DashboardBloc>()
-        ..add(NavigateToPageEvent(pageIndex: 0)),
+      create: (context) => Injector.resolve<DashboardBloc>(),
       child: BlocListener<DashboardBloc, DashboardState>(
-        listener: (context, state) => {},
+        listener: (context, state) =>
+            _pageController.jumpToPage(state.pageIndex),
         child: _buildScaffold(),
       ),
     );
@@ -60,7 +66,7 @@ class DashboardScreenState extends State<DashboardScreen> {
       );
 
   Widget _getScaffoldBody() => PageView(
-        pageSnapping: true,
+        pageSnapping: false,
         controller: _pageController,
         scrollDirection: Axis.horizontal,
         physics: const NeverScrollableScrollPhysics(),
@@ -68,25 +74,14 @@ class DashboardScreenState extends State<DashboardScreen> {
       );
 
   Widget _buildBottomNavigationBar(
-    BuildContext context,
-    DashboardState state,
-  ) {
-    if (state is PageLoadedState) {
-      if (state?.pageIndex == null) {
-        return Container();
-      }
-
-      _pageController.jumpToPage(state.pageIndex);
-      return BottomNavigationBar(
+          BuildContext context, DashboardState state) =>
+      BottomNavigationBar(
         elevation: 32,
         currentIndex: state.pageIndex,
         type: BottomNavigationBarType.fixed,
         items: _navigationBarData.getBottomNavigationBarItemList(),
         onTap: (index) => BlocProvider.of<DashboardBloc>(context).add(
-          NavigateToPageEvent(pageIndex: index),
+          NavigateToPageEvent(pageIndex: index ?? 0),
         ),
       );
-    }
-    return Container();
-  }
 }

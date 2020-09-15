@@ -7,5 +7,5 @@ abstract class DashboardEvent {
 class NavigateToPageEvent extends DashboardEvent {
   final int pageIndex;
 
-  NavigateToPageEvent({this.pageIndex}) : super(pageIndex);
+  NavigateToPageEvent({this.pageIndex}) : super(pageIndex ?? 0);
 }
