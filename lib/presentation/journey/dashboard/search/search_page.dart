@@ -6,8 +6,9 @@ import 'package:aker_foods_retail/domain/entities/product_entity.dart';
 import 'package:aker_foods_retail/presentation/common_blocs/products_bloc/products_bloc.dart';
 import 'package:aker_foods_retail/presentation/common_blocs/products_bloc/products_event.dart';
 import 'package:aker_foods_retail/presentation/common_blocs/products_bloc/products_state.dart';
-import 'package:aker_foods_retail/presentation/journey/dashboard/home/product_grid_item_tile.dart';
 import 'package:aker_foods_retail/presentation/theme/app_colors.dart';
+import 'package:aker_foods_retail/presentation/widgets/product_grid_item_tile.dart';
+import 'package:aker_foods_retail/presentation/widgets/products_category_header.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -182,20 +183,7 @@ class SearchPageState extends State<SearchPage> {
 
   SliverToBoxAdapter _productsCategoryHeader(String title) =>
       SliverToBoxAdapter(
-        child: Container(
-          color: AppColor.primaryColor.withOpacity(0.35),
-          height: LayoutConstants.dimen_48.w,
-          alignment: Alignment.centerLeft,
-          padding: EdgeInsets.symmetric(
-            horizontal: LayoutConstants.dimen_16.w,
-          ),
-          child: Text(
-            title,
-            style: Theme.of(context).textTheme.bodyText1.copyWith(
-                  color: AppColor.black,
-                ),
-          ),
-        ),
+        child: ProductsCategoryHeader(title: title),
       );
 
   SliverPadding _productsSliverGridWithPadding() => SliverPadding(
@@ -227,19 +215,8 @@ class SearchPageState extends State<SearchPage> {
         ),
       );
 
-  Container _productsCountTextContainer() => Container(
-        color: AppColor.primaryColor.withOpacity(0.35),
-        height: LayoutConstants.dimen_48.w,
-        alignment: Alignment.centerLeft,
-        padding: EdgeInsets.symmetric(
-          horizontal: LayoutConstants.dimen_16.w,
-        ),
-        child: Text(
-          _getProductsResultString(),
-          style: Theme.of(context).textTheme.bodyText1.copyWith(
-                color: AppColor.black,
-              ),
-        ),
+  Widget _productsCountTextContainer() => ProductsCategoryHeader(
+        title: _getProductsResultString(),
       );
 
   String _getProductsResultString() {
@@ -271,9 +248,5 @@ class SearchPageState extends State<SearchPage> {
       );
 
   ProductGridItemTile _productGridItemTile(ProductEntity product) =>
-      ProductGridItemTile(
-        product.name,
-        product.quantity,
-        '${AppConstants.rupeeSymbol} ${product.price}',
-      );
+      ProductGridItemTile(product: product);
 }

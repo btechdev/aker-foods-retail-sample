@@ -1,8 +1,9 @@
 import 'package:aker_foods_retail/common/constants/layout_constants.dart';
+import 'package:aker_foods_retail/common/extensions/pixel_dimension_util_extensions.dart';
+import 'package:aker_foods_retail/data/repositories/products_repository_impl.dart';
 import 'package:aker_foods_retail/presentation/journey/checkout/order_cart/order_item_counter.dart';
+import 'package:aker_foods_retail/presentation/widgets/product_info_price_widget.dart';
 import 'package:flutter/material.dart';
-
-import '../../../../common/extensions/pixel_dimension_util_extensions.dart';
 
 class OrderItemTile extends StatelessWidget {
   final int id;
@@ -19,25 +20,33 @@ class OrderItemTile extends StatelessWidget {
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) => Container(
-        height: LayoutConstants.dimen_140.h,
-        padding: EdgeInsets.symmetric(
-          horizontal: LayoutConstants.dimen_16.w,
-          vertical: LayoutConstants.dimen_8.h,
+  Widget build(BuildContext context) => Card(
+        elevation: 0,
+        shape: LayoutConstants.borderlessRoundedRectangle,
+        child: Container(
+          height: LayoutConstants.dimen_140.h,
+          alignment: Alignment.center,
+          padding: EdgeInsets.symmetric(
+            horizontal: LayoutConstants.dimen_12.w,
+            vertical: LayoutConstants.dimen_12.h,
+          ),
+          child: _productDetailsRow(context),
         ),
-        child: _getBody(context),
       );
 
-  Row _getBody(BuildContext context) => Row(
+  Row _productDetailsRow(BuildContext context) => Row(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          _productImageClippedRect(),
           Expanded(
-            flex: 2,
-            child: _getItemDetail(context),
+            flex: 3,
+            child: _productDetailsContainer(context),
           ),
           if (!isForDetail)
             Expanded(
-              flex: 1,
+              flex: 2,
               child: Container(
+                alignment: Alignment.bottomCenter,
                 child: OrderItemCounter(
                   id: id,
                   onIncrement: onItemIncreased,
@@ -48,43 +57,23 @@ class OrderItemTile extends StatelessWidget {
         ],
       );
 
-  Container _getItemDetail(BuildContext context) => Container(
-        child: _getItemContainer(context),
+  ClipRRect _productImageClippedRect() => ClipRRect(
+        borderRadius: LayoutConstants.defaultBorderRadius,
+        child: _productImage(),
       );
 
-  Row _getItemContainer(BuildContext context) => Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(LayoutConstants.dimen_12.w),
-            child: Image.asset(
-              'assets/images/user-profile-vegies.jpeg',
-              height: LayoutConstants.dimen_100.h,
-              width: LayoutConstants.dimen_100.w,
-              fit: BoxFit.cover,
-            ),
-          ),
-          SizedBox(width: LayoutConstants.dimen_10.w),
-          _getItemPriceQuantityContainer(context)
-        ],
+  Image _productImage() => Image.asset(
+        'assets/images/user-profile-vegies.jpeg',
+        width: LayoutConstants.dimen_100.w,
+        height: LayoutConstants.dimen_100.h,
+        fit: BoxFit.cover,
       );
 
-  Column _getItemPriceQuantityContainer(BuildContext context) => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Onion',
-            style: Theme.of(context).textTheme.bodyText1,
-          ),
-          Text(
-            '1 kg',
-            style: Theme.of(context).textTheme.subtitle1,
-          ),
-          SizedBox(height: LayoutConstants.dimen_16.h),
-          Text(
-            'Rs 22',
-            style: Theme.of(context).textTheme.bodyText1,
-          )
-        ],
+  Container _productDetailsContainer(BuildContext context) => Container(
+        alignment: Alignment.center,
+        padding: EdgeInsets.only(left: LayoutConstants.dimen_12.w),
+        child: ProductInfoPrice(
+          product: ProductsRepositoryImpl.dummyProducts[0],
+        ),
       );
 }

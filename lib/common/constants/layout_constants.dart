@@ -5,14 +5,20 @@ import 'package:flutter/material.dart';
 class LayoutConstants {
   LayoutConstants._();
 
+  static const appBarDefaultElevation = dimen_8;
+
   static double get primaryButtonHeight => dimen_48.h;
 
-  static const appBarDefaultElevation = dimen_8;
+  static BorderRadius get defaultBorderRadius =>
+      BorderRadius.circular(dimen_12.w);
 
   static BoxDecoration get inputBoxDecoration => BoxDecoration(
         border: Border.all(color: AppColor.black25, width: dimen_1.w),
-        borderRadius: BorderRadius.circular(dimen_12.w),
+        borderRadius: defaultBorderRadius,
       );
+
+  static RoundedRectangleBorder get borderlessRoundedRectangle =>
+      RoundedRectangleBorder(borderRadius: defaultBorderRadius);
 
   static const padding = 18.0;
   static const fontHeight = 1.5;

@@ -1,14 +1,14 @@
 import 'package:aker_foods_retail/data/models/product_model.dart';
-import 'package:aker_foods_retail/domain/entities/product_entity.dart';
 import 'package:aker_foods_retail/domain/repositories/products_repository.dart';
 
 class ProductsRepositoryImpl implements ProductsRepository {
-  List<String> dummyCategories = [
+  static List<String> dummyCategories = [
     'Vegetables',
     'Fruits',
     'Dairy',
   ];
-  List<ProductModel> dummyProducts = [
+
+  static List<ProductModel> dummyProducts = [
     ProductModel(
         name: 'Onion Onion Onion Onion Onion', quantity: '1 kg', price: 20),
     ProductModel(name: 'Tomato', quantity: '1 kg', price: 80, discount: 0.10),

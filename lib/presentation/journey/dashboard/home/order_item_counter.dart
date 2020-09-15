@@ -60,14 +60,13 @@ class _OrderItemCounterState extends State<OrderItemCounter> {
       );
 
   Container _getButtonContainer(IconData iconData) => Container(
+        width: LayoutConstants.dimen_36.w,
+        height: LayoutConstants.dimen_36.w,
         alignment: Alignment.center,
-        padding: EdgeInsets.all(LayoutConstants.dimen_4.w),
         decoration: BoxDecoration(
-            color: AppColor.primaryColor,
-            borderRadius: BorderRadius.circular(LayoutConstants.dimen_8.w)),
-        child: Icon(
-          iconData,
-          color: Colors.white,
+          color: AppColor.primaryColor,
+          borderRadius: BorderRadius.circular(LayoutConstants.dimen_8.w),
         ),
+        child: Icon(iconData, color: Colors.white),
       );
 }

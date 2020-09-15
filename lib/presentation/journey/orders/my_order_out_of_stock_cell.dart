@@ -1,7 +1,10 @@
 import 'package:aker_foods_retail/common/constants/layout_constants.dart';
+import 'package:aker_foods_retail/common/extensions/pixel_dimension_util_extensions.dart';
+import 'package:aker_foods_retail/data/repositories/products_repository_impl.dart';
 import 'package:aker_foods_retail/presentation/theme/app_colors.dart';
+import 'package:aker_foods_retail/presentation/widgets/notify_me_button.dart';
+import 'package:aker_foods_retail/presentation/widgets/product_info_price_widget.dart';
 import 'package:flutter/material.dart';
-import '../../../common/extensions/pixel_dimension_util_extensions.dart';
 
 class MyOrderOutOfStockCell extends StatefulWidget {
   final Function onDelete;
@@ -15,113 +18,90 @@ class MyOrderOutOfStockCell extends StatefulWidget {
 
 class _MyOrderOutOfStockCellState extends State<MyOrderOutOfStockCell> {
   @override
-  Widget build(BuildContext context) => Container(
-        color: AppColor.white54,
-        height: LayoutConstants.dimen_140.h,
-        padding: EdgeInsets.symmetric(
-          horizontal: LayoutConstants.dimen_16.w,
-          vertical: LayoutConstants.dimen_8.h,
+  Widget build(BuildContext context) => Card(
+        elevation: 0,
+        color: AppColor.orangeDark.withOpacity(0.10),
+        shape: LayoutConstants.borderlessRoundedRectangle,
+        child: Container(
+          height: LayoutConstants.dimen_140.h,
+          alignment: Alignment.center,
+          padding: EdgeInsets.symmetric(
+            horizontal: LayoutConstants.dimen_12.w,
+            vertical: LayoutConstants.dimen_12.h,
+          ),
+          child: _productDetailsRow(context),
         ),
-        child: _getBody(context),
       );
 
-  Row _getBody(BuildContext context) => Row(
-    crossAxisAlignment: CrossAxisAlignment.start,
+  Row _productDetailsRow(BuildContext context) => Row(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          _productImageClippedRect(),
+          Expanded(
+            flex: 3,
+            child: _productDetailsContainer(context),
+          ),
           Expanded(
             flex: 2,
-            child: _getItemDetail(context),
-          ),
-          Expanded(
-            flex: 1,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: <Widget>[
-                Align(
-                  alignment: Alignment.topRight,
-                  child: IconButton(
-                    icon: Icon(Icons.delete),
-                    onPressed: widget.onDelete,
-                  ),
-                ),
-                FlatButton(
-                  onPressed: widget.onNotify,
-                  shape: RoundedRectangleBorder(
-                    side: BorderSide(
-                        color: AppColor.primaryColor,
-                        width: LayoutConstants.dimen_1.w,
-                        style: BorderStyle.solid),
-                    borderRadius:
-                        BorderRadius.circular(LayoutConstants.dimen_8.w),
-                  ),
-                  child: Text(
-                    'Notify Me',
-                    style: Theme.of(context).textTheme.caption,
-                  ),
-                ),
-              ],
-            ),
+            child: _actionsColumn(context),
           )
         ],
       );
 
-  Container _getItemDetail(BuildContext context) => Container(
-        child: _getItemContainer(context),
+  ClipRRect _productImageClippedRect() => ClipRRect(
+        borderRadius: LayoutConstants.defaultBorderRadius,
+        child: Stack(
+          children: <Widget>[
+            _productImage(),
+            _outOfStockOverlayContainer(),
+          ],
+        ),
       );
 
-  Row _getItemContainer(BuildContext context) => Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ClipRRect(
-              borderRadius: BorderRadius.circular(LayoutConstants.dimen_12.w),
-              child: Stack(
-                children: <Widget>[
-                  Image.asset(
-                    'assets/images/user-profile-vegies.jpeg',
-                    height: LayoutConstants.dimen_100.h,
-                    width: LayoutConstants.dimen_100.w,
-                    fit: BoxFit.cover,
-                  ),
-                  Container(
-                    height: LayoutConstants.dimen_100.h,
-                    width: LayoutConstants.dimen_100.w,
-                    color: AppColor.white54,
-                  ),
-                  Positioned(
-                    top: LayoutConstants.dimen_40.h,
-                    bottom: LayoutConstants.dimen_40.h,
-                    child: Container(
-                      padding: EdgeInsets.symmetric(horizontal: LayoutConstants.dimen_10.w),
-                      color: AppColor.white,
-                      child: Text(
-                        'Out of stock',
-                        style: Theme.of(context).textTheme.subtitle2,
-                      ),
-                    ),
-                  ),
-                ],
-              )),
-          SizedBox(width: LayoutConstants.dimen_10.w),
-          _getItemPriceQuantityContainer(context)
+  Container _productDetailsContainer(BuildContext context) => Container(
+        alignment: Alignment.center,
+        padding: EdgeInsets.only(left: LayoutConstants.dimen_12.w),
+        child: ProductInfoPrice(
+          product: ProductsRepositoryImpl.dummyProducts[0],
+        ),
+      );
+
+  Column _actionsColumn(BuildContext context) => Column(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          IconButton(
+            icon: Icon(Icons.delete, color: AppColor.black54),
+            padding: EdgeInsets.zero,
+            onPressed: widget.onDelete,
+          ),
+          NotifyMeButton(onPressed: widget.onNotify),
         ],
       );
 
-  Column _getItemPriceQuantityContainer(BuildContext context) => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Onion',
-            style: Theme.of(context).textTheme.bodyText1,
+  Image _productImage() => Image.asset(
+        'assets/images/user-profile-vegies.jpeg',
+        width: LayoutConstants.dimen_100.w,
+        height: LayoutConstants.dimen_100.h,
+        fit: BoxFit.cover,
+      );
+
+  Container _outOfStockOverlayContainer() => Container(
+        width: LayoutConstants.dimen_100.w,
+        height: LayoutConstants.dimen_100.h,
+        color: AppColor.white54,
+        alignment: Alignment.center,
+        child: Container(
+          width: LayoutConstants.dimen_100.w,
+          height: LayoutConstants.dimen_24.h,
+          color: AppColor.white,
+          alignment: Alignment.center,
+          child: Text(
+            'Out of stock',
+            style: Theme.of(context).textTheme.subtitle2.copyWith(
+                  color: AppColor.black54,
+                ),
           ),
-          Text(
-            '1 kg',
-            style: Theme.of(context).textTheme.subtitle1,
-          ),
-          SizedBox(height: LayoutConstants.dimen_16.h),
-          Text(
-            'Rs 22',
-            style: Theme.of(context).textTheme.bodyText1,
-          )
-        ],
+        ),
       );
 }
