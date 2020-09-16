@@ -1,4 +1,5 @@
 import 'package:aker_foods_retail/common/constants/layout_constants.dart';
+import 'package:aker_foods_retail/common/extensions/pixel_dimension_util_extensions.dart';
 import 'package:aker_foods_retail/presentation/app/route_constants.dart';
 import 'package:aker_foods_retail/presentation/journey/checkout/order_cart/bill_details_widget.dart';
 import 'package:aker_foods_retail/presentation/journey/checkout/order_cart/order_delivery_address.dart';
@@ -9,7 +10,6 @@ import 'package:aker_foods_retail/presentation/journey/checkout/order_cart/refer
 import 'package:aker_foods_retail/presentation/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:keyboard_avoider/keyboard_avoider.dart';
-import '../../../../common/extensions/pixel_dimension_util_extensions.dart';
 
 class CheckoutOrderScreen extends StatefulWidget {
   CheckoutOrderScreen({Key key}) : super(key: key);
@@ -19,9 +19,9 @@ class CheckoutOrderScreen extends StatefulWidget {
 }
 
 class _CheckoutOrderScreenState extends State<CheckoutOrderScreen> {
-  var items = ['abc', 'def', 'ghi'];
-  var referralCode = '';
-  var isReferralCodeApplied = false;
+  List<String> items = ['abc', 'def', 'ghi'];
+  String referralCode = '';
+  bool isReferralCodeApplied = false;
 
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -110,7 +110,7 @@ class _CheckoutOrderScreenState extends State<CheckoutOrderScreen> {
 
   AppBar _getAppBar() => AppBar(
         title: Text(
-          'Checkout',
+          'Cart',
           style: Theme.of(context).textTheme.headline6,
         ),
         centerTitle: false,

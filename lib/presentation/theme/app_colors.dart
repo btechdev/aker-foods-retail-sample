@@ -11,7 +11,9 @@ class AppColor {
   static const Color white = Color(0xFFFFFFFF);
   static const Color black = Color(0xFF000000);
   static const Color grey = Color(0xFFBDBDBD);
-  static Color grey25 = grey.withOpacity(0.25);
+
+  static Color primaryColor35 = primaryColor.withOpacity(0.35);
+  static const Color primaryColor35Opaque = Color(0xFFBADCBC);
 
   static Color white87 = white.withOpacity(0.87);
   static Color white54 = white.withOpacity(0.54);
@@ -22,6 +24,8 @@ class AppColor {
   static Color black54 = black.withOpacity(0.54);
   static Color black40 = black.withOpacity(0.40);
   static Color black25 = black.withOpacity(0.25);
+
+  static Color grey25 = grey.withOpacity(0.25);
 
   static const Color scaffoldBackgroundColor = Color(0xFFF5F5F5);
 

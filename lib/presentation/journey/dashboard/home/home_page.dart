@@ -1,9 +1,9 @@
 import 'package:aker_foods_retail/common/constants/layout_constants.dart';
 import 'package:aker_foods_retail/common/extensions/pixel_dimension_util_extensions.dart';
-import 'package:aker_foods_retail/common/utils/pixel_dimension_util.dart';
 import 'package:aker_foods_retail/common/utils/widget_util.dart';
 import 'package:aker_foods_retail/data/repositories/products_repository_impl.dart';
 import 'package:aker_foods_retail/presentation/app/route_constants.dart';
+import 'package:aker_foods_retail/presentation/journey/dashboard/home/aker_banner_widget.dart';
 import 'package:aker_foods_retail/presentation/journey/user/address/change_address_mode_selection_bottom_sheet.dart';
 import 'package:aker_foods_retail/presentation/theme/app_colors.dart';
 import 'package:aker_foods_retail/presentation/widgets/product_grid_item_tile.dart';
@@ -96,28 +96,13 @@ class HomePageState extends State<HomePage> {
           SliverList(
             delegate: SliverChildListDelegate([
               SizedBox(height: LayoutConstants.dimen_12.h),
-              _bannerContainer(),
+              const AkerBanner(),
               _categoriesCard(),
               SizedBox(height: LayoutConstants.dimen_12.h),
             ]),
           ),
           ..._getProductsWithCategorySliversList(),
         ],
-      );
-
-  Container _bannerContainer() => Container(
-        height: PixelDimensionUtil().uiHeightPx * 0.35,
-        padding: EdgeInsets.symmetric(
-          horizontal: LayoutConstants.dimen_16.w,
-          vertical: LayoutConstants.dimen_16.h,
-        ),
-        child: Card(
-          elevation: 4,
-          color: AppColor.skyBlue,
-          child: Image.network(
-            'https://www.goteso.com/products/assets/images/fruit-and-vegetable-business-management-app.png',
-          ),
-        ),
       );
 
   Card _categoriesCard() => Card(
@@ -167,18 +152,18 @@ class HomePageState extends State<HomePage> {
 
   Row _categoriesRow() => Row(
         children: [
-          _categoryItem(
+          _categoryItemInExpandedContainer(
             title: 'Vegetables',
             url:
                 'https://cdn.shopify.com/s/files/1/0104/1059/0266/products/vegetables-box.jpg',
           ),
           SizedBox(width: LayoutConstants.dimen_12.w),
-          _categoryItem(
+          _categoryItemInExpandedContainer(
             title: 'Dairy',
             url: 'https://images.indianexpress.com/2019/10/dairy-1.jpg',
           ),
           SizedBox(width: LayoutConstants.dimen_12.w),
-          _categoryItem(
+          _categoryItemInExpandedContainer(
             title: 'Fruits',
             url:
                 'https://www.luxuryvillasphuketthailand.com/wp-content/uploads/2018/01/Fruits-in-Phuket1-600x600.jpg',
@@ -186,12 +171,20 @@ class HomePageState extends State<HomePage> {
         ],
       );
 
+  Expanded _categoryItemInExpandedContainer({String title, String url}) =>
+      Expanded(
+        flex: 1,
+        child: Container(
+          child: _categoryItem(title: title, url: url),
+        ),
+      );
+
   Widget _categoryItem({String title, String url}) => Column(
         children: [
           CircleAvatar(
             radius: LayoutConstants.dimen_32.w,
             backgroundImage: NetworkImage(url),
-            backgroundColor: AppColor.primaryColor.withOpacity(0.35),
+            backgroundColor: AppColor.primaryColor35,
           ),
           Text(
             title,

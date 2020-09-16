@@ -95,6 +95,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
 
   Container _getLoadingContainer() {
     return Container(
+      height: LayoutConstants.dimen_200.h,
       alignment: Alignment.center,
       child: const CircularLoaderWidget(),
     );
@@ -119,23 +120,21 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
     );
   }
 
-  Expanded _getSettings() {
-    return Expanded(
-      flex: 1,
-      child: ListView.separated(
-        separatorBuilder: (context, index) => const Divider(
-          color: AppColor.grey,
-        ),
-        itemCount: options.length,
-        itemBuilder: (context, index) => GestureDetector(
-          onTap: () => {_navigateTo(index)},
-          child: _getCell(
-            options[index],
+  Expanded _getSettings() => Expanded(
+        flex: 1,
+        child: ListView.separated(
+          separatorBuilder: (context, index) => const Divider(
+            color: AppColor.grey,
+          ),
+          itemCount: options.length,
+          itemBuilder: (context, index) => GestureDetector(
+            onTap: () => {_navigateTo(index)},
+            child: _getCell(
+              options[index],
+            ),
           ),
         ),
-      ),
-    );
-  }
+      );
 
   Container _getAddressContainer(BuildContext context) {
     return Container(
@@ -248,53 +247,70 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
     }
   }
 
-  Column _getUserDetailsContainer(
-      BuildContext context, UserProfileState state) {
-    return Column(
-      children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Container(
-              width: LayoutConstants.dimen_20.w,
-              height: LayoutConstants.dimen_120.w,
-            ),
-            CircleAvatar(
-              radius: LayoutConstants.dimen_60.w,
-              backgroundImage: const ExactAssetImage(
-                  'assets/images/user-profile-vegies.jpeg'),
-            ),
-            Container(
-              height: LayoutConstants.dimen_120.w,
-              alignment: Alignment.topCenter,
-              child: _getEditUserInfoButton(state),
-            ),
-          ],
-        ),
-        SizedBox(height: LayoutConstants.dimen_16.h),
-        _getUserInfoColumn(state),
-      ],
+  Container _getUserDetailsContainer(
+      BuildContext context, UserProfileFetchSuccessState state) {
+    return Container(
+      height: LayoutConstants.dimen_200.h,
+      alignment: Alignment.center,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          _userProfileImageWithEditButton(state),
+          SizedBox(height: LayoutConstants.dimen_8.h),
+          _userFullNameText(context, state),
+          SizedBox(height: LayoutConstants.dimen_4.h),
+          _userEmailText(context, state),
+        ],
+      ),
     );
   }
 
-  Column _getUserInfoColumn(UserProfileFetchSuccessState state) => Column(
+  Row _userProfileImageWithEditButton(UserProfileState state) => Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Text(
-            '${state.user.salutation} '
-            '${state.user.firstName} ${state.user.lastName}',
-            style: Theme.of(context).textTheme.headline5.apply(
-                  color: AppColor.white,
-                ),
+          Expanded(
+            flex: 2,
+            child: Container(
+              alignment: Alignment.centerRight,
+              child: CircleAvatar(
+                radius: LayoutConstants.dimen_60.w,
+                backgroundImage: const ExactAssetImage(
+                    'assets/images/user-profile-vegies.jpeg'),
+              ),
+            ),
           ),
-          SizedBox(height: LayoutConstants.dimen_4.h),
-          Text(
-            '${state.user.email}',
-            style: Theme.of(context).textTheme.caption.apply(
-                  color: AppColor.white87,
-                ),
+          Expanded(
+            flex: 1,
+            child: Container(
+              height: LayoutConstants.dimen_120.w,
+              alignment: Alignment.topRight,
+              child: _getEditUserInfoButton(state),
+            ),
           ),
         ],
+      );
+
+  Text _userFullNameText(
+    BuildContext context,
+    UserProfileFetchSuccessState state,
+  ) =>
+      Text(
+        '${state.user.salutation} '
+        '${state.user.firstName} ${state.user.lastName}',
+        style: Theme.of(context).textTheme.headline5.apply(
+              color: AppColor.white,
+            ),
+      );
+
+  Text _userEmailText(
+    BuildContext context,
+    UserProfileFetchSuccessState state,
+  ) =>
+      Text(
+        '${state.user.email}',
+        style: Theme.of(context).textTheme.caption.apply(
+              color: AppColor.white87,
+            ),
       );
 
   Widget _getEditUserInfoButton(UserProfileFetchSuccessState state) =>

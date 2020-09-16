@@ -16,7 +16,7 @@ class AppTheme {
         colorScheme: ColorScheme.light(
           primary: AppColor.primaryColor,
           onPrimary: AppColor.primaryColor,
-          primaryVariant: AppColor.primaryColor.withOpacity(0.38),
+          primaryVariant: AppColor.primaryColor35,
           secondary: AppColor.primaryColorDark,
         ),
         appBarTheme: AppBarTheme(

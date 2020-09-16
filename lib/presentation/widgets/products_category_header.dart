@@ -14,7 +14,7 @@ class ProductsCategoryHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: AppColor.primaryColor.withOpacity(0.35),
+      color: AppColor.primaryColor35,
       height: LayoutConstants.dimen_48.w,
       alignment: Alignment.centerLeft,
       padding: EdgeInsets.symmetric(

@@ -6,6 +6,7 @@ class LayoutConstants {
   LayoutConstants._();
 
   static const appBarDefaultElevation = dimen_8;
+  static const cardDefaultElevation = dimen_4;
 
   static double get primaryButtonHeight => dimen_48.h;
 
