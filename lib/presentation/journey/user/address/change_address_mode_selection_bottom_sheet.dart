@@ -4,10 +4,15 @@ import 'package:aker_foods_retail/presentation/journey/user/address/change_addre
 import 'package:aker_foods_retail/presentation/journey/user/address/change_address/bloc/change_address_event.dart';
 import 'package:aker_foods_retail/presentation/journey/user/address/change_address/bloc/change_address_state.dart';
 import 'package:aker_foods_retail/presentation/journey/user/address/change_address/change_address_screen.dart';
+import 'package:aker_foods_retail/presentation/journey/user/address/choose_your_location/choose_your_location_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ChangeAddressModeSelectionBottomSheet extends StatefulWidget {
+  final Function onAddressChange;
+
+  ChangeAddressModeSelectionBottomSheet({this.onAddressChange});
+
   @override
   State<StatefulWidget> createState() =>
       ChangeAddressModeSelectionBottomSheetState();
@@ -45,6 +50,7 @@ class ChangeAddressModeSelectionBottomSheetState
               onSelectAddress: (address) {
                 changeAddressBloc
                     .add(SelectCurrentAddressEvent(selectedAddress: address));
+                widget.onAddressChange(address);
               },
               onAddressTypeSelection: _navigateToConfirmLocationOnMapScreen,
             ),
@@ -70,7 +76,14 @@ class ChangeAddressModeSelectionBottomSheetState
     }
   }
 
-  void _showGooglePlacesApiScreen() {}
+  void _showGooglePlacesApiScreen() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ChooseYourLocationScreen(isFromSearch: true),
+      ),
+    );
+  }
 
   void _navigateToConfirmLocationOnMapScreen(int index) {
     Navigator.pushNamed(context, '/choose-location');

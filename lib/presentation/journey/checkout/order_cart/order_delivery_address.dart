@@ -1,4 +1,5 @@
 import 'package:aker_foods_retail/common/constants/layout_constants.dart';
+import 'package:aker_foods_retail/data/models/address_model.dart';
 import 'package:aker_foods_retail/presentation/journey/user/address/change_address_mode_selection_bottom_sheet.dart';
 import 'package:flutter/material.dart';
 
@@ -14,6 +15,8 @@ class OrderDeliveryAddressSelection extends StatefulWidget {
 
 class _OrderDeliveryAddressSelectionState
     extends State<OrderDeliveryAddressSelection> {
+  String _selectedAddress = '';
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -41,7 +44,7 @@ class _OrderDeliveryAddressSelectionState
           SizedBox(
             height: LayoutConstants.dimen_8.h,
           ),
-          Text('Adress', style: Theme.of(context).textTheme.bodyText1),
+          Text(_selectedAddress, style: Theme.of(context).textTheme.bodyText1),
         ],
       ),
     );
@@ -64,7 +67,15 @@ class _OrderDeliveryAddressSelectionState
         ),
       ),
       builder: (BuildContext context) =>
-          ChangeAddressModeSelectionBottomSheet(),
+          ChangeAddressModeSelectionBottomSheet(
+            onAddressChange: (address) {
+              setState(() {
+                if (address is AddressModel) {
+                  _selectedAddress = '${address.address1} ${address.address2}';
+                }
+              });
+            },
+          ),
     );
   }
 }

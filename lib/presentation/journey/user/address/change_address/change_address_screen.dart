@@ -142,7 +142,7 @@ class ChangeAddressScreen extends StatelessWidget {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(LayoutConstants.dimen_12.w),
         ),
-        onPressed: () => onSearchTapped,
+        onPressed: onSearchTapped,
         child: _getSearchContainer(context),
       );
 

@@ -48,6 +48,12 @@ dependencies:
   firebase_auth: ^0.18.0+1
   firebase_crashlytics: ^0.1.4+1
 
+  # Map & Location
+  google_maps_flutter: ^0.5.32
+  flutter_google_places: ^0.2.6
+  geocoder: ^0.2.1
+  geolocator: ^6.0.0+4
+
   # Local Storage Data
   hive: ^1.4.0+1 # Local DB
   shared_preferences: ^0.5.10 # Local preferences to store key-value pairs data

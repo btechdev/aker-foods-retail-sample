@@ -65,5 +65,7 @@
 		<meta-data
 			android:name="com.claimsforce.segment.DEBUG"
 			android:value="true"/>
+		<meta-data android:name="com.google.android.geo.API_KEY"
+			android:value="AIzaSyAxfdSiEsi2r0yL4A53HxEtuc0NxTkttX8"/>
 	</application>
 </manifest>
