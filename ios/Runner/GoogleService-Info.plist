@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>267926914538-8iukju92c4l0mvgighvmoejss5u2omob.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.267926914538-8iukju92c4l0mvgighvmoejss5u2omob</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>267926914538-2uhlj0hs0r072dejdkn05a7r57oosotj.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyBIRtngbStfgad-FncMgkCs8sK7cbGL650</string>
+	<key>GCM_SENDER_ID</key>
+	<string>267926914538</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.akerfoods.retail.in</string>
+	<key>PROJECT_ID</key>
+	<string>aker-retail-96630</string>
+	<key>STORAGE_BUCKET</key>
+	<string>aker-retail-96630.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:267926914538:ios:3e150a9c54e503856e5e93</string>
+	<key>DATABASE_URL</key>
+	<string>https://aker-retail-96630.firebaseio.com</string>
+</dict>
+</plist>

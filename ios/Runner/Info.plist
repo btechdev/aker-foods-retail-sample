@@ -18,10 +18,28 @@
 	<string>$(FLUTTER_BUILD_NAME)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.267926914538-8iukju92c4l0mvgighvmoejss5u2omob</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>OneSignal_app_groups_key</key>
+	<string>group.com.akerfoods.retail.in.onesignal</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>fetch</string>
+		<string>remote-notification</string>
+	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
@@ -41,5 +59,11 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>com.claimsforce.segment.ENABLE_AMPLITUDE_INTEGRATION</key>
+	<false/>
+	<key>com.claimsforce.segment.TRACK_APPLICATION_LIFECYCLE_EVENTS</key>
+	<false/>
+	<key>com.claimsforce.segment.WRITE_KEY</key>
+	<string>FjiFLTKXrpuQbOXwtcEGG7XCoEHwdWA7</string>
 </dict>
 </plist>

@@ -9,7 +9,7 @@
 	"dev": {
 		"shouldEnableAllLogs": true,
 		"shouldEnableCrashlytics": true,
-		"host": "https://dev-api.akerretail.com/",
+		"host": "https://dev-api.akerretail.com",
 		"clientId": "abcdefghijkl",
 		"clientSecret": "abcdefghijkl",
 		"assetHost": "https://dev-assets.akerfoods.com",

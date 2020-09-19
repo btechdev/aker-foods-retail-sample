@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+//import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
@@ -27,8 +27,8 @@ void main() {
 
   // Enable Crashlytics based on environment and
   // Pass all uncaught errors from the framework to Crashlytics.
-  Crashlytics.instance.enableInDevMode = Configuration.shouldEnableCrashlytics;
-  FlutterError.onError = Crashlytics.instance.recordFlutterError;
+//  Crashlytics.instance.enableInDevMode = Configuration.shouldEnableCrashlytics;
+//  FlutterError.onError = Crashlytics.instance.recordFlutterError;
 
   // Initialise OneSignal for push notification service
   unawaited(_initialiseOneSignal());
@@ -39,15 +39,16 @@ void main() {
 
   runZoned(
     () => runApp(App()),
-    onError: Crashlytics.instance.recordError,
+    //onError: Crashlytics.instance.recordError,
   );
 }
 
 Future<void> _initialiseOneSignal() async {
-  await OneSignal.shared.setLogLevel(OSLogLevel.info, OSLogLevel.none);
+  await OneSignal.shared.setLogLevel(OSLogLevel.verbose, OSLogLevel.none);
 
   // Keep this parameter to `true` if you want to adhere to GDPR privacy consent
   await OneSignal.shared.setRequiresUserPrivacyConsent(false);
+  var status = await OneSignal.shared.getPermissionSubscriptionState();
 
   final iOSSettings = {
     OSiOSSettings.autoPrompt: false,
@@ -61,7 +62,9 @@ Future<void> _initialiseOneSignal() async {
 
   await OneSignal.shared
       .setInFocusDisplayType(OSNotificationDisplayType.notification);
-
+  OneSignal.shared.setNotificationReceivedHandler((OSNotification notification) {
+    // a notification has been received
+  });
   // This function will show the iOS push notification prompt.
   // It is recommended removing the following code and instead using an
   // In-App Message to prompt for notification permission.

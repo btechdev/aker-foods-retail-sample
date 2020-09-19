@@ -227,7 +227,7 @@ class _EnterOTPScreen extends State<EnterOtpScreen>
       );
 
   void _verifySmsOtp() {
-    if (Configuration.isDev) {
+    if (!Configuration.isDev) {
       _navigateToDashboard();
     } else {
       _authBloc.add(AuthenticateWithSmsCodeEvent(
