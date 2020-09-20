@@ -1,3 +1,4 @@
+import 'package:aker_foods_retail/domain/entities/product_category_entity.dart';
 import 'package:aker_foods_retail/domain/entities/product_entity.dart';
 
 // ignore: one_member_abstracts
@@ -21,7 +22,7 @@ class SearchingProductsState extends ProductsState {
 }
 
 class HomePageProductsLoadedState extends ProductsState {
-  final List<String> categories;
+  final List<ProductCategoryEntity> categories;
   final List<ProductEntity> products;
 
   HomePageProductsLoadedState({this.categories, this.products});
@@ -34,7 +35,7 @@ class HomePageProductsLoadedState extends ProductsState {
 }
 
 class SearchPageProductsLoadedState extends ProductsState {
-  final List<String> categories;
+  final List<ProductCategoryEntity> categories;
   final List<ProductEntity> products;
 
   SearchPageProductsLoadedState({this.categories, this.products});

@@ -2,6 +2,7 @@ import 'package:aker_foods_retail/data/models/address_model.dart';
 import 'package:aker_foods_retail/data/models/society_model.dart';
 import 'package:aker_foods_retail/network/api/api_client.dart';
 import 'package:aker_foods_retail/network/api/api_endpoints.dart';
+import 'package:aker_foods_retail/network/api/api_response.dart';
 import 'package:flutter/material.dart';
 
 class UserAddressRemoteDataSource {
@@ -10,8 +11,8 @@ class UserAddressRemoteDataSource {
   UserAddressRemoteDataSource({this.apiClient});
 
   Future<List<SocietyModel>> getSocieties() async {
-    final map = await apiClient.get(ApiEndpoints.societies);
-    return SocietyModel.fromListJson(map);
+    final jsonMap = await apiClient.get(ApiEndpoints.societies);
+    return ApiResponse.fromJson<SocietyModel>(jsonMap).data;
   }
 
   Future<void> createNewAddress(AddressModel address) async {

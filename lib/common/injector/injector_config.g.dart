@@ -64,8 +64,8 @@ class _$InjectorConfig extends InjectorConfig {
     container.registerFactory<UserOrderRepository>((c) =>
         UserOrderRepositoryImpl(
             userOrderRemoteDataSource: c<UserOrderRemoteDataSource>()));
-    container
-        .registerFactory<ProductsRepository>((c) => ProductsRepositoryImpl());
+    container.registerFactory<ProductsRepository>((c) => ProductsRepositoryImpl(
+        productsRemoteDataSource: c<ProductsRemoteDataSource>()));
   }
 
   void _configureLocalDataSources() {
@@ -86,6 +86,8 @@ class _$InjectorConfig extends InjectorConfig {
         (c) => UserTransactionRemoteDataSource(apiClient: c<ApiClient>()));
     container.registerFactory(
         (c) => UserOrderRemoteDataSource(apiClient: c<ApiClient>()));
+    container.registerFactory(
+        (c) => ProductsRemoteDataSource(apiClient: c<ApiClient>()));
   }
 
   void _configureCommon() {

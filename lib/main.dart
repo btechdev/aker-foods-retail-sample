@@ -1,8 +1,6 @@
 import 'dart:async';
 
 import 'package:firebase_core/firebase_core.dart';
-
-//import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
@@ -14,6 +12,7 @@ import 'common/injector/injector.dart';
 import 'common/injector/injector_config.dart';
 import 'common/local_preferences/local_preferences.dart';
 import 'config/configuration.dart';
+import 'network/api/api_models_configuration.dart';
 import 'presentation/app.dart';
 
 Future<void> main() async {
@@ -30,8 +29,10 @@ Future<void> main() async {
 
   // Enable Crashlytics based on environment and
   // Pass all uncaught errors from the framework to Crashlytics.
-//  Crashlytics.instance.enableInDevMode = Configuration.shouldEnableCrashlytics;
-//  FlutterError.onError = Crashlytics.instance.recordFlutterError;
+  /*
+  Crashlytics.instance.enableInDevMode = Configuration.shouldEnableCrashlytics;
+  FlutterError.onError = Crashlytics.instance.recordFlutterError;
+  */
 
   // Initialise OneSignal for push notification service
   unawaited(_initialiseOneSignal());
@@ -45,6 +46,8 @@ Future<void> main() async {
   unawaited(FlutterStatusbarcolor.setStatusBarWhiteForeground(false));
   unawaited(FlutterStatusbarcolor.setStatusBarColor(Colors.transparent));
 
+  unawaited(configureApiModels());
+
   runZoned(
     () => runApp(App(localPreferences)),
     //onError: Crashlytics.instance.recordError,
@@ -56,7 +59,7 @@ Future<void> _initialiseOneSignal() async {
 
   // Keep this parameter to `true` if you want to adhere to GDPR privacy consent
   await OneSignal.shared.setRequiresUserPrivacyConsent(false);
-  var status = await OneSignal.shared.getPermissionSubscriptionState();
+  await OneSignal.shared.getPermissionSubscriptionState();
 
   final iOSSettings = {
     OSiOSSettings.autoPrompt: false,

@@ -1,21 +1,36 @@
 import 'package:aker_foods_retail/domain/entities/product_entity.dart';
 
+import 'product_category_model.dart';
+import 'product_subcategory_model.dart';
+
 class ProductModel extends ProductEntity {
   ProductModel({
-    String id,
+    int id,
     String name,
-    String quantity,
+    String description,
+    int categoryId,
+    ProductCategoryModel category,
+    int subcategoryId,
+    ProductSubcategoryModel subcategory,
+    double baseQuantity,
     double price,
-    double discount,
-    double couponDiscount,
-    ProductStatus status,
+    double discountedPrice,
+    String unit,
+    String imageUrl,
+    bool isInStock,
   }) : super(
           id: id,
           name: name,
-          quantity: quantity,
+          description: description,
+          categoryId: categoryId,
+          category: category,
+          subcategoryId: subcategoryId,
+          subcategory: subcategory,
+          baseQuantity: baseQuantity,
           price: price,
-          discount: discount,
-          couponDiscount: couponDiscount,
-          status: status,
+          discountedPrice: discountedPrice,
+          unit: unit,
+          imageUrl: imageUrl,
+          isInStock: isInStock,
         );
 }

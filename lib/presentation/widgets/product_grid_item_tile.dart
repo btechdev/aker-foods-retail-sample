@@ -43,7 +43,8 @@ class ProductGridItemTileState extends State<ProductGridItemTile> {
       );
 
   Widget _getItemImage(BuildContext context) {
-    if (widget.product.discount != null && widget.product.discount > 0) {
+    if (widget.product.discountedPrice != null &&
+        widget.product.discountedPrice > 0) {
       return Stack(
         children: [
           _productAvatarContainer(),
@@ -88,7 +89,7 @@ class ProductGridItemTileState extends State<ProductGridItemTile> {
               ),
             ),
             Text(
-              widget.product.quantity,
+              '${widget.product.baseQuantity} ${widget.product.unit}',
               style: Theme.of(context).textTheme.subtitle1.copyWith(
                     color: AppColor.black40,
                   ),
@@ -142,7 +143,7 @@ class ProductGridItemTileState extends State<ProductGridItemTile> {
   }
 
   Widget _getProductPriceRow() {
-    final double productMrp = widget.product.price ?? 0;
+    /*final double productMrp = widget.product.price ?? 0;
     final double priceDiscountValue =
         productMrp * (widget.product.discount ?? 0);
 
@@ -151,6 +152,17 @@ class ProductGridItemTileState extends State<ProductGridItemTile> {
 
     final List<Widget> rowChildren = List()
       ..add(_productPriceText(productPrice));
+    if (priceDiscountValue > 0) {
+      rowChildren
+        ..add(SizedBox(width: LayoutConstants.dimen_4.w))
+        ..add(_productMrpFlexibleText(productMrp));
+    }*/
+    final double productMrp = widget.product.price ?? 0;
+    final double productDiscountPrice = widget.product.discountedPrice ?? 0;
+    final double priceDiscountValue = productMrp - productDiscountPrice;
+
+    final List<Widget> rowChildren = List()
+      ..add(_productPriceText(productDiscountPrice));
     if (priceDiscountValue > 0) {
       rowChildren
         ..add(SizedBox(width: LayoutConstants.dimen_4.w))

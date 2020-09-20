@@ -1,3 +1,4 @@
+import 'package:aker_foods_retail/domain/entities/product_category_entity.dart';
 import 'package:aker_foods_retail/domain/entities/product_entity.dart';
 import 'package:aker_foods_retail/domain/repositories/products_repository.dart';
 
@@ -6,7 +7,7 @@ class ProductsUseCase {
 
   ProductsUseCase(this.productsRepository);
 
-  Future<List<String>> getCategories() async =>
+  Future<List<ProductCategoryEntity>> getCategories() async =>
       productsRepository.getCategories();
 
   Future<List<ProductEntity>> getProducts() async =>

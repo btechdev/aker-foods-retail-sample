@@ -9,7 +9,12 @@ class SocietyModel extends SocietyEntity {
           name: name,
         );
 
-  static List<SocietyModel> fromListJson(Map<String, dynamic> jsonMap) {
+  static Map<String, dynamic> toJson(SocietyModel societyModel) => {
+        'id': societyModel.id,
+        'name': societyModel.name,
+      };
+
+  /*static List<SocietyModel> fromListJson(Map<String, dynamic> jsonMap) {
     final List<dynamic> societyMapList = jsonMap['results'];
     final list =  societyMapList
         .map((societyMap) => SocietyModel.fromJson(societyMap)).toList();
@@ -19,10 +24,11 @@ class SocietyModel extends SocietyEntity {
   factory SocietyModel.fromJson(Map<String, dynamic> jsonMap) => SocietyModel(
         id: jsonMap['id'],
         name: jsonMap['name'],
-      );
+      );*/
 
-  static Map<String, dynamic> toJson(SocietyModel societyModel) => {
-    'id': societyModel.id,
-    'name': societyModel.name,
-  };
+  // ignore: prefer_constructors_over_static_methods
+  static SocietyModel fromJson(Map<String, dynamic> jsonMap) => SocietyModel(
+        id: jsonMap['id'],
+        name: jsonMap['name'],
+      );
 }

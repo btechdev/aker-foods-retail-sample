@@ -2,6 +2,7 @@ import 'package:aker_foods_retail/common/local_preferences/local_preferences.dar
 import 'package:aker_foods_retail/common/utils/firebase_auth_utils.dart';
 import 'package:aker_foods_retail/data/local_data_sources/authentication_local_data_source.dart';
 import 'package:aker_foods_retail/data/local_data_sources/user_address_local_data_source.dart';
+import 'package:aker_foods_retail/data/remote_data_sources/products_remote_data_source.dart';
 import 'package:aker_foods_retail/data/remote_data_sources/user_address_remote_data_source.dart';
 import 'package:aker_foods_retail/data/remote_data_sources/user_order_remote_data_source.dart';
 import 'package:aker_foods_retail/data/remote_data_sources/user_profile_remote_data_source.dart';
@@ -120,6 +121,7 @@ abstract class InjectorConfig {
   @Register.factory(UserProfileRemoteDataSource)
   @Register.factory(UserTransactionRemoteDataSource)
   @Register.factory(UserOrderRemoteDataSource)
+  @Register.factory(ProductsRemoteDataSource)
   void _configureRemoteDataSources();
 
   /// ============ Register Common Classes ============

@@ -1,24 +1,39 @@
+import 'package:aker_foods_retail/domain/entities/product_category_entity.dart';
+import 'package:aker_foods_retail/domain/entities/product_subcategory_entity.dart';
+
 class ProductEntity {
-  final String id;
+  final int id;
   final String name;
-  final String quantity;
+  final String description;
+  final int categoryId;
+  final ProductCategoryEntity category;
+  final int subcategoryId;
+  final ProductSubcategoryEntity subcategory;
+  final double baseQuantity;
   final double price;
-  final double discount;
-  final double couponDiscount;
-  final ProductStatus status;
+  final double discountedPrice;
+  final String unit;
+  final String imageUrl;
+  final bool isInStock;
 
   ProductEntity({
     this.id,
     this.name,
-    this.quantity,
+    this.description,
+    this.categoryId,
+    this.category,
+    this.subcategoryId,
+    this.subcategory,
+    this.baseQuantity,
     this.price,
-    this.discount,
-    this.couponDiscount,
-    this.status,
+    this.discountedPrice,
+    this.unit,
+    this.imageUrl,
+    this.isInStock = true,
   });
 }
 
-enum ProductStatus { available, outOfStock, unknown }
+/*enum ProductStatus { available, outOfStock, unknown }
 
 extension ProductStatusExtension on ProductStatus {
   String getString() {
@@ -46,4 +61,4 @@ extension ProductStatusExtension on ProductStatus {
         return ProductStatus.unknown;
     }
   }
-}
+}*/

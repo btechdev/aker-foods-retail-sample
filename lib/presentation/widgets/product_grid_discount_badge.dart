@@ -14,9 +14,17 @@ class ProductGridDiscountBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double discountValue = (product.discount ?? 0) * 100;
+    final double discountValue = product.price - (product.discountedPrice ?? 0);
     if (discountValue > 0) {
-      return Container(
+      final double discountApplied = (discountValue / product.price) * 100;
+      return _appliedDiscountValueTextContainer(context, discountApplied);
+    }
+    return Container();
+  }
+
+  Widget _appliedDiscountValueTextContainer(
+          BuildContext context, double discountApplied) =>
+      Container(
         padding: EdgeInsets.symmetric(
           horizontal: LayoutConstants.dimen_8.w,
           vertical: LayoutConstants.dimen_4.h,
@@ -29,7 +37,7 @@ class ProductGridDiscountBadge extends StatelessWidget {
           ),
         ),
         child: Text(
-          '$discountValue %',
+          '$discountApplied %',
           maxLines: 1,
           textAlign: TextAlign.center,
           overflow: TextOverflow.ellipsis,
@@ -38,7 +46,4 @@ class ProductGridDiscountBadge extends StatelessWidget {
               ),
         ),
       );
-    }
-    return Container();
-  }
 }

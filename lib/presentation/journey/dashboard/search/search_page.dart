@@ -2,6 +2,7 @@ import 'package:aker_foods_retail/common/constants/app_constants.dart';
 import 'package:aker_foods_retail/common/constants/layout_constants.dart';
 import 'package:aker_foods_retail/common/extensions/pixel_dimension_util_extensions.dart';
 import 'package:aker_foods_retail/common/injector/injector.dart';
+import 'package:aker_foods_retail/domain/entities/product_category_entity.dart';
 import 'package:aker_foods_retail/domain/entities/product_entity.dart';
 import 'package:aker_foods_retail/presentation/common_blocs/products_bloc/products_bloc.dart';
 import 'package:aker_foods_retail/presentation/common_blocs/products_bloc/products_event.dart';
@@ -24,7 +25,7 @@ class SearchPageState extends State<SearchPage> {
 
   ProductsBloc productsBloc;
 
-  List<String> categories;
+  List<ProductCategoryEntity> categories;
   List<ProductEntity> products;
 
   @override
@@ -175,7 +176,7 @@ class SearchPageState extends State<SearchPage> {
     final List<Widget> slivers = [];
     for (final category in categories) {
       slivers
-        ..add(_productsCategoryHeader(category))
+        ..add(_productsCategoryHeader(category.name))
         ..add(_productsSliverGridWithPadding());
     }
     return slivers;

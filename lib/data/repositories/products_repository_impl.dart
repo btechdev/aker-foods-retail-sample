@@ -1,7 +1,14 @@
+import 'package:aker_foods_retail/data/models/product_category_model.dart';
 import 'package:aker_foods_retail/data/models/product_model.dart';
+import 'package:aker_foods_retail/data/remote_data_sources/products_remote_data_source.dart';
 import 'package:aker_foods_retail/domain/repositories/products_repository.dart';
 
 class ProductsRepositoryImpl implements ProductsRepository {
+  final ProductsRemoteDataSource productsRemoteDataSource;
+
+  ProductsRepositoryImpl({this.productsRemoteDataSource});
+
+  // TODO(Bhushan): Remove this and dependencies
   static List<String> dummyCategories = [
     'Vegetables',
     'Fruits',
@@ -9,25 +16,21 @@ class ProductsRepositoryImpl implements ProductsRepository {
   ];
 
   static List<ProductModel> dummyProducts = [
-    ProductModel(
-        name: 'Onion Onion Onion Onion Onion', quantity: '1 kg', price: 20),
-    ProductModel(name: 'Tomato', quantity: '1 kg', price: 80, discount: 0.10),
-    ProductModel(name: 'Potato', quantity: '1 kg', price: 25),
-    ProductModel(
-        name: 'Beat Root', quantity: '1 kg', price: 60, discount: 0.15),
-    ProductModel(name: 'Carrot', quantity: '1 kg', price: 40),
-    ProductModel(name: 'Cucumber', quantity: '1 kg', price: 40),
+    ProductModel(name: 'Onion Onion Onion Onion Onion', price: 20),
+    ProductModel(name: 'Tomato', price: 80),
+    ProductModel(name: 'Potato', price: 25),
+    ProductModel(name: 'Beat Root', price: 60),
+    ProductModel(name: 'Carrot', price: 40),
+    ProductModel(name: 'Cucumber', price: 40),
   ];
 
   @override
-  Future<List<String>> getCategories() async {
-    return dummyCategories;
-  }
+  Future<List<ProductCategoryModel>> getCategories() async =>
+      productsRemoteDataSource.getCategories();
 
   @override
-  Future<List<ProductModel>> getProducts() async {
-    return dummyProducts;
-  }
+  Future<List<ProductModel>> getProducts() async =>
+      productsRemoteDataSource.getProducts();
 
   @override
   Future<List<ProductModel>> searchProducts(String searchText) async {
