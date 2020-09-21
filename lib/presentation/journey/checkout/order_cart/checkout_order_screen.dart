@@ -1,5 +1,6 @@
 import 'package:aker_foods_retail/common/constants/layout_constants.dart';
 import 'package:aker_foods_retail/common/extensions/pixel_dimension_util_extensions.dart';
+import 'package:aker_foods_retail/domain/entities/coupon_entity.dart';
 import 'package:aker_foods_retail/presentation/app/route_constants.dart';
 import 'package:aker_foods_retail/presentation/journey/checkout/order_cart/bill_details_widget.dart';
 import 'package:aker_foods_retail/presentation/journey/checkout/order_cart/order_delivery_address.dart';
@@ -91,11 +92,11 @@ class _CheckoutOrderScreenState extends State<CheckoutOrderScreen> {
   Future<void> _navigateToReferralCodeSelection() async {
     final code =
         await Navigator.pushNamed(context, RouteConstants.applyReferralCode);
-    if (code is String) {
-      if (code.isNotEmpty) {
+    if (code is CouponEntity) {
+      if (code != null) {
         setState(() {
           isReferralCodeApplied = true;
-          referralCode = code;
+          referralCode = code.code;
         });
       }
     }

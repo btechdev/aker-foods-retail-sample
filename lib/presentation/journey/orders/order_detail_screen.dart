@@ -1,10 +1,16 @@
 import 'package:aker_foods_retail/common/constants/layout_constants.dart';
+import 'package:aker_foods_retail/common/utils/date_utils.dart';
+import 'package:aker_foods_retail/domain/entities/order_entity.dart';
 import 'package:aker_foods_retail/presentation/journey/orders/order_detail_items_list.dart';
 import 'package:aker_foods_retail/presentation/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import '../../../common/extensions/pixel_dimension_util_extensions.dart';
 
 class OrderDetailsScreen extends StatefulWidget {
+  final OrderEntity order;
+
+  OrderDetailsScreen({@required this.order});
+
   @override
   _OrderDetailsScreenState createState() => _OrderDetailsScreenState();
 }
@@ -28,53 +34,66 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
       );
 
   SingleChildScrollView _getBody() => SingleChildScrollView(
-    child: _getColumn(),
-  );
+        child: _getColumn(),
+      );
 
   Column _getColumn() => Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: LayoutConstants.dimen_16.w),
-          child: _getTitleAndValue(context, 'Order ID', '34607'),
-        ),
-        SizedBox(height: LayoutConstants.dimen_8.h),
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: LayoutConstants.dimen_16.w),
-          child: _getTitleAndValue(context, 'Order Date', '6th Aug, 2020'),
-        ),
-        SizedBox(height: LayoutConstants.dimen_20.h),
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: LayoutConstants.dimen_16.w),
-          child: _getDeliveryDetailsContainerHeader('Delivery Details'),
-        ),
-        SizedBox(height: LayoutConstants.dimen_8.h),
-        _getDeliveryDetailsContainer(
-            '6th Aug, 2020', 'Xpress Delivery', 'Order Status: Delivered'),
-        SizedBox(height: LayoutConstants.dimen_20.h),
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: LayoutConstants.dimen_16.w),
-          child: _getDeliveryDetailsContainerHeader('Delivery Address'),
-        ),
-        SizedBox(height: LayoutConstants.dimen_8.h),
-        _getDeliveryDetailsContainer(
-            'Suraj Saste', 'Nivedita Terrace', 'Contact Number: 88219212091'),
-        SizedBox(height: LayoutConstants.dimen_20.h),
-        _getBillDetails(),
-        SizedBox(height: LayoutConstants.dimen_20.h),
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: LayoutConstants.dimen_16.w),
-          child: _getDeliveryDetailsContainerHeader('Items in this order'),
-        ),
-        Flexible(
-          fit: FlexFit.loose,
-          child: OrderDetailsItemList(
-            items: const ['Mango', 'Apple', 'Pumpkin'],
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Padding(
+            padding:
+                EdgeInsets.symmetric(horizontal: LayoutConstants.dimen_16.w),
+            child: _getTitleAndValue(context, 'Order ID', widget.order.orderId),
           ),
-        ),
-      ],
-    );
+          SizedBox(height: LayoutConstants.dimen_8.h),
+          Padding(
+            padding:
+                EdgeInsets.symmetric(horizontal: LayoutConstants.dimen_16.w),
+            child: _getTitleAndValue(
+              context,
+              'Order Date',
+              DateUtils.getFormatterDate(widget.order.createdAt),
+            ),
+          ),
+          SizedBox(height: LayoutConstants.dimen_20.h),
+          Padding(
+            padding:
+                EdgeInsets.symmetric(horizontal: LayoutConstants.dimen_16.w),
+            child: _getDeliveryDetailsContainerHeader('Delivery Details'),
+          ),
+          SizedBox(height: LayoutConstants.dimen_8.h),
+          _getDeliveryDetailsContainer(
+              DateUtils.getFormatterDate(widget.order.deliveredAt),
+              'Order Status: ${widget.order.status}',
+              ''),
+          SizedBox(height: LayoutConstants.dimen_20.h),
+          Padding(
+            padding:
+                EdgeInsets.symmetric(horizontal: LayoutConstants.dimen_16.w),
+            child: _getDeliveryDetailsContainerHeader('Delivery Address'),
+          ),
+          SizedBox(height: LayoutConstants.dimen_8.h),
+          _getDeliveryDetailsContainer(
+              '${widget.order.shippingAddressDetails.address1} ',
+              widget.order.shippingAddressDetails.address2,
+              '${widget.order.shippingAddressDetails.society.name}'),
+          SizedBox(height: LayoutConstants.dimen_20.h),
+          _getBillDetails(),
+          SizedBox(height: LayoutConstants.dimen_20.h),
+          Padding(
+            padding:
+                EdgeInsets.symmetric(horizontal: LayoutConstants.dimen_16.w),
+            child: _getDeliveryDetailsContainerHeader('Items in this order'),
+          ),
+          Flexible(
+            fit: FlexFit.loose,
+            child: OrderDetailsItemList(
+              items: widget.order.cartItemDetail,
+            ),
+          ),
+        ],
+      );
 
   Row _getTitleAndValue(BuildContext context, String title, String value) =>
       Row(
@@ -147,26 +166,27 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
           SizedBox(height: LayoutConstants.dimen_12.h),
           _getPaymentSection(
             context,
-            title: '1 x Total Items Price',
-            amount: 'Rs 22',
+            title: 'Total Items Price',
+            amount: widget.order.subTotal,
           ),
           SizedBox(height: LayoutConstants.dimen_8.h),
-          _getPaymentSection(
-            context,
-            title: '50% off upto Rs 75',
-            amount: '- Rs 11',
-            color: AppColor.primaryColor,
-          ),
+          if (double.parse(widget.order.totalDiscountedAmount) > 0)
+            _getPaymentSection(
+              context,
+              title: 'Discount',
+              amount: '- ${widget.order.totalDiscountedAmount}',
+              color: AppColor.primaryColor,
+            ),
           SizedBox(height: LayoutConstants.dimen_8.h),
           _getPaymentSection(
             context,
             title: 'Delivery Charges',
-            amount: 'Rs 50',
+            amount: '${widget.order.deliveryCharges}',
           ),
           SizedBox(height: LayoutConstants.dimen_8.h),
           const Divider(),
           SizedBox(height: LayoutConstants.dimen_12.h),
-          _getTotalPayment(context, 'Rs 61'),
+          _getTotalPayment(context, widget.order.totalAmount),
           SizedBox(height: LayoutConstants.dimen_8.h),
         ],
       );

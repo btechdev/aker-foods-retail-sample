@@ -27,12 +27,15 @@ class ChooseYourLocationScreenState extends State<ChooseYourLocationScreen> {
   GoogleMapController mapController;
   GoogleMapsPlaces _places;
   String _selectedLocation;
+  final _iconSize = LayoutConstants.dimen_40.w;
 
   Future<void> _onSearch() async {
     final result = await PlacesAutocomplete.show(
       context: context,
       apiKey: AppConstants.kGoogleApiKey,
       mode: Mode.fullscreen,
+      location: Location(_currentLocation.latitude, _currentLocation.longitude),
+      region: 'in',
     );
     await _getLatLongFor(prediction: result);
   }
@@ -40,6 +43,7 @@ class ChooseYourLocationScreenState extends State<ChooseYourLocationScreen> {
   Future<void> getCurrentLocation() async {
     _currentLocation =
         await getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    await _animateMapToCurrentLocation();
   }
 
   @override
@@ -79,12 +83,10 @@ class ChooseYourLocationScreenState extends State<ChooseYourLocationScreen> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Container(
-              width: double.infinity,
+              width: PixelDimensionUtil.screenWidthDp,
               height: PixelDimensionUtil.screenHeightDp * 0.55,
               color: AppColor.primaryColor,
-              child: Stack(
-                children: [_getMap(), _getCenterMarker()],
-              ),
+              child: _getStack(),
             ),
             Expanded(
               child: _getBottomContainer(),
@@ -93,8 +95,31 @@ class ChooseYourLocationScreenState extends State<ChooseYourLocationScreen> {
         ),
       );
 
+  Stack _getStack() {
+    final mapWidth = PixelDimensionUtil.screenWidthDp;
+    final mapHeight = PixelDimensionUtil.screenHeightDp * 0.55;
+    final iconSize = LayoutConstants.dimen_40.w;
+
+    return Stack(
+      alignment:
+          Alignment(LayoutConstants.dimen_0.w, LayoutConstants.dimen_0.h),
+      children: <Widget>[
+        Container(width: mapWidth, height: mapHeight, child: _getMap()),
+        Positioned(
+          top: (mapHeight - _iconSize) / 2,
+          right: (mapWidth - _iconSize) / 2,
+          child: Icon(
+            Icons.location_on,
+            size: iconSize,
+            color: AppColor.primaryColor,
+          ),
+        )
+      ],
+    );
+  }
+
   GoogleMap _getMap() => GoogleMap(
-        myLocationButtonEnabled: true,
+        myLocationButtonEnabled: false,
         myLocationEnabled: true,
         initialCameraPosition: const CameraPosition(
           target: AppConstants.akerFoodsLatLng,
@@ -108,22 +133,11 @@ class ChooseYourLocationScreenState extends State<ChooseYourLocationScreen> {
         onCameraIdle: _getPlaceForMapCenter,
       );
 
-  Center _getCenterMarker() => Center(
-        child: Icon(
-          Icons.location_on,
-          size: LayoutConstants.dimen_48.w,
-          color: AppColor.primaryColor,
-        ),
-      );
-
   Future<void> _getPlaceForMapCenter() async {
-    final middleX = PixelDimensionUtil.screenWidthDp / 2;
-    final middleY = (PixelDimensionUtil.screenHeightDp -
-            PixelDimensionUtil.statusBarHeight * 0.55) /
-        2;
+    final middleX = PixelDimensionUtil.screenWidthDp - _iconSize / 2;
+    final middleY = PixelDimensionUtil.screenHeightDp - _iconSize / 2;
     final screenCoordinate =
         ScreenCoordinate(x: middleX.round(), y: middleY.round());
-    debugPrint('$screenCoordinate');
     final middlePoint = await mapController.getLatLng(screenCoordinate);
     try {
       final places = await Geocoder.local.findAddressesFromCoordinates(
@@ -133,7 +147,7 @@ class ChooseYourLocationScreenState extends State<ChooseYourLocationScreen> {
       });
       return places;
     } catch (error) {
-      debugPrint('$error');
+      debugPrint('err: $error');
     }
   }
 

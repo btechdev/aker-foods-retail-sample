@@ -1,7 +1,13 @@
 import 'package:aker_foods_retail/common/constants/layout_constants.dart';
+import 'package:aker_foods_retail/common/extensions/pixel_dimension_util_extensions.dart';
+import 'package:aker_foods_retail/common/injector/injector.dart';
+import 'package:aker_foods_retail/domain/entities/coupon_entity.dart';
+import 'package:aker_foods_retail/presentation/journey/checkout/order_cart/bloc/cart_bloc.dart';
+import 'package:aker_foods_retail/presentation/journey/checkout/order_cart/bloc/cart_event.dart';
+import 'package:aker_foods_retail/presentation/journey/checkout/order_cart/bloc/cart_state.dart';
 import 'package:aker_foods_retail/presentation/theme/app_colors.dart';
 import 'package:flutter/material.dart';
-import '../../../../common/extensions/pixel_dimension_util_extensions.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ApplyReferralCodeScreen extends StatefulWidget {
   ApplyReferralCodeScreen({Key key}) : super(key: key);
@@ -12,12 +18,28 @@ class ApplyReferralCodeScreen extends StatefulWidget {
 }
 
 class _ApplyReferralCodeScreenState extends State<ApplyReferralCodeScreen> {
-  @override
   final _referralCodeController = TextEditingController();
+  CartBloc cartBloc;
 
+  @override
+  void initState() {
+    super.initState();
+    cartBloc = Injector.resolve<CartBloc>()..add(FetchCouponsEvent());
+  }
+
+  @override
+  void dispose() {
+    cartBloc?.close();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) => Scaffold(
         appBar: _getAppBar(),
-        body: _getBody(),
+        body: BlocProvider<CartBloc>(
+          create: (context) => cartBloc,
+          child: _getBody(),
+        ),
       );
 
   AppBar _getAppBar() => AppBar(
@@ -43,7 +65,15 @@ class _ApplyReferralCodeScreenState extends State<ApplyReferralCodeScreen> {
                 style: Theme.of(context).textTheme.bodyText1),
           ),
           SizedBox(height: LayoutConstants.dimen_16.h),
-          _getPromoCodeList(context),
+          BlocBuilder<CartBloc, CartState>(
+            builder: (context, state) {
+              if (state is CouponsFetchSuccessState) {
+                return _getPromoCodeList(context, state);
+              } else {
+                return Container();
+              }
+            },
+          ),
         ],
       );
 
@@ -60,11 +90,11 @@ class _ApplyReferralCodeScreenState extends State<ApplyReferralCodeScreen> {
         child: Row(
           children: <Widget>[
             Expanded(
-              child: _getPromocodeTextField(context),),
+              child: _getPromocodeTextField(context),
+            ),
             FlatButton(
-              onPressed: () => {
-                Navigator.pop(context, _referralCodeController.text)
-              },
+              onPressed: () =>
+                  {Navigator.pop(context, _referralCodeController.text)},
               child: Container(
                 width: LayoutConstants.dimen_80.w,
                 height: LayoutConstants.dimen_70.h,
@@ -81,30 +111,33 @@ class _ApplyReferralCodeScreenState extends State<ApplyReferralCodeScreen> {
         ),
       );
 
-  ListView _getPromoCodeList(BuildContext context) => ListView.builder(
-        itemBuilder: (_, index) => _getPromoCodeTile(context),
+  ListView _getPromoCodeList(
+          BuildContext context, CouponsFetchSuccessState state) =>
+      ListView.builder(
+        itemBuilder: (_, index) =>
+            _getPromoCodeTile(context, state.coupons[index]),
         shrinkWrap: true,
-        itemCount: 1,
+        itemCount: state.coupons.length,
       );
 
   TextField _getPromocodeTextField(BuildContext context) => TextField(
-    controller: _referralCodeController,
-    decoration: InputDecoration(
-      contentPadding:
-      EdgeInsets.only(left: LayoutConstants.dimen_16.w),
-      hintText: 'Enter promo/Referral Code',
-      hintStyle: Theme.of(context).textTheme.bodyText1.copyWith(
-        color: AppColor.grey,
-      ),
-      border: InputBorder.none,
-      disabledBorder: InputBorder.none,
-      errorBorder: InputBorder.none,
-      focusedBorder: InputBorder.none,
-      focusedErrorBorder: InputBorder.none,
-    ),
-  );
+        controller: _referralCodeController,
+        decoration: InputDecoration(
+          contentPadding: EdgeInsets.only(left: LayoutConstants.dimen_16.w),
+          hintText: 'Enter promo/Referral Code',
+          hintStyle: Theme.of(context).textTheme.bodyText1.copyWith(
+                color: AppColor.grey,
+              ),
+          border: InputBorder.none,
+          disabledBorder: InputBorder.none,
+          errorBorder: InputBorder.none,
+          focusedBorder: InputBorder.none,
+          focusedErrorBorder: InputBorder.none,
+        ),
+      );
 
-  Container _getPromoCodeTile(BuildContext context) => Container(
+  Container _getPromoCodeTile(BuildContext context, CouponEntity entity) =>
+      Container(
         height: LayoutConstants.dimen_80.h,
         padding: EdgeInsets.only(
             left: LayoutConstants.dimen_16.w, top: LayoutConstants.dimen_16.h),
@@ -126,21 +159,19 @@ class _ApplyReferralCodeScreenState extends State<ApplyReferralCodeScreen> {
                     color: AppColor.yellow,
                   ),
                   child: Text(
-                    'PROMOCODE50',
+                    entity.code,
                     style: Theme.of(context).textTheme.subtitle1,
                   ),
                 ),
                 SizedBox(height: LayoutConstants.dimen_8.h),
                 Text(
-                  'Something',
+                  entity.description,
                   style: Theme.of(context).textTheme.subtitle1,
                 ),
               ],
             ),
             FlatButton(
-              onPressed: () => {
-                Navigator.pop(context, 'PROMOCODE50')
-              },
+              onPressed: () => {Navigator.pop(context, entity)},
               child: Container(
                 width: LayoutConstants.dimen_80.w,
                 height: LayoutConstants.dimen_70.h,

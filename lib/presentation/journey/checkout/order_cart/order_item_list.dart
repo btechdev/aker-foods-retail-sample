@@ -1,4 +1,5 @@
 import 'package:aker_foods_retail/common/constants/layout_constants.dart';
+import 'package:aker_foods_retail/domain/entities/order_item_tile_entity.dart';
 import 'package:aker_foods_retail/presentation/journey/checkout/order_cart/order_item_tile.dart';
 import 'package:aker_foods_retail/presentation/journey/orders/my_order_out_of_stock_cell.dart';
 import 'package:flutter/material.dart';
@@ -30,6 +31,8 @@ class _OrderItemListState extends State<OrderItemList> {
                 id: index,
                 onItemIncreased: widget.onIncreased,
                 onItemDecreased: widget.onDecreased,
+                item: OrderItemTileEntity(
+                    price: 100.0, orderQuantity: '20', itemName: 'Strawbberry'),
               ),
         itemCount: widget.items.length,
         shrinkWrap: true,

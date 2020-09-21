@@ -30,12 +30,15 @@ class EnterNewAddressScreen extends StatefulWidget {
 }
 
 class EnterNewAddressScreenState extends State<EnterNewAddressScreen> {
-   TextEditingController _flatDetailsTextController;
-   TextEditingController _landmarkTextController;
-   TextEditingController _pincodeTextController;
+  TextEditingController _flatDetailsTextController;
+  TextEditingController _landmarkTextController;
+  TextEditingController _pincodeTextController;
   final mapLocation = LocationEntity(latitude: 22.22, longitude: 82.22);
-   SocietyModel selectedSociety;
+  SocietyModel selectedSociety;
   AddressTagType addressTagType;
+  bool _isHomeSelected = false;
+  bool _isOfficeSelected = false;
+  bool _isOtherSelected = false;
 
   // ignore: close_sinks
   EnterNewAddressBloc enterNewAddressBloc;
@@ -74,8 +77,8 @@ class EnterNewAddressScreenState extends State<EnterNewAddressScreen> {
       city: 'Pune',
       zipCode: _pincodeTextController.text,
       society: selectedSociety,
-      location: LocationModel(
-          latitude: mapLocation.latitude, longitude: mapLocation.longitude),
+      latitude: '${mapLocation.latitude}',
+      longitude: '${mapLocation.longitude}',
     );
 
     enterNewAddressBloc.add(CreateNewAddressEvent(addressModel: newAddress));
@@ -93,9 +96,9 @@ class EnterNewAddressScreenState extends State<EnterNewAddressScreen> {
   void initState() {
     super.initState();
     enterNewAddressBloc = Injector.resolve<EnterNewAddressBloc>();
-     _flatDetailsTextController = TextEditingController();
-     _landmarkTextController = TextEditingController();
-     _pincodeTextController = TextEditingController();
+    _flatDetailsTextController = TextEditingController();
+    _landmarkTextController = TextEditingController();
+    _pincodeTextController = TextEditingController();
   }
 
   @override
@@ -154,35 +157,7 @@ class EnterNewAddressScreenState extends State<EnterNewAddressScreen> {
                   ),
             ),
             SizedBox(height: LayoutConstants.dimen_4.h),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                SizedBox(width: LayoutConstants.dimen_8.w),
-                AddressTagButton(
-                  type: AddressTagType.home,
-                  title: 'Home',
-                  onSelect: () {
-                    addressTagType = AddressTagType.home;
-                  },
-                ),
-                SizedBox(width: LayoutConstants.dimen_8.w),
-                AddressTagButton(
-                  type: AddressTagType.office,
-                  title: 'Office',
-                  onSelect: () {
-                    addressTagType = AddressTagType.office;
-                  },
-                ),
-                SizedBox(width: LayoutConstants.dimen_8.w),
-                AddressTagButton(
-                  type: AddressTagType.other,
-                  title: 'Other',
-                  onSelect: () {
-                    addressTagType = AddressTagType.other;
-                  },
-                ),
-              ],
-            ),
+            _getAddressType(),
             SizedBox(height: LayoutConstants.dimen_24.h),
             _buttonWithContainer(context),
           ],
@@ -194,9 +169,8 @@ class EnterNewAddressScreenState extends State<EnterNewAddressScreen> {
           BlocListener<EnterNewAddressBloc, EnterNewAddressState>(
             listener: (context, state) {
               if (state is CreateNewAddressSuccessState) {
-                Navigator.pushNamed(context, RouteConstants.myAccount);
                 Injector.resolve<SnackBarBloc>().add(ShowSnackBarEvent(
-                  text: 'User Profile created',
+                  text: 'Address created',
                   type: CustomSnackBarType.success,
                   position: CustomSnackBarPosition.top,
                 ));
@@ -339,6 +313,54 @@ class EnterNewAddressScreenState extends State<EnterNewAddressScreen> {
             _getAddressContainer(context)
           ],
         ),
+      );
+
+  Row _getAddressType() => Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          SizedBox(width: LayoutConstants.dimen_8.w),
+          AddressTagButton(
+            type: AddressTagType.home,
+            title: 'Home',
+            isSelected: _isHomeSelected,
+            onSelect: () {
+              addressTagType = AddressTagType.home;
+              setState(() {
+                _isHomeSelected = true;
+                _isOfficeSelected = false;
+                _isOtherSelected = false;
+              });
+            },
+          ),
+          SizedBox(width: LayoutConstants.dimen_8.w),
+          AddressTagButton(
+            type: AddressTagType.office,
+            title: 'Office',
+            isSelected: _isOfficeSelected,
+            onSelect: () {
+              addressTagType = AddressTagType.office;
+              setState(() {
+                _isOfficeSelected = true;
+                _isHomeSelected = false;
+                _isOtherSelected = false;
+              });
+            },
+          ),
+          SizedBox(width: LayoutConstants.dimen_8.w),
+          AddressTagButton(
+            type: AddressTagType.other,
+            title: 'Other',
+            isSelected: _isOtherSelected,
+            onSelect: () {
+              addressTagType = AddressTagType.other;
+              setState(() {
+                _isOtherSelected = true;
+                _isHomeSelected = false;
+                _isOfficeSelected = false;
+              });
+            },
+          ),
+        ],
       );
 
   Container _getAddressContainer(BuildContext context) => Container(

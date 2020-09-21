@@ -11,7 +11,8 @@ class AddressModel extends AddressEntity {
     String city,
     String country,
     SocietyModel society,
-    LocationModel location,
+    String latitude,
+    String longitude,
   }) : super(
           id: id,
           label: label,
@@ -21,18 +22,12 @@ class AddressModel extends AddressEntity {
           city: city,
           country: country,
           society: society,
-          location: location,
+          latitude: latitude,
+          longitude: longitude,
         );
 
-  static List<AddressModel> fromListJson(Map<String, dynamic> jsonMap) {
-    final List<dynamic> addressMapList = jsonMap['results'];
-    final list = addressMapList
-        .map((addressMap) => AddressModel.fromJson(addressMap))
-        .toList();
-    return list;
-  }
-
-  factory AddressModel.fromJson(Map<String, dynamic> jsonMap) => AddressModel(
+  // ignore: prefer_constructors_over_static_methods
+  static AddressModel fromJson(Map<String, dynamic> jsonMap) => AddressModel(
         id: jsonMap['id'],
         label: jsonMap['label'],
         address1: jsonMap['address1'],
@@ -40,20 +35,21 @@ class AddressModel extends AddressEntity {
         city: jsonMap['city'],
         country: jsonMap['country'],
         zipCode: jsonMap['zip_code'],
-        society: SocietyModel.fromJson(jsonMap),
-        location: LocationModel.fromJson(jsonMap),
+        society: SocietyModel.fromJson(jsonMap['society_detail']),
+        latitude: jsonMap['latitude'],
+        longitude: jsonMap['longitude'],
       );
 
   static Map<String, dynamic> toJson(AddressModel userAddressModel) => {
-        'id': userAddressModel.id,
         'label': userAddressModel.label,
         'address1': userAddressModel.address1,
         'address2': userAddressModel.address2,
         'city': userAddressModel.city,
         'country': userAddressModel.country,
         'zip_code': userAddressModel.zipCode,
-        'society_detail': SocietyModel.toJson(userAddressModel.society),
-        'location': LocationModel.toJson(userAddressModel.location),
+        'society': SocietyModel.toJson(userAddressModel.society),
+        'latitude': userAddressModel.latitude,
+        'longitude': userAddressModel.longitude,
       };
 }
 

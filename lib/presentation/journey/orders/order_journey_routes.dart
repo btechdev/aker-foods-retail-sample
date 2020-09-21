@@ -7,6 +7,6 @@ import 'package:aker_foods_retail/presentation/app/route_constants.dart';
 class OrderJourneyRoutes {
   static Map<String, WidgetBuilder> all() => {
     RouteConstants.myOrders: (context) => MyOrdersScreen(),
-    RouteConstants.orderDetails: (context) => OrderDetailsScreen(),
+//    RouteConstants.orderDetails: (context) => OrderDetailsScreen(),
   };
 }

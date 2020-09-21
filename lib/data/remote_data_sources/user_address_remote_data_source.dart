@@ -17,14 +17,10 @@ class UserAddressRemoteDataSource {
 
   Future<void> createNewAddress(AddressModel address) async {
     final payload = AddressModel.toJson(address);
-
+    debugPrint('$payload');
     try {
       final Map<String, Object> response =
           await apiClient.post(ApiEndpoints.newAddress, payload);
-      debugPrint('SetupUserProfile Response ==>');
-      response.forEach((key, value) {
-        debugPrint('$key = ${value?.toString()}');
-      });
       return response;
     } catch (error) {
       rethrow;
@@ -32,8 +28,7 @@ class UserAddressRemoteDataSource {
   }
 
   Future<List<AddressModel>> getUserAddresses() async {
-    final map = await apiClient.get(ApiEndpoints.newAddress);
-    final addresses = AddressModel.fromListJson(map);
-    return addresses;
+    final jsonMap = await apiClient.get(ApiEndpoints.newAddress);
+    return ApiResponse.fromJson<AddressModel>(jsonMap).data;
   }
 }

@@ -2,24 +2,28 @@ import 'package:aker_foods_retail/common/local_preferences/local_preferences.dar
 import 'package:aker_foods_retail/common/utils/firebase_auth_utils.dart';
 import 'package:aker_foods_retail/data/local_data_sources/authentication_local_data_source.dart';
 import 'package:aker_foods_retail/data/local_data_sources/user_address_local_data_source.dart';
+import 'package:aker_foods_retail/data/remote_data_sources/cart_remote_data_source.dart';
 import 'package:aker_foods_retail/data/remote_data_sources/products_remote_data_source.dart';
 import 'package:aker_foods_retail/data/remote_data_sources/user_address_remote_data_source.dart';
 import 'package:aker_foods_retail/data/remote_data_sources/user_order_remote_data_source.dart';
 import 'package:aker_foods_retail/data/remote_data_sources/user_profile_remote_data_source.dart';
 import 'package:aker_foods_retail/data/remote_data_sources/user_transaction_remote_datasource.dart';
 import 'package:aker_foods_retail/data/repositories/authentication_repository_impl.dart';
+import 'package:aker_foods_retail/data/repositories/cart_repository_impl.dart';
 import 'package:aker_foods_retail/data/repositories/products_repository_impl.dart';
 import 'package:aker_foods_retail/data/repositories/user_address_repository_impl.dart';
 import 'package:aker_foods_retail/data/repositories/user_order_repository_impl.dart';
 import 'package:aker_foods_retail/data/repositories/user_profile_repository_impl.dart';
 import 'package:aker_foods_retail/data/repositories/user_transaction_repository_impl.dart';
 import 'package:aker_foods_retail/domain/repositories/authentication_repository.dart';
+import 'package:aker_foods_retail/domain/repositories/cart_repository.dart';
 import 'package:aker_foods_retail/domain/repositories/products_repository.dart';
 import 'package:aker_foods_retail/domain/repositories/user_address_repository.dart';
 import 'package:aker_foods_retail/domain/repositories/user_order_repository.dart';
 import 'package:aker_foods_retail/domain/repositories/user_profile_repository.dart';
 import 'package:aker_foods_retail/domain/repositories/user_transaction_repository.dart';
 import 'package:aker_foods_retail/domain/usecases/authentication_use_case.dart';
+import 'package:aker_foods_retail/domain/usecases/cart_use_case.dart';
 import 'package:aker_foods_retail/domain/usecases/products_use_case.dart';
 import 'package:aker_foods_retail/domain/usecases/user_address_use_case.dart';
 import 'package:aker_foods_retail/domain/usecases/user_order_use_case.dart';
@@ -29,6 +33,7 @@ import 'package:aker_foods_retail/network/api/api_client.dart';
 import 'package:aker_foods_retail/presentation/common_blocs/firebase_auth_bloc/firebase_auth_bloc.dart';
 import 'package:aker_foods_retail/presentation/common_blocs/products_bloc/products_bloc.dart';
 import 'package:aker_foods_retail/presentation/common_blocs/snack_bar_bloc/snack_bar_bloc.dart';
+import 'package:aker_foods_retail/presentation/journey/checkout/order_cart/bloc/cart_bloc.dart';
 import 'package:aker_foods_retail/presentation/journey/dashboard/bloc/dashboard_bloc.dart';
 import 'package:aker_foods_retail/presentation/journey/orders/bloc/user_order_bloc.dart';
 import 'package:aker_foods_retail/presentation/journey/user/address/change_address/bloc/change_address_bloc.dart';
@@ -66,6 +71,7 @@ abstract class InjectorConfig {
   @Register.singleton(SnackBarBloc)
   @Register.singleton(FirebaseAuthBloc)
   @Register.singleton(DashboardBloc)
+  @Register.singleton(CartBloc)
   @Register.factory(SelectSocietyBloc)
   @Register.factory(UserProfileBloc)
   @Register.factory(EnterNewAddressBloc)
@@ -82,6 +88,7 @@ abstract class InjectorConfig {
   @Register.factory(UserTransactionUseCase)
   @Register.factory(UserOrderUseCase)
   @Register.factory(ProductsUseCase)
+  @Register.factory(CartUseCase)
   void _configureUseCases();
 
   /// ============ Register Repositories ============
@@ -109,6 +116,11 @@ abstract class InjectorConfig {
     ProductsRepository,
     from: ProductsRepositoryImpl,
   )
+  @Register.factory(
+    CartRepository,
+    from: CartRepositoryImpl,
+  )
+
   void _configureRepositories();
 
   /// ============ Register LocalDataSources ============
@@ -122,6 +134,7 @@ abstract class InjectorConfig {
   @Register.factory(UserTransactionRemoteDataSource)
   @Register.factory(UserOrderRemoteDataSource)
   @Register.factory(ProductsRemoteDataSource)
+  @Register.factory(CartRemoteDataSource)
   void _configureRemoteDataSources();
 
   /// ============ Register Common Classes ============

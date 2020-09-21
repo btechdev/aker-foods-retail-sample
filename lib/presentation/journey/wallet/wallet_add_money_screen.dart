@@ -20,7 +20,7 @@ class WalletAddMoneyScreen extends StatelessWidget {
           children: <Widget>[
             ProfileTextFieldWidget(
               controller: _topUpAmountTextController,
-              prefixIcon: Icon(Icons.money_off),
+              prefixIcon: const Icon(Icons.money_off),
               hintText: 'Top Amount',
               onTextChange: (value) => {},
             ),

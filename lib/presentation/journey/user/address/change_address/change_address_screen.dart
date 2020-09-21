@@ -99,18 +99,18 @@ class ChangeAddressScreen extends StatelessWidget {
   Widget _getTrailing(int index) {
     if (savedAddresses.isNotEmpty && currentAddress != null) {
       if (savedAddresses[index - 7].id == currentAddress.id) {
-        return Icon(
+        return const Icon(
           Icons.check,
           color: AppColor.primaryColor,
         );
       } else {
-        return Icon(
+        return const Icon(
           Icons.check,
           color: AppColor.transparent,
         );
       }
     } else {
-      return Icon(
+      return const Icon(
         Icons.check,
         color: AppColor.transparent,
       );
