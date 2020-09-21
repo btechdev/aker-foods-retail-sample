@@ -10,9 +10,9 @@ class ProductEntity {
   final int subcategoryId;
   final ProductSubcategoryEntity subcategory;
   final double baseQuantity;
-  final double price;
-  final double discountedPrice;
-  final String unit;
+  final String salesUnit;
+  final double amount;
+  final double discountedAmount;
   final String imageUrl;
   final bool isInStock;
 
@@ -25,40 +25,10 @@ class ProductEntity {
     this.subcategoryId,
     this.subcategory,
     this.baseQuantity,
-    this.price,
-    this.discountedPrice,
-    this.unit,
+    this.salesUnit,
+    this.amount,
+    this.discountedAmount,
     this.imageUrl,
     this.isInStock = true,
   });
 }
-
-/*enum ProductStatus { available, outOfStock, unknown }
-
-extension ProductStatusExtension on ProductStatus {
-  String getString() {
-    switch (this) {
-      case ProductStatus.available:
-        return 'AVAILABLE';
-
-      case ProductStatus.outOfStock:
-        return 'OUT_OF_STOCK';
-
-      default:
-        return 'UNKNOWN';
-    }
-  }
-
-  static ProductStatus getEnum(String status) {
-    switch (status) {
-      case 'AVAILABLE':
-        return ProductStatus.available;
-
-      case 'OUT_OF_STOCK':
-        return ProductStatus.outOfStock;
-
-      default:
-        return ProductStatus.unknown;
-    }
-  }
-}*/

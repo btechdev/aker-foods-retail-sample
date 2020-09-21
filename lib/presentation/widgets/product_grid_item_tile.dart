@@ -1,6 +1,7 @@
 import 'package:aker_foods_retail/common/constants/app_constants.dart';
 import 'package:aker_foods_retail/common/constants/layout_constants.dart';
 import 'package:aker_foods_retail/common/extensions/pixel_dimension_util_extensions.dart';
+import 'package:aker_foods_retail/common/extensions/string_extensions.dart';
 import 'package:aker_foods_retail/domain/entities/product_entity.dart';
 import 'package:aker_foods_retail/presentation/journey/dashboard/home/order_item_counter.dart';
 import 'package:aker_foods_retail/presentation/theme/app_colors.dart';
@@ -43,8 +44,8 @@ class ProductGridItemTileState extends State<ProductGridItemTile> {
       );
 
   Widget _getItemImage(BuildContext context) {
-    if (widget.product.discountedPrice != null &&
-        widget.product.discountedPrice > 0) {
+    if (widget.product.discountedAmount != null &&
+        widget.product.discountedAmount > 0) {
       return Stack(
         children: [
           _productAvatarContainer(),
@@ -64,9 +65,12 @@ class ProductGridItemTileState extends State<ProductGridItemTile> {
         ),
         child: CircleAvatar(
           radius: LayoutConstants.dimen_32.w,
-          backgroundImage: const ExactAssetImage(
-            'assets/images/user-profile-vegies.jpeg',
-          ),
+          backgroundColor: AppColor.white,
+          backgroundImage: widget.product.imageUrl.isNotNullAndEmpty
+              ? NetworkImage(widget.product.imageUrl)
+              : const ExactAssetImage(
+                  'assets/images/logo_transparent_background.png',
+                ),
         ),
       );
 
@@ -89,7 +93,7 @@ class ProductGridItemTileState extends State<ProductGridItemTile> {
               ),
             ),
             Text(
-              '${widget.product.baseQuantity} ${widget.product.unit}',
+              '${widget.product.baseQuantity} ${widget.product.salesUnit}',
               style: Theme.of(context).textTheme.subtitle1.copyWith(
                     color: AppColor.black40,
                   ),
@@ -157,8 +161,8 @@ class ProductGridItemTileState extends State<ProductGridItemTile> {
         ..add(SizedBox(width: LayoutConstants.dimen_4.w))
         ..add(_productMrpFlexibleText(productMrp));
     }*/
-    final double productMrp = widget.product.price ?? 0;
-    final double productDiscountPrice = widget.product.discountedPrice ?? 0;
+    final double productMrp = widget.product.amount ?? 0;
+    final double productDiscountPrice = widget.product.discountedAmount ?? 0;
     final double priceDiscountValue = productMrp - productDiscountPrice;
 
     final List<Widget> rowChildren = List()

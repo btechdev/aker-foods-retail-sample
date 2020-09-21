@@ -2,6 +2,7 @@ import 'package:aker_foods_retail/common/constants/app_constants.dart';
 import 'package:aker_foods_retail/common/constants/layout_constants.dart';
 import 'package:aker_foods_retail/common/extensions/pixel_dimension_util_extensions.dart';
 import 'package:aker_foods_retail/common/injector/injector.dart';
+import 'package:aker_foods_retail/common/utils/pixel_dimension_util.dart';
 import 'package:aker_foods_retail/domain/entities/product_category_entity.dart';
 import 'package:aker_foods_retail/domain/entities/product_entity.dart';
 import 'package:aker_foods_retail/presentation/common_blocs/products_bloc/products_bloc.dart';
@@ -175,9 +176,12 @@ class SearchPageState extends State<SearchPage> {
   List<Widget> _getProductsWithCategorySliversList() {
     final List<Widget> slivers = [];
     for (final category in categories) {
+      final categoryProducts = products
+          .where((product) => category.id == product.categoryId)
+          .toList();
       slivers
         ..add(_productsCategoryHeader(category.name))
-        ..add(_productsSliverGridWithPadding());
+        ..add(_productsSliverGridWithPadding(categoryProducts));
     }
     return slivers;
   }
@@ -187,7 +191,9 @@ class SearchPageState extends State<SearchPage> {
         child: ProductsCategoryHeader(title: title),
       );
 
-  SliverPadding _productsSliverGridWithPadding() => SliverPadding(
+  SliverPadding _productsSliverGridWithPadding(
+          List<ProductEntity> categoryProducts) =>
+      SliverPadding(
         padding: EdgeInsets.only(
           left: LayoutConstants.dimen_12.w,
           right: LayoutConstants.dimen_12.w,
@@ -196,8 +202,8 @@ class SearchPageState extends State<SearchPage> {
         sliver: SliverGrid(
           gridDelegate: _productsGridDelegate(),
           delegate: SliverChildBuilderDelegate(
-            (context, index) => _productGridItemTile(products[index]),
-            childCount: products.length,
+            (context, index) => _productGridItemTile(categoryProducts[index]),
+            childCount: categoryProducts.length,
           ),
         ),
       );
@@ -242,8 +248,8 @@ class SearchPageState extends State<SearchPage> {
 
   SliverGridDelegate _productsGridDelegate() =>
       SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        childAspectRatio: 1 / 1.55,
+        crossAxisCount: AppConstants.productsGridCrossAxisCount,
+        childAspectRatio: LayoutConstants.productsGridChildAspectRatio,
         mainAxisSpacing: LayoutConstants.dimen_8.h,
         crossAxisSpacing: LayoutConstants.dimen_8.w,
       );

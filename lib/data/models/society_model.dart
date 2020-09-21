@@ -14,18 +14,6 @@ class SocietyModel extends SocietyEntity {
         'name': societyModel.name,
       };
 
-  /*static List<SocietyModel> fromListJson(Map<String, dynamic> jsonMap) {
-    final List<dynamic> societyMapList = jsonMap['results'];
-    final list =  societyMapList
-        .map((societyMap) => SocietyModel.fromJson(societyMap)).toList();
-    return list;
-  }
-
-  factory SocietyModel.fromJson(Map<String, dynamic> jsonMap) => SocietyModel(
-        id: jsonMap['id'],
-        name: jsonMap['name'],
-      );*/
-
   // ignore: prefer_constructors_over_static_methods
   static SocietyModel fromJson(Map<String, dynamic> jsonMap) => SocietyModel(
         id: jsonMap['id'],

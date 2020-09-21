@@ -29,7 +29,7 @@ class ProductInfoPrice extends StatelessWidget {
           ),
         ),
         Text(
-          '${product.baseQuantity} ${product.unit}',
+          '${product.baseQuantity} ${product.salesUnit}',
           style: Theme.of(context).textTheme.subtitle1.copyWith(
                 color: AppColor.black40,
               ),
@@ -41,8 +41,8 @@ class ProductInfoPrice extends StatelessWidget {
   }
 
   Row _getProductPriceRow(BuildContext context) {
-    final double productMrp = product.price ?? 0;
-    final double productDiscountPrice = product.discountedPrice ?? 0;
+    final double productMrp = product.amount ?? 0;
+    final double productDiscountPrice = product.discountedAmount ?? 0;
     final double priceDiscountValue = productMrp - productDiscountPrice;
 
     final List<Widget> rowChildren = List()

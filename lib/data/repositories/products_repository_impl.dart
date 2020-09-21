@@ -16,12 +16,12 @@ class ProductsRepositoryImpl implements ProductsRepository {
   ];
 
   static List<ProductModel> dummyProducts = [
-    ProductModel(name: 'Onion Onion Onion Onion Onion', price: 20),
-    ProductModel(name: 'Tomato', price: 80),
-    ProductModel(name: 'Potato', price: 25),
-    ProductModel(name: 'Beat Root', price: 60),
-    ProductModel(name: 'Carrot', price: 40),
-    ProductModel(name: 'Cucumber', price: 40),
+    ProductModel(name: 'Onion Onion Onion Onion Onion', amount: 20),
+    ProductModel(name: 'Tomato', amount: 80),
+    ProductModel(name: 'Potato', amount: 25),
+    ProductModel(name: 'Beat Root', amount: 60),
+    ProductModel(name: 'Carrot', amount: 40),
+    ProductModel(name: 'Cucumber', amount: 40),
   ];
 
   @override

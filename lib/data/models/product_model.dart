@@ -13,9 +13,9 @@ class ProductModel extends ProductEntity {
     int subcategoryId,
     ProductSubcategoryModel subcategory,
     double baseQuantity,
-    double price,
-    double discountedPrice,
-    String unit,
+    double amount,
+    double discountedAmount,
+    String salesUnit,
     String imageUrl,
     bool isInStock,
   }) : super(
@@ -27,10 +27,34 @@ class ProductModel extends ProductEntity {
           subcategoryId: subcategoryId,
           subcategory: subcategory,
           baseQuantity: baseQuantity,
-          price: price,
-          discountedPrice: discountedPrice,
-          unit: unit,
+          salesUnit: salesUnit,
+          amount: amount,
+          discountedAmount: discountedAmount,
           imageUrl: imageUrl,
           isInStock: isInStock,
         );
+
+  // ignore: prefer_constructors_over_static_methods
+  static ProductModel fromJson(Map<String, dynamic> jsonMap) => ProductModel(
+        id: jsonMap['id'],
+        name: jsonMap['name'],
+        description: jsonMap['description'],
+        categoryId: jsonMap['category_id'],
+        category: ProductCategoryModel.fromJson(jsonMap['category_detail']),
+        subcategoryId: jsonMap['subcategory_id'],
+        subcategory:
+            ProductSubcategoryModel.fromJson(jsonMap['subcategory_detail']),
+        baseQuantity: jsonMap['base_quantity'],
+        salesUnit: jsonMap['sales_unit'],
+        amount: double.parse(jsonMap['amount']),
+        discountedAmount: double.parse(jsonMap['discounted_amount']),
+        imageUrl: jsonMap['image'],
+        isInStock: jsonMap['in_stock'] == 1,
+      );
+
+// TODO(Bhushan): What does these values indicate?
+//"in_stock":1,"display_order":0,"is_active":true
+
+// TODO(Bhushan): Why values are in String and not double?
+//"amount":"100.00","discounted_amount":"100.00"
 }

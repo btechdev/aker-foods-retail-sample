@@ -2,7 +2,9 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class AppConstants {
   static const phoneNumberLength = 10;
+  static const productsGridCrossAxisCount = 2;
   static const searchMinTextLength = 3;
+
   static const mapZoomLevel = 14.0;
 
   static const firebaseAuthRequestTimeoutDuration = Duration(minutes: 1);

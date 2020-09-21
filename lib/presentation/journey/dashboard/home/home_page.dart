@@ -1,3 +1,4 @@
+import 'package:aker_foods_retail/common/constants/app_constants.dart';
 import 'package:aker_foods_retail/common/constants/layout_constants.dart';
 import 'package:aker_foods_retail/common/extensions/pixel_dimension_util_extensions.dart';
 import 'package:aker_foods_retail/common/utils/widget_util.dart';
@@ -218,8 +219,8 @@ class HomePageState extends State<HomePage> {
         ),
         sliver: SliverGrid(
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            childAspectRatio: 1 / 1.6,
+            crossAxisCount: AppConstants.productsGridCrossAxisCount,
+            childAspectRatio: LayoutConstants.productsGridChildAspectRatio,
             mainAxisSpacing: LayoutConstants.dimen_8.h,
             crossAxisSpacing: LayoutConstants.dimen_8.w,
           ),

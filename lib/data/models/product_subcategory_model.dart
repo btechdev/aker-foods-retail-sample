@@ -12,4 +12,13 @@ class ProductSubcategoryModel extends ProductSubcategoryEntity {
           description: description,
           imageUrl: imageUrl,
         );
+
+  // ignore: prefer_constructors_over_static_methods
+  static ProductSubcategoryModel fromJson(Map<String, dynamic> jsonMap) =>
+      ProductSubcategoryModel(
+        id: jsonMap['id'],
+        name: jsonMap['name'],
+        description: jsonMap['description'],
+        imageUrl: jsonMap['image'],
+      );
 }

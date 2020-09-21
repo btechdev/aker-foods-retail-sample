@@ -38,7 +38,7 @@ class HttpClient {
       '====> Retrying HTTP request\n'
       'Method: ${request.method}\n'
       'Header: ${parseDataAndSplitString(request.headers)}\n'
-      'Url: ${getParsedUrl(request.url.path)}',
+      'Url: ${request.url.toString()}',
     );
 
     final IOStreamedResponse streamedResponse = await _client.send(request);
