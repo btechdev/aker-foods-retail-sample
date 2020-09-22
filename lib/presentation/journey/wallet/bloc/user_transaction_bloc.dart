@@ -14,7 +14,7 @@ class UserTransactionBloc
   Stream<UserTransactionState> mapEventToState(
       UserTransactionEvent event) async* {
     if (event is FetchUserTransactions) {
-      _handleFetchTransactionEvent(event);
+      yield* _handleFetchTransactionEvent(event);
     }
   }
 

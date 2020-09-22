@@ -2,33 +2,26 @@ import 'package:aker_foods_retail/domain/entities/transaction_entity.dart';
 
 class TransactionModel extends TransactionEntity {
   TransactionModel({
-    int transactionId,
-    String transactionTitle,
+    String transactionId,
+    String description,
     String transactionType,
-    double amount,
+    String value,
     String date,
   }) : super(
           transactionId: transactionId,
-          transactionTitle: transactionTitle,
+          description: description,
           transactionType: transactionType,
-          amount: amount,
+          value: value,
           date: date,
         );
 
-  static List<TransactionModel> fromListJson(Map<String, dynamic> jsonMap) {
-    final List<dynamic> transactionMapList = jsonMap['results'];
-    final list = transactionMapList
-        .map((transactionMap) => TransactionModel.fromJson(transactionMap))
-        .toList();
-    return list;
-  }
-
-  factory TransactionModel.fromJson(Map<String, dynamic> jsonMap) =>
+  // ignore: prefer_constructors_over_static_methods
+  static TransactionModel fromJson(Map<String, dynamic> jsonMap) =>
       TransactionModel(
-        transactionId: jsonMap['transactionId'],
-        transactionTitle: jsonMap['transactionTitle'],
-        transactionType: jsonMap['transactionType'],
-        amount: jsonMap['amount'],
-        date: jsonMap['date'],
+        transactionId: jsonMap['id'],
+        description: jsonMap['description'],
+        transactionType: jsonMap['status'],
+        value: jsonMap['value'],
+        date: jsonMap['created_at'],
       );
 }

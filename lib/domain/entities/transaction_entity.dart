@@ -1,15 +1,15 @@
 class TransactionEntity {
-  final int transactionId;
-  final String transactionTitle;
+  final String transactionId;
+  final String description;
   final String transactionType;
-  final double amount;
+  final String value;
   final String date;
 
   TransactionEntity({
     this.transactionId,
-    this.transactionTitle,
+    this.description,
     this.transactionType,
-    this.amount,
+    this.value,
     this.date,
   });
 }

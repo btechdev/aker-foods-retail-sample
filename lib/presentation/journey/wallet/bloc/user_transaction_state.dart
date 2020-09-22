@@ -1,6 +1,6 @@
 
 
-import 'package:aker_foods_retail/data/models/transaction_model.dart';
+import 'package:aker_foods_retail/domain/entities/transaction_entity.dart';
 
 abstract class UserTransactionState {}
 
@@ -9,7 +9,7 @@ class EmptyState extends UserTransactionState {}
 class TransactionFetchingState extends UserTransactionState {}
 
 class TransactionFetchSuccessfulState extends UserTransactionState {
-  final List<TransactionModel> transactions;
+  final List<TransactionEntity> transactions;
 
   TransactionFetchSuccessfulState({this.transactions});
 }
