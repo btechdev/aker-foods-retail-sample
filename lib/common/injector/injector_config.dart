@@ -1,6 +1,7 @@
 import 'package:aker_foods_retail/common/local_preferences/local_preferences.dart';
 import 'package:aker_foods_retail/common/utils/firebase_auth_utils.dart';
 import 'package:aker_foods_retail/data/local_data_sources/authentication_local_data_source.dart';
+import 'package:aker_foods_retail/data/local_data_sources/cart_local_data_source.dart';
 import 'package:aker_foods_retail/data/local_data_sources/user_address_local_data_source.dart';
 import 'package:aker_foods_retail/data/remote_data_sources/cart_remote_data_source.dart';
 import 'package:aker_foods_retail/data/remote_data_sources/products_remote_data_source.dart';
@@ -30,10 +31,11 @@ import 'package:aker_foods_retail/domain/usecases/user_order_use_case.dart';
 import 'package:aker_foods_retail/domain/usecases/user_profile_user_case.dart';
 import 'package:aker_foods_retail/domain/usecases/user_transaction_use_case.dart';
 import 'package:aker_foods_retail/network/api/api_client.dart';
+import 'package:aker_foods_retail/presentation/common_blocs/cart_bloc/cart_bloc.dart';
 import 'package:aker_foods_retail/presentation/common_blocs/firebase_auth_bloc/firebase_auth_bloc.dart';
 import 'package:aker_foods_retail/presentation/common_blocs/products_bloc/products_bloc.dart';
 import 'package:aker_foods_retail/presentation/common_blocs/snack_bar_bloc/snack_bar_bloc.dart';
-import 'package:aker_foods_retail/presentation/journey/checkout/order_cart/bloc/cart_bloc.dart';
+import 'package:aker_foods_retail/presentation/journey/checkout/order_cart/coupons_bloc/coupons_bloc.dart';
 import 'package:aker_foods_retail/presentation/journey/dashboard/bloc/dashboard_bloc.dart';
 import 'package:aker_foods_retail/presentation/journey/orders/bloc/user_order_bloc.dart';
 import 'package:aker_foods_retail/presentation/journey/user/address/change_address/bloc/change_address_bloc.dart';
@@ -79,6 +81,7 @@ abstract class InjectorConfig {
   @Register.factory(UserTransactionBloc)
   @Register.factory(UserOrderBloc)
   @Register.factory(ProductsBloc)
+  @Register.factory(CouponsBloc)
   void _configureBlocs();
 
   /// ============ Register UseCases ============
@@ -120,12 +123,12 @@ abstract class InjectorConfig {
     CartRepository,
     from: CartRepositoryImpl,
   )
-
   void _configureRepositories();
 
   /// ============ Register LocalDataSources ============
   @Register.factory(AuthenticationLocalDataSource)
   @Register.factory(UserAddressLocalDataSource)
+  @Register.factory(CartLocalDataSource)
   void _configureLocalDataSources();
 
   /// ============ Register RemoteDataSources ============

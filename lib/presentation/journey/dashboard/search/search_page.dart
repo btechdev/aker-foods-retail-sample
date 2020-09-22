@@ -2,9 +2,10 @@ import 'package:aker_foods_retail/common/constants/app_constants.dart';
 import 'package:aker_foods_retail/common/constants/layout_constants.dart';
 import 'package:aker_foods_retail/common/extensions/pixel_dimension_util_extensions.dart';
 import 'package:aker_foods_retail/common/injector/injector.dart';
-import 'package:aker_foods_retail/common/utils/pixel_dimension_util.dart';
 import 'package:aker_foods_retail/domain/entities/product_category_entity.dart';
 import 'package:aker_foods_retail/domain/entities/product_entity.dart';
+import 'package:aker_foods_retail/presentation/common_blocs/cart_bloc/cart_bloc.dart';
+import 'package:aker_foods_retail/presentation/common_blocs/cart_bloc/cart_state.dart';
 import 'package:aker_foods_retail/presentation/common_blocs/products_bloc/products_bloc.dart';
 import 'package:aker_foods_retail/presentation/common_blocs/products_bloc/products_event.dart';
 import 'package:aker_foods_retail/presentation/common_blocs/products_bloc/products_state.dart';
@@ -254,6 +255,16 @@ class SearchPageState extends State<SearchPage> {
         crossAxisSpacing: LayoutConstants.dimen_8.w,
       );
 
-  ProductGridItemTile _productGridItemTile(ProductEntity product) =>
-      ProductGridItemTile(product: product);
+  ProductGridItemTile _productGridItemTile(ProductEntity product) {
+    final cartState = BlocProvider.of<CartBloc>(context).state;
+    int productQuantityAlreadyPresentInCart = 0;
+    if (cartState is CartLoadedState) {
+      productQuantityAlreadyPresentInCart =
+          cartState.productIdCountMap[product.id] ?? 0;
+    }
+    return ProductGridItemTile(
+      product: product,
+      productQuantityCountInCart: productQuantityAlreadyPresentInCart,
+    );
+  }
 }

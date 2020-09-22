@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:aker_foods_retail/common/utils/database_utils.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -22,6 +23,7 @@ Future<void> main() async {
   InjectorConfig.setup();
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  unawaited(DatabaseUtil.initDatabase());
 
   // Initialize shared preferences wrapper
   final localPreferences = Injector.resolve<LocalPreferences>();

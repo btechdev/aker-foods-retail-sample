@@ -13,9 +13,9 @@ class ProductModel extends ProductEntity {
     int subcategoryId,
     ProductSubcategoryModel subcategory,
     double baseQuantity,
+    String salesUnit,
     double amount,
     double discountedAmount,
-    String salesUnit,
     String imageUrl,
     bool isInStock,
   }) : super(

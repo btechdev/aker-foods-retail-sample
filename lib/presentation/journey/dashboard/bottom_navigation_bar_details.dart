@@ -1,43 +1,70 @@
+import 'package:aker_foods_retail/common/constants/layout_constants.dart';
+import 'package:aker_foods_retail/common/extensions/pixel_dimension_util_extensions.dart';
 import 'package:aker_foods_retail/presentation/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 
-enum DashboardBottomNavigationItems { home, search, cart, account }
+enum DashboardBottomNavigationItem { home, search, cart, account }
 
 class DashboardBottomNavigationBarData {
   final BuildContext context;
 
   DashboardBottomNavigationBarData(this.context);
 
-  List<BottomNavigationBarItem> getBottomNavigationBarItemList() {
+  List<BottomNavigationBarItem> getBottomNavigationBarItemList(
+      int cartProductCount) {
     final List<BottomNavigationBarItem> items = List();
-    for (final item in DashboardBottomNavigationItems.values) {
-      items.add(_getBottomNavigationBarItem(item));
+    for (final item in DashboardBottomNavigationItem.values) {
+      items.add(_getBottomNavigationBarItem(item, cartProductCount));
     }
     return items;
   }
 
-  BottomNavigationBarItem _getBottomNavigationBarItem(item) {
+  BottomNavigationBarItem _getBottomNavigationBarItem(
+      DashboardBottomNavigationItem item, int cartProductCount) {
     String titleString;
-    IconData iconData;
+    Widget iconWidget;
+    Widget activeIconWidget;
     switch (item) {
-      case DashboardBottomNavigationItems.home:
+      case DashboardBottomNavigationItem.home:
         titleString = 'Home';
-        iconData = Icons.home;
+        iconWidget = const Icon(Icons.home);
+        activeIconWidget = const Icon(
+          Icons.home,
+          color: AppColor.primaryColor,
+        );
         break;
 
-      case DashboardBottomNavigationItems.search:
+      case DashboardBottomNavigationItem.search:
         titleString = 'Search';
-        iconData = Icons.search;
+        iconWidget = const Icon(Icons.search);
+        activeIconWidget = const Icon(
+          Icons.search,
+          color: AppColor.primaryColor,
+        );
         break;
 
-      case DashboardBottomNavigationItems.cart:
+      case DashboardBottomNavigationItem.cart:
         titleString = 'Cart';
-        iconData = Icons.shopping_cart;
+        const icon = Icon(Icons.shopping_cart);
+        const activeIcon = Icon(
+          Icons.shopping_cart,
+          color: AppColor.primaryColor,
+        );
+        iconWidget = cartProductCount > 0
+            ? _wrapWithCartProductCount(icon, cartProductCount)
+            : icon;
+        activeIconWidget = cartProductCount > 0
+            ? _wrapWithCartProductCount(activeIcon, cartProductCount)
+            : activeIcon;
         break;
 
-      case DashboardBottomNavigationItems.account:
+      case DashboardBottomNavigationItem.account:
         titleString = 'Account';
-        iconData = Icons.account_box;
+        iconWidget = const Icon(Icons.account_box);
+        activeIconWidget = const Icon(
+          Icons.account_box,
+          color: AppColor.primaryColor,
+        );
         break;
     }
 
@@ -46,11 +73,40 @@ class DashboardBottomNavigationBarData {
         titleString,
         style: Theme.of(context).textTheme.overline,
       ),
-      icon: Icon(iconData),
-      activeIcon: Icon(
-        iconData,
-        color: AppColor.primaryColor,
-      ),
+      icon: iconWidget,
+      activeIcon: activeIconWidget,
+    );
+  }
+
+  Widget _wrapWithCartProductCount(Icon icon, int cartProductCount) {
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        icon,
+        Positioned(
+          top: 0,
+          right: 0,
+          child: Container(
+            alignment: Alignment.center,
+            padding: EdgeInsets.all(LayoutConstants.dimen_2.w),
+            decoration: BoxDecoration(
+              color: AppColor.orangeDark,
+              borderRadius: BorderRadius.circular(LayoutConstants.dimen_8.w),
+            ),
+            constraints: BoxConstraints(
+              minWidth: LayoutConstants.dimen_16.w,
+              minHeight: LayoutConstants.dimen_16.h,
+            ),
+            child: Text(
+              '$cartProductCount',
+              style: Theme.of(context).textTheme.overline.copyWith(
+                    color: AppColor.white,
+                  ),
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

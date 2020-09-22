@@ -1,19 +1,25 @@
-import 'package:aker_foods_retail/common/constants/app_constants.dart';
 import 'package:aker_foods_retail/common/constants/layout_constants.dart';
 import 'package:aker_foods_retail/common/extensions/pixel_dimension_util_extensions.dart';
 import 'package:aker_foods_retail/common/extensions/string_extensions.dart';
 import 'package:aker_foods_retail/domain/entities/product_entity.dart';
+import 'package:aker_foods_retail/presentation/common_blocs/cart_bloc/cart_bloc.dart';
+import 'package:aker_foods_retail/presentation/common_blocs/cart_bloc/cart_event.dart';
 import 'package:aker_foods_retail/presentation/journey/dashboard/home/order_item_counter.dart';
 import 'package:aker_foods_retail/presentation/theme/app_colors.dart';
 import 'package:aker_foods_retail/presentation/widgets/product_grid_discount_badge.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'product_info_price_widget.dart';
 
 class ProductGridItemTile extends StatefulWidget {
   final ProductEntity product;
+  final int productQuantityCountInCart;
 
   const ProductGridItemTile({
     Key key,
-    this.product,
+    @required this.product,
+    this.productQuantityCountInCart = 0,
   }) : super(key: key);
 
   @override
@@ -22,6 +28,12 @@ class ProductGridItemTile extends StatefulWidget {
 
 class ProductGridItemTileState extends State<ProductGridItemTile> {
   int _itemCountInCart = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _itemCountInCart = widget.productQuantityCountInCart;
+  }
 
   @override
   Widget build(BuildContext context) => Card(
@@ -38,12 +50,19 @@ class ProductGridItemTileState extends State<ProductGridItemTile> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          _getItemImage(context),
-          _getItemDetail(context),
+          _productImageWithBadges(),
+          _productInfoContainer(),
+          Container(
+            padding:
+                EdgeInsets.symmetric(horizontal: LayoutConstants.dimen_12.w),
+            child: _itemCountInCart > 0
+                ? _orderItemCounterWithContainer(context)
+                : _buttonWithContainer(context),
+          ),
         ],
       );
 
-  Widget _getItemImage(BuildContext context) {
+  Widget _productImageWithBadges() {
     if (widget.product.discountedAmount != null &&
         widget.product.discountedAmount > 0) {
       return Stack(
@@ -74,49 +93,34 @@ class ProductGridItemTileState extends State<ProductGridItemTile> {
         ),
       );
 
-  Container _getItemDetail(BuildContext context) => Container(
+  Container _productInfoContainer() => Container(
         padding: EdgeInsets.symmetric(
-          horizontal: LayoutConstants.dimen_16.w,
+          horizontal: LayoutConstants.dimen_12.w,
           vertical: LayoutConstants.dimen_8.h,
         ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Container(
-              height: LayoutConstants.dimen_52.h,
-              child: Text(
-                widget.product.name,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: Theme.of(context).textTheme.bodyText1,
-              ),
-            ),
-            Text(
-              '${widget.product.baseQuantity} ${widget.product.salesUnit}',
-              style: Theme.of(context).textTheme.subtitle1.copyWith(
-                    color: AppColor.black40,
-                  ),
-            ),
-            SizedBox(height: LayoutConstants.dimen_8.h),
-            _getProductPriceRow(),
-            SizedBox(height: LayoutConstants.dimen_8.h),
-            _itemCountInCart > 0
-                ? _orderItemCounterWithContainer(context)
-                : _buttonWithContainer(context),
-          ],
-        ),
+        child: ProductInfoPrice(product: widget.product),
       );
 
   Container _orderItemCounterWithContainer(BuildContext context) => Container(
         height: LayoutConstants.dimen_48.h,
         alignment: Alignment.center,
-        child: OrderItemCounter(
+        child: ProductQuantityCountManager(
           counterStart: _itemCountInCart,
-          onCountChanged: (count) {
+          onIncrementQuantity: (count) {
             setState(() {
               _itemCountInCart = count;
             });
+            BlocProvider.of<CartBloc>(context).add(
+              AddProductToCartEvent(productEntity: widget.product),
+            );
+          },
+          onDecrementQuantity: (count) {
+            setState(() {
+              _itemCountInCart = count;
+            });
+            BlocProvider.of<CartBloc>(context).add(
+              RemoveProductFromCartEvent(productEntity: widget.product),
+            );
           },
         ),
       );
@@ -144,54 +148,8 @@ class ProductGridItemTileState extends State<ProductGridItemTile> {
     setState(() {
       ++_itemCountInCart;
     });
+    BlocProvider.of<CartBloc>(context).add(
+      AddProductToCartEvent(productEntity: widget.product),
+    );
   }
-
-  Widget _getProductPriceRow() {
-    /*final double productMrp = widget.product.price ?? 0;
-    final double priceDiscountValue =
-        productMrp * (widget.product.discount ?? 0);
-
-    final double productPrice =
-        priceDiscountValue > 0 ? productMrp - priceDiscountValue : productMrp;
-
-    final List<Widget> rowChildren = List()
-      ..add(_productPriceText(productPrice));
-    if (priceDiscountValue > 0) {
-      rowChildren
-        ..add(SizedBox(width: LayoutConstants.dimen_4.w))
-        ..add(_productMrpFlexibleText(productMrp));
-    }*/
-    final double productMrp = widget.product.amount ?? 0;
-    final double productDiscountPrice = widget.product.discountedAmount ?? 0;
-    final double priceDiscountValue = productMrp - productDiscountPrice;
-
-    final List<Widget> rowChildren = List()
-      ..add(_productPriceText(productDiscountPrice));
-    if (priceDiscountValue > 0) {
-      rowChildren
-        ..add(SizedBox(width: LayoutConstants.dimen_4.w))
-        ..add(_productMrpFlexibleText(productMrp));
-    }
-    return Row(children: rowChildren);
-  }
-
-  Text _productPriceText(double productPrice) => Text(
-        '${AppConstants.rupeeSymbol} $productPrice',
-        style: Theme.of(context).textTheme.bodyText1.copyWith(
-              color: AppColor.orangeDark,
-              fontWeight: FontWeight.w600,
-            ),
-      );
-
-  Flexible _productMrpFlexibleText(double productMrp) => Flexible(
-        child: Text(
-          '${AppConstants.rupeeSymbol} $productMrp',
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          style: Theme.of(context).textTheme.subtitle2.copyWith(
-                color: AppColor.black40,
-                decoration: TextDecoration.lineThrough,
-              ),
-        ),
-      );
 }

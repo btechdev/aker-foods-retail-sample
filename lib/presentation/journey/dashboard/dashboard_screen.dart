@@ -1,4 +1,6 @@
 import 'package:aker_foods_retail/common/injector/injector.dart';
+import 'package:aker_foods_retail/presentation/common_blocs/cart_bloc/cart_bloc.dart';
+import 'package:aker_foods_retail/presentation/common_blocs/cart_bloc/cart_state.dart';
 import 'package:aker_foods_retail/presentation/journey/checkout/order_cart/checkout_order_screen.dart';
 import 'package:aker_foods_retail/presentation/journey/dashboard/bottom_navigation_bar_details.dart';
 import 'package:aker_foods_retail/presentation/journey/dashboard/search/search_page.dart';
@@ -46,12 +48,25 @@ class DashboardScreenState extends State<DashboardScreen> {
     return BlocProvider<DashboardBloc>(
       lazy: false,
       create: (context) => Injector.resolve<DashboardBloc>(),
-      child: BlocListener<DashboardBloc, DashboardState>(
-        listener: (context, state) =>
-            _pageController.jumpToPage(state.pageIndex),
+      child: MultiBlocListener(
+        listeners: _dashboardBlocListeners(),
         child: _buildScaffold(),
       ),
     );
+  }
+
+  List<BlocListener> _dashboardBlocListeners() => [
+        BlocListener<DashboardBloc, DashboardState>(
+          listener: (context, state) =>
+              _pageController.jumpToPage(state.pageIndex),
+        ),
+        BlocListener<CartBloc, CartState>(
+          listener: _cartBlocStateListener,
+        ),
+      ];
+
+  void _cartBlocStateListener(BuildContext context, CartState state) {
+    // TODO(Bhushan): Check if this is needed.
   }
 
   Widget _buildScaffold() => Scaffold(
@@ -61,8 +76,15 @@ class DashboardScreenState extends State<DashboardScreen> {
       );
 
   BlocBuilder _getBottomNavBarWrappedWithBlocBuilder() =>
-      BlocBuilder<DashboardBloc, DashboardState>(
-        builder: _buildBottomNavigationBar,
+      BlocBuilder<CartBloc, CartState>(
+        builder: (_, cartState) {
+          return BlocBuilder<DashboardBloc, DashboardState>(
+            builder: (context, dashboardState) {
+              return _buildBottomNavigationBar(
+                  context, cartState, dashboardState);
+            },
+          );
+        },
       );
 
   Widget _getScaffoldBody() => PageView(
@@ -74,12 +96,17 @@ class DashboardScreenState extends State<DashboardScreen> {
       );
 
   Widget _buildBottomNavigationBar(
-          BuildContext context, DashboardState state) =>
+    BuildContext context,
+    CartState cartState,
+    DashboardState dashboardState,
+  ) =>
       BottomNavigationBar(
         elevation: 32,
-        currentIndex: state.pageIndex,
+        iconSize: 36,
+        currentIndex: dashboardState.pageIndex,
         type: BottomNavigationBarType.fixed,
-        items: _navigationBarData.getBottomNavigationBarItemList(),
+        items: _navigationBarData
+            .getBottomNavigationBarItemList(cartState.totalProductCount),
         onTap: (index) => BlocProvider.of<DashboardBloc>(context).add(
           NavigateToPageEvent(pageIndex: index ?? 0),
         ),

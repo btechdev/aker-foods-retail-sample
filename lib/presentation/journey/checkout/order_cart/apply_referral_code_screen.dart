@@ -2,12 +2,13 @@ import 'package:aker_foods_retail/common/constants/layout_constants.dart';
 import 'package:aker_foods_retail/common/extensions/pixel_dimension_util_extensions.dart';
 import 'package:aker_foods_retail/common/injector/injector.dart';
 import 'package:aker_foods_retail/domain/entities/coupon_entity.dart';
-import 'package:aker_foods_retail/presentation/journey/checkout/order_cart/bloc/cart_bloc.dart';
-import 'package:aker_foods_retail/presentation/journey/checkout/order_cart/bloc/cart_event.dart';
-import 'package:aker_foods_retail/presentation/journey/checkout/order_cart/bloc/cart_state.dart';
+import 'package:aker_foods_retail/presentation/journey/checkout/order_cart/coupons_bloc/coupons_bloc.dart';
+import 'package:aker_foods_retail/presentation/journey/checkout/order_cart/coupons_bloc/coupons_state.dart';
 import 'package:aker_foods_retail/presentation/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'coupons_bloc/coupons_event.dart';
 
 class ApplyReferralCodeScreen extends StatefulWidget {
   ApplyReferralCodeScreen({Key key}) : super(key: key);
@@ -19,12 +20,12 @@ class ApplyReferralCodeScreen extends StatefulWidget {
 
 class _ApplyReferralCodeScreenState extends State<ApplyReferralCodeScreen> {
   final _referralCodeController = TextEditingController();
-  CartBloc cartBloc;
+  CouponsBloc cartBloc;
 
   @override
   void initState() {
     super.initState();
-    cartBloc = Injector.resolve<CartBloc>()..add(FetchCouponsEvent());
+    cartBloc = Injector.resolve<CouponsBloc>()..add(FetchCouponsEvent());
   }
 
   @override
@@ -36,7 +37,7 @@ class _ApplyReferralCodeScreenState extends State<ApplyReferralCodeScreen> {
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: _getAppBar(),
-        body: BlocProvider<CartBloc>(
+        body: BlocProvider<CouponsBloc>(
           create: (context) => cartBloc,
           child: _getBody(),
         ),
@@ -65,7 +66,7 @@ class _ApplyReferralCodeScreenState extends State<ApplyReferralCodeScreen> {
                 style: Theme.of(context).textTheme.bodyText1),
           ),
           SizedBox(height: LayoutConstants.dimen_16.h),
-          BlocBuilder<CartBloc, CartState>(
+          BlocBuilder<CouponsBloc, CouponsState>(
             builder: (context, state) {
               if (state is CouponsFetchSuccessState) {
                 return _getPromoCodeList(context, state);

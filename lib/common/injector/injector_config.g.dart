@@ -13,7 +13,7 @@ class _$InjectorConfig extends InjectorConfig {
     container.registerSingleton(
         (c) => FirebaseAuthBloc(authUseCase: c<AuthenticationUseCase>()));
     container.registerSingleton((c) => DashboardBloc());
-    container.registerSingleton((c) => CartBloc(cartUseCase: c<CartUseCase>()));
+    container.registerSingleton((c) => CartBloc(c<CartUseCase>()));
     container.registerFactory(
         (c) => SelectSocietyBloc(userAddressUseCase: c<UserAddressUseCase>()));
     container.registerFactory(
@@ -28,6 +28,8 @@ class _$InjectorConfig extends InjectorConfig {
         (c) => UserOrderBloc(userOrderUseCase: c<UserOrderUseCase>()));
     container.registerFactory(
         (c) => ProductsBloc(productsUseCase: c<ProductsUseCase>()));
+    container
+        .registerFactory((c) => CouponsBloc(cartUseCase: c<CartUseCase>()));
   }
 
   void _configureUseCases() {
@@ -43,7 +45,8 @@ class _$InjectorConfig extends InjectorConfig {
     container.registerFactory(
         (c) => UserOrderUseCase(userOrderRepository: c<UserOrderRepository>()));
     container.registerFactory((c) => ProductsUseCase(c<ProductsRepository>()));
-    container.registerFactory((c) => CartUseCase(c<CartRepository>()));
+    container.registerFactory(
+        (c) => CartUseCase(cartRepository: c<CartRepository>()));
   }
 
   void _configureRepositories() {
@@ -68,8 +71,9 @@ class _$InjectorConfig extends InjectorConfig {
             userOrderRemoteDataSource: c<UserOrderRemoteDataSource>()));
     container.registerFactory<ProductsRepository>((c) => ProductsRepositoryImpl(
         productsRemoteDataSource: c<ProductsRemoteDataSource>()));
-    container.registerFactory<CartRepository>((c) =>
-        CartRepositoryImpl(cartRemoteDataSource: c<CartRemoteDataSource>()));
+    container.registerFactory<CartRepository>((c) => CartRepositoryImpl(
+        cartLocalDataSource: c<CartLocalDataSource>(),
+        cartRemoteDataSource: c<CartRemoteDataSource>()));
   }
 
   void _configureLocalDataSources() {
@@ -78,6 +82,7 @@ class _$InjectorConfig extends InjectorConfig {
         AuthenticationLocalDataSource(localPreferences: c<LocalPreferences>()));
     container.registerFactory((c) =>
         UserAddressLocalDataSource(localPreferences: c<LocalPreferences>()));
+    container.registerFactory((c) => CartLocalDataSource());
   }
 
   void _configureRemoteDataSources() {

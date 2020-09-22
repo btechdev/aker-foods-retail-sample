@@ -3,21 +3,25 @@ import 'package:aker_foods_retail/common/extensions/pixel_dimension_util_extensi
 import 'package:aker_foods_retail/presentation/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 
-class OrderItemCounter extends StatefulWidget {
+class ProductQuantityCountManager extends StatefulWidget {
   final int counterStart;
-  final Function(int count) onCountChanged;
+  final Function(int count) onIncrementQuantity;
+  final Function(int count) onDecrementQuantity;
 
-  const OrderItemCounter({
+  const ProductQuantityCountManager({
     Key key,
     this.counterStart,
-    @required this.onCountChanged,
+    @required this.onIncrementQuantity,
+    @required this.onDecrementQuantity,
   }) : super(key: key);
 
   @override
-  _OrderItemCounterState createState() => _OrderItemCounterState();
+  _ProductQuantityCountManagerState createState() =>
+      _ProductQuantityCountManagerState();
 }
 
-class _OrderItemCounterState extends State<OrderItemCounter> {
+class _ProductQuantityCountManagerState
+    extends State<ProductQuantityCountManager> {
   int _currentCount;
 
   @override
@@ -36,7 +40,7 @@ class _OrderItemCounterState extends State<OrderItemCounter> {
                 if (_currentCount > 0) {
                   setState(() {
                     _currentCount -= 1;
-                    widget.onCountChanged?.call(_currentCount);
+                    widget.onDecrementQuantity?.call(_currentCount);
                   });
                 }
               },
@@ -50,7 +54,7 @@ class _OrderItemCounterState extends State<OrderItemCounter> {
               onTap: () {
                 setState(() {
                   _currentCount += 1;
-                  widget.onCountChanged?.call(_currentCount);
+                  widget.onIncrementQuantity?.call(_currentCount);
                 });
               },
               child: _getButtonContainer(Icons.add),
