@@ -30,6 +30,8 @@ class _$InjectorConfig extends InjectorConfig {
         (c) => ProductsBloc(productsUseCase: c<ProductsUseCase>()));
     container
         .registerFactory((c) => CouponsBloc(cartUseCase: c<CartUseCase>()));
+    container.registerFactory(
+        (c) => BannerBloc(bannerInfoUseCase: c<BannerInfoUseCase>()));
   }
 
   void _configureUseCases() {
@@ -47,6 +49,8 @@ class _$InjectorConfig extends InjectorConfig {
     container.registerFactory((c) => ProductsUseCase(c<ProductsRepository>()));
     container.registerFactory(
         (c) => CartUseCase(cartRepository: c<CartRepository>()));
+    container.registerFactory((c) =>
+        BannerInfoUseCase(bannerInfoRepository: c<BannerInfoRepository>()));
   }
 
   void _configureRepositories() {
@@ -74,6 +78,9 @@ class _$InjectorConfig extends InjectorConfig {
     container.registerFactory<CartRepository>((c) => CartRepositoryImpl(
         cartLocalDataSource: c<CartLocalDataSource>(),
         cartRemoteDataSource: c<CartRemoteDataSource>()));
+    container.registerFactory<BannerInfoRepository>((c) =>
+        BannerInfoRepositoryImpl(
+            bannerInfoRemoteDataSource: c<BannerInfoRemoteDataSource>()));
   }
 
   void _configureLocalDataSources() {
@@ -103,6 +110,8 @@ class _$InjectorConfig extends InjectorConfig {
         (c) => CartRemoteDataSource(apiClient: c<ApiClient>()));
     container.registerFactory(
         (c) => AppUpdateRemoteDataSource(apiClient: c<ApiClient>()));
+    container.registerFactory(
+        (c) => BannerInfoRemoteDataSource(apiClient: c<ApiClient>()));
   }
 
   void _configureCommon() {
