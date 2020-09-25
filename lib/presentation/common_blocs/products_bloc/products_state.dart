@@ -65,3 +65,37 @@ class ProductsSearchFailedState extends ProductsState {
   @override
   ProductsState clone() => ProductsSearchFailedState();
 }
+
+class ProductCategoriesFetchingState extends ProductsState {
+  ProductCategoriesFetchingState();
+
+  @override
+  ProductsState clone() => ProductCategoriesFetchingState();
+}
+
+class ProductCategoriesFetchSuccessState extends ProductsState {
+  final List<ProductCategoryEntity> categories;
+
+  ProductCategoriesFetchSuccessState({this.categories});
+
+  @override
+  ProductsState clone() =>
+      ProductCategoriesFetchSuccessState(categories: categories);
+}
+
+class ProductCategoriesFetchFailedState extends ProductsState {
+  @override
+  ProductsState clone() => ProductCategoriesFetchFailedState();
+}
+
+class CategoryWiseProductsFetchSuccessState extends ProductsState {
+  final List<ProductCategoryEntity> categories;
+  final Map<int, List<ProductEntity>> categoryProductsMap;
+
+  CategoryWiseProductsFetchSuccessState(
+      {this.categoryProductsMap, this.categories});
+
+  @override
+  ProductsState clone() =>
+      CategoryWiseProductsFetchSuccessState();
+}

@@ -18,4 +18,11 @@ class ProductsRemoteDataSource {
     final jsonMap = await apiClient.get(ApiEndpoints.products);
     return ApiResponse.fromJson<ProductModel>(jsonMap).data;
   }
+
+  Future<List<ProductModel>> getProductsForCategory(
+      {int cid, int pageSize}) async {
+    final jsonMap = await apiClient
+        .get('${ApiEndpoints.products}?category_id=$cid&page_size=$pageSize');
+    return ApiResponse.fromJson<ProductModel>(jsonMap).data;
+  }
 }

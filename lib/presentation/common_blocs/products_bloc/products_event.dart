@@ -13,3 +13,7 @@ class SearchProductsEvent extends ProductsEvent {
 class InitiateProductsSearchEvent extends ProductsEvent {}
 
 class CancelProductsSearchEvent extends ProductsEvent {}
+
+class FetchProductCategoriesEvent extends ProductsEvent {}
+
+class FetchProductForCategoriesEvent extends ProductsEvent {}

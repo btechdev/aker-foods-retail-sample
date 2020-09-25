@@ -1,3 +1,5 @@
+import 'package:aker_foods_retail/domain/entities/product_category_entity.dart';
+import 'package:aker_foods_retail/domain/entities/product_entity.dart';
 import 'package:aker_foods_retail/domain/usecases/products_use_case.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -6,6 +8,7 @@ import 'products_state.dart';
 
 class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
   final ProductsUseCase productsUseCase;
+  List<ProductCategoryEntity> _categories = [];
 
   ProductsBloc({this.productsUseCase}) : super(EmptyState());
 
@@ -21,7 +24,30 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
       yield* _handleInitiateProductsSearchEvent();
     } else if (event is CancelProductsSearchEvent) {
       yield* _handleCancelProductsSearchEvent();
+    } else if (event is FetchProductCategoriesEvent) {
+      yield* _handleFetchCategoriesEvent();
+    } else if (event is FetchProductForCategoriesEvent) {
+      yield* _handleProductForCategoriesEvent();
     }
+  }
+
+  Stream<ProductsState> _handleFetchCategoriesEvent() async* {
+    yield ProductCategoriesFetchingState();
+    _categories = await productsUseCase.getCategories();
+    yield ProductCategoriesFetchSuccessState(categories: _categories);
+  }
+
+  Stream<ProductsState> _handleProductForCategoriesEvent() async* {
+    final Map<int, List<ProductEntity>> productsMap = {};
+    final list = await Future.wait(_categories.map((category) =>
+        productsUseCase.getProductsForCategories(category.id, 4)));
+
+    for (var i = 0; i < _categories.length; i++) {
+      productsMap[_categories[i].id] = list[i];
+    }
+
+    yield CategoryWiseProductsFetchSuccessState(
+        categories: _categories, categoryProductsMap: productsMap);
   }
 
   Stream<ProductsState> _handleFetchHomePageProductsEvent() async* {

@@ -7,4 +7,7 @@ abstract class ProductsRepository {
   Future<List<ProductEntity>> getProducts();
 
   Future<List<ProductEntity>> searchProducts(String searchText);
+
+  Future<List<ProductEntity>> getProductsForCategories(
+      int cid, int pageSize);
 }

@@ -1,6 +1,7 @@
 import 'package:aker_foods_retail/data/models/product_category_model.dart';
 import 'package:aker_foods_retail/data/models/product_model.dart';
 import 'package:aker_foods_retail/data/remote_data_sources/products_remote_data_source.dart';
+import 'package:aker_foods_retail/domain/entities/product_category_entity.dart';
 import 'package:aker_foods_retail/domain/repositories/products_repository.dart';
 
 class ProductsRepositoryImpl implements ProductsRepository {
@@ -41,4 +42,10 @@ class ProductsRepositoryImpl implements ProductsRepository {
         )
         .toList();
   }
+
+  @override
+  Future<List<ProductModel>> getProductsForCategories(
+          int cid, int pageSize) async =>
+      productsRemoteDataSource.getProductsForCategory(
+          cid: cid, pageSize: pageSize);
 }

@@ -15,4 +15,8 @@ class ProductsUseCase {
 
   Future<List<ProductEntity>> searchProducts(String searchText) async =>
       productsRepository.searchProducts(searchText);
+
+  Future<List<ProductEntity>> getProductsForCategories(
+          int cid, int pageSize) async =>
+      productsRepository.getProductsForCategories(cid, pageSize);
 }

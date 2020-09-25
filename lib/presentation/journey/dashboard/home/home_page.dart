@@ -1,15 +1,20 @@
 import 'package:aker_foods_retail/common/constants/app_constants.dart';
 import 'package:aker_foods_retail/common/constants/layout_constants.dart';
 import 'package:aker_foods_retail/common/extensions/pixel_dimension_util_extensions.dart';
+import 'package:aker_foods_retail/common/injector/injector.dart';
 import 'package:aker_foods_retail/common/utils/widget_util.dart';
-import 'package:aker_foods_retail/data/repositories/products_repository_impl.dart';
+import 'package:aker_foods_retail/domain/entities/product_entity.dart';
 import 'package:aker_foods_retail/presentation/app/route_constants.dart';
+import 'package:aker_foods_retail/presentation/common_blocs/products_bloc/products_bloc.dart';
+import 'package:aker_foods_retail/presentation/common_blocs/products_bloc/products_event.dart';
+import 'package:aker_foods_retail/presentation/common_blocs/products_bloc/products_state.dart';
 import 'package:aker_foods_retail/presentation/journey/dashboard/home/aker_banner_widget.dart';
 import 'package:aker_foods_retail/presentation/journey/user/address/change_address_mode_selection_bottom_sheet.dart';
 import 'package:aker_foods_retail/presentation/theme/app_colors.dart';
 import 'package:aker_foods_retail/presentation/widgets/product_grid_item_tile.dart';
 import 'package:aker_foods_retail/presentation/widgets/products_category_header.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -17,10 +22,23 @@ class HomePage extends StatefulWidget {
 }
 
 class HomePageState extends State<HomePage> {
+  // ignore: close_sinks
+  ProductsBloc productsBloc;
+
+  @override
+  void initState() {
+    super.initState();
+    productsBloc = Injector.resolve<ProductsBloc>()
+      ..add(FetchProductCategoriesEvent());
+  }
+
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: _getAppBar(),
-        body: _getHomePageContent(),
+        body: BlocProvider<ProductsBloc>(
+          create: (context) => productsBloc,
+          child: _wrapWithBlocBuilder(),
+        ),
       );
 
   AppBar _getAppBar() => AppBar(
@@ -90,7 +108,7 @@ class HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _getHomePageContent() => CustomScrollView(
+  Widget _getHomePageContent(ProductsState state) => CustomScrollView(
         primary: true,
         shrinkWrap: true,
         slivers: [
@@ -98,15 +116,15 @@ class HomePageState extends State<HomePage> {
             delegate: SliverChildListDelegate([
               SizedBox(height: LayoutConstants.dimen_12.h),
               const AkerBanner(),
-              _categoriesCard(),
+              _categoriesCard(state),
               SizedBox(height: LayoutConstants.dimen_12.h),
             ]),
           ),
-          ..._getProductsWithCategorySliversList(),
+          ..._getProductsWithCategorySliversList(state),
         ],
       );
 
-  Card _categoriesCard() => Card(
+  Card _categoriesCard(ProductsState state) => Card(
         elevation: 4,
         child: Container(
           child: Column(
@@ -119,7 +137,7 @@ class HomePageState extends State<HomePage> {
                   right: LayoutConstants.dimen_16.w,
                   bottom: LayoutConstants.dimen_16.h,
                 ),
-                child: _categoriesRow(),
+                child: _categoriesRow(state),
               ),
             ],
           ),
@@ -151,26 +169,39 @@ class HomePageState extends State<HomePage> {
         ],
       );
 
-  Row _categoriesRow() => Row(
-        children: [
-          _categoryItemInExpandedContainer(
-            title: 'Vegetables',
-            url:
-                'https://cdn.shopify.com/s/files/1/0104/1059/0266/products/vegetables-box.jpg',
-          ),
-          SizedBox(width: LayoutConstants.dimen_12.w),
-          _categoryItemInExpandedContainer(
-            title: 'Dairy',
-            url: 'https://images.indianexpress.com/2019/10/dairy-1.jpg',
-          ),
-          SizedBox(width: LayoutConstants.dimen_12.w),
-          _categoryItemInExpandedContainer(
-            title: 'Fruits',
-            url:
-                'https://www.luxuryvillasphuketthailand.com/wp-content/uploads/2018/01/Fruits-in-Phuket1-600x600.jpg',
-          ),
-        ],
+  BlocBuilder _wrapWithBlocBuilder() {
+    return BlocBuilder<ProductsBloc, ProductsState>(
+      builder: (context, state) {
+        return _getHomePageContent(state);
+      },
+    );
+  }
+
+  Widget _categoriesRow(ProductsState state) {
+    if (state is ProductCategoriesFetchSuccessState) {
+      final categories = state.categories;
+      if (categories.isEmpty) {
+        return Container();
+      }
+
+      productsBloc.add(FetchProductForCategoriesEvent());
+      final categoriesToDisplayCount =
+          categories.length < 3 ? categories.length : 3;
+      final rowChildren = <Widget>[];
+      int i;
+      for (i = 0; i < categoriesToDisplayCount; i++) {
+        rowChildren.add(_categoryItemInExpandedContainer(
+          title: categories[i].name,
+          url: categories[i].imageUrl,
+        ));
+      }
+      return Row(
+        children: rowChildren,
       );
+    } else {
+      return Container();
+    }
+  }
 
   Expanded _categoryItemInExpandedContainer({String title, String url}) =>
       Expanded(
@@ -196,12 +227,15 @@ class HomePageState extends State<HomePage> {
         ],
       );
 
-  List<Widget> _getProductsWithCategorySliversList() {
-    final List<Widget> slivers = [];
-    for (final category in ProductsRepositoryImpl.dummyCategories) {
-      slivers
-        ..add(_productsCategoryHeader(category))
-        ..add(_productsSliverGridWithPadding());
+  List<Widget> _getProductsWithCategorySliversList(ProductsState state) {
+    final slivers = <Widget>[];
+    if (state is CategoryWiseProductsFetchSuccessState) {
+      for (final category in state.categories) {
+        slivers
+          ..add(_productsCategoryHeader(category.name))
+          ..add(_productsSliverGridWithPadding(
+              state.categoryProductsMap[category.id]));
+      }
     }
     return slivers;
   }
@@ -211,7 +245,8 @@ class HomePageState extends State<HomePage> {
         child: ProductsCategoryHeader(title: title),
       );
 
-  SliverPadding _productsSliverGridWithPadding() => SliverPadding(
+  SliverPadding _productsSliverGridWithPadding(List<ProductEntity> products) =>
+      SliverPadding(
         padding: EdgeInsets.only(
           left: LayoutConstants.dimen_12.w,
           right: LayoutConstants.dimen_12.w,
@@ -227,10 +262,10 @@ class HomePageState extends State<HomePage> {
           delegate: SliverChildBuilderDelegate(
             (context, index) {
               return ProductGridItemTile(
-                product: ProductsRepositoryImpl.dummyProducts[index],
+                product: products[index],
               );
             },
-            childCount: ProductsRepositoryImpl.dummyProducts.length,
+            childCount: products.length,
           ),
         ),
       );
