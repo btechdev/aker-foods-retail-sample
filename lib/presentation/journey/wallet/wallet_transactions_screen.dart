@@ -15,6 +15,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../common/extensions/pixel_dimension_util_extensions.dart';
 
 class WalletTransactionsScreen extends StatefulWidget {
+  final double currentWalletBalance;
+  WalletTransactionsScreen({this.currentWalletBalance});
+
   @override
   _WalletTransactionsScreenState createState() =>
       _WalletTransactionsScreenState();
@@ -28,7 +31,7 @@ class _WalletTransactionsScreenState extends State<WalletTransactionsScreen> {
   void initState() {
     super.initState();
     userTransactionBloc = Injector.resolve<UserTransactionBloc>()
-      ..add(FetchUserTransactions());
+      ..add(FetchUserTransactionsEvent());
   }
 
   @override
@@ -121,7 +124,7 @@ class _WalletTransactionsScreenState extends State<WalletTransactionsScreen> {
                       ),
                 ),
                 Text(
-                  'Rs 50',
+                  '${AppConstants.rupeeSymbol} ${widget.currentWalletBalance}',
                   style: Theme.of(context).textTheme.headline4.copyWith(
                         color: AppColor.white,
                       ),
@@ -228,8 +231,8 @@ class _WalletTransactionsScreenState extends State<WalletTransactionsScreen> {
           ),
           Container(
             child: item.transactionType == 'withdraw'
-                ? _getDebitAmountText(item.value)
-                : _getCreditAmountText(item.value),
+                ? _getDebitAmountText('${item.value}')
+                : _getCreditAmountText('${item.value}'),
           )
         ],
       );

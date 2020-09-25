@@ -5,7 +5,7 @@ class TransactionModel extends TransactionEntity {
     String transactionId,
     String description,
     String transactionType,
-    String value,
+    double value,
     String date,
   }) : super(
           transactionId: transactionId,

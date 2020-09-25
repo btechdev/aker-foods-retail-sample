@@ -16,14 +16,16 @@ import 'package:aker_foods_retail/presentation/widgets/circular_loader_widget.da
 import 'package:aker_foods_retail/presentation/widgets/custom_snack_bar/snack_bar_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:geocoder/geocoder.dart';
 import 'package:keyboard_avoider/keyboard_avoider.dart';
 
 import '../../../../../common/extensions/pixel_dimension_util_extensions.dart';
 
 class EnterNewAddressScreen extends StatefulWidget {
   final ScrollController scrollController;
+  final Address address;
 
-  EnterNewAddressScreen({this.scrollController});
+  EnterNewAddressScreen({this.scrollController, this.address});
 
   @override
   EnterNewAddressScreenState createState() => EnterNewAddressScreenState();
@@ -33,7 +35,7 @@ class EnterNewAddressScreenState extends State<EnterNewAddressScreen> {
   TextEditingController _flatDetailsTextController;
   TextEditingController _landmarkTextController;
   TextEditingController _pincodeTextController;
-  final mapLocation = LocationEntity(latitude: 22.22, longitude: 82.22);
+  LocationEntity mapLocation;
   SocietyModel selectedSociety;
   AddressTagType addressTagType;
   bool _isHomeSelected = false;
@@ -73,12 +75,12 @@ class EnterNewAddressScreenState extends State<EnterNewAddressScreen> {
       label: addressType,
       address1: _flatDetailsTextController.text,
       address2: _landmarkTextController.text,
-      country: 'India',
-      city: 'Pune',
+      country: widget.address.countryName,
+      city: widget.address.locality,
       zipCode: _pincodeTextController.text,
       society: selectedSociety,
-      latitude: '${mapLocation.latitude}',
-      longitude: '${mapLocation.longitude}',
+      latitude: double.parse(mapLocation.latitude.toStringAsFixed(2)),
+      longitude: double.parse(mapLocation.longitude.toStringAsFixed(2)),
     );
 
     enterNewAddressBloc.add(CreateNewAddressEvent(addressModel: newAddress));
@@ -98,7 +100,11 @@ class EnterNewAddressScreenState extends State<EnterNewAddressScreen> {
     enterNewAddressBloc = Injector.resolve<EnterNewAddressBloc>();
     _flatDetailsTextController = TextEditingController();
     _landmarkTextController = TextEditingController();
-    _pincodeTextController = TextEditingController();
+    _pincodeTextController =
+        TextEditingController(text: widget.address.postalCode);
+    mapLocation = LocationEntity(
+        latitude: widget.address.coordinates.latitude,
+        longitude: widget.address.coordinates.longitude);
   }
 
   @override
@@ -174,6 +180,7 @@ class EnterNewAddressScreenState extends State<EnterNewAddressScreen> {
                   type: CustomSnackBarType.success,
                   position: CustomSnackBarPosition.top,
                 ));
+                Navigator.pop(context);
               } else if (state is CreateNewAddressFailedState) {
                 Injector.resolve<SnackBarBloc>().add(ShowSnackBarEvent(
                   text: state.errorMessage,
@@ -378,7 +385,7 @@ class EnterNewAddressScreenState extends State<EnterNewAddressScreen> {
             SizedBox(width: LayoutConstants.dimen_8.w),
             Expanded(
               child: Text(
-                'Splendid County, Lohegaon, Dhanori',
+                widget.address.addressLine,
                 overflow: TextOverflow.ellipsis,
                 style: Theme.of(context).textTheme.bodyText1,
               ),

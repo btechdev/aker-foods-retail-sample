@@ -45,7 +45,6 @@ class ChangeAddressBloc extends Bloc<ChangeAddressEvent, ChangeAddressState> {
             : FetchSelectedAddressSuccessState(addressModel: address);
 
       } catch(error) {
-        debugPrint(error);
         yield FetchSelectedAddressFailedState();
       }
     } else {

@@ -2,7 +2,7 @@ class TransactionEntity {
   final String transactionId;
   final String description;
   final String transactionType;
-  final String value;
+  final double value;
   final String date;
 
   TransactionEntity({

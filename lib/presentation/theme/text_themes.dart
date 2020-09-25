@@ -287,4 +287,8 @@ extension AppTextThemeExtension on TextTheme {
       );
 
   TextStyle get toastSubtitle => bodyText2;
+
+  TextStyle get addressSubtitle => subtitle2.copyWith(
+    color: AppColor.grey,
+  );
 }

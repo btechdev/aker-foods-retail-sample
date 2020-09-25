@@ -9,8 +9,8 @@ class AddressEntity {
   final String city;
   final String country;
   final SocietyEntity society;
-  final String latitude;
-  final String longitude;
+  final double latitude;
+  final double longitude;
 
   AddressEntity({
     this.id,

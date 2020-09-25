@@ -1,3 +1,4 @@
+import 'package:aker_foods_retail/common/constants/app_constants.dart';
 import 'package:aker_foods_retail/common/injector/injector.dart';
 import 'package:aker_foods_retail/data/models/address_model.dart';
 import 'package:aker_foods_retail/presentation/app/route_constants.dart';
@@ -5,6 +6,7 @@ import 'package:aker_foods_retail/presentation/journey/user/bloc/user_profile_bl
 import 'package:aker_foods_retail/presentation/journey/user/bloc/user_profile_event.dart';
 import 'package:aker_foods_retail/presentation/journey/user/bloc/user_profile_state.dart';
 import 'package:aker_foods_retail/presentation/journey/user/edit_profile/edit_profile_screen.dart';
+import 'package:aker_foods_retail/presentation/journey/wallet/wallet_transactions_screen.dart';
 import 'package:aker_foods_retail/presentation/widgets/circular_loader_widget.dart';
 import 'package:aker_foods_retail/presentation/widgets/empty_state_widget.dart';
 import 'package:flutter/material.dart';
@@ -26,6 +28,7 @@ class MyAccountScreen extends StatefulWidget {
 class _MyAccountScreenState extends State<MyAccountScreen> {
   // ignore: close_sinks
   UserProfileBloc userProfileBloc;
+  var currentBalance = 0.0;
 
   final options = [
     MyAccountOptionDataEntity(
@@ -35,7 +38,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
     MyAccountOptionDataEntity(
       icon: Icons.account_balance_wallet,
       title: 'My Wallet',
-      subtitle: 'Rs 1000',
+      subtitle: '${AppConstants.rupeeSymbol} 0',
     ),
     MyAccountOptionDataEntity(
       icon: Icons.code,
@@ -61,19 +64,24 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
         create: (context) => userProfileBloc,
         child: Scaffold(
           appBar: _getAppBar(context),
-          body: Column(
-            children: [
-              _getUserProfileContainerWrappedWithBloc(),
-              _getSettings(),
-            ],
-          ),
+          body: _getUserProfileContainerWrappedWithBloc(),
         ),
       );
 
   BlocBuilder<UserProfileBloc, UserProfileState>
       _getUserProfileContainerWrappedWithBloc() =>
           BlocBuilder<UserProfileBloc, UserProfileState>(
-            builder: _getUserProfile,
+            builder: (context, state) {
+              if (state is UserProfileFetchSuccessState) {
+                currentBalance = state.user.currentBalance;
+              }
+              return Column(
+                children: [
+                  _getUserProfile(context, state),
+                  _getSettings(),
+                ],
+              );
+            },
           );
 
   AppBar _getAppBar(BuildContext context) {
@@ -129,9 +137,17 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
           itemCount: options.length,
           itemBuilder: (context, index) => GestureDetector(
             onTap: () => {_navigateTo(index)},
-            child: _getCell(
-              options[index],
-            ),
+            child: (index == 1)
+                ? _getCell(
+                    MyAccountOptionDataEntity(
+                        icon: Icons.account_balance_wallet,
+                        title: 'My Wallet',
+                        subtitle:
+                            '${AppConstants.rupeeSymbol} $currentBalance'),
+                  )
+                : _getCell(
+                    options[index],
+                  ),
           ),
         ),
       );
@@ -236,7 +252,14 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
         Navigator.pushNamed(context, RouteConstants.myOrders);
         break;
       case 1:
-        Navigator.pushNamed(context, RouteConstants.myWalletTransactions);
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => WalletTransactionsScreen(
+              currentWalletBalance: currentBalance,
+            ),
+          ),
+        );
         break;
       case 2:
         Navigator.pushNamed(context, RouteConstants.referral);

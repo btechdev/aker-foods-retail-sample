@@ -11,8 +11,8 @@ class AddressModel extends AddressEntity {
     String city,
     String country,
     SocietyModel society,
-    String latitude,
-    String longitude,
+    double latitude,
+    double longitude,
   }) : super(
           id: id,
           label: label,
@@ -26,21 +26,42 @@ class AddressModel extends AddressEntity {
           longitude: longitude,
         );
 
+//  // ignore: prefer_constructors_over_static_methods
+//  static AddressModel fromJson(Map<String, dynamic> jsonMap) => AddressModel(
+//        id: jsonMap['id'],
+//        label: jsonMap['label'],
+//        address1: jsonMap['address1'],
+//        address2: jsonMap['address2'],
+//        city: jsonMap['city'],
+//        country: jsonMap['country'],
+//        zipCode: jsonMap['zip_code'],
+//        society: SocietyModel.fromJson(jsonMap['society_detail']),
+//        latitude: jsonMap['latitude'],
+//        longitude: jsonMap['longitude'],
+//      );
+
   // ignore: prefer_constructors_over_static_methods
-  static AddressModel fromJson(Map<String, dynamic> jsonMap) => AddressModel(
-        id: jsonMap['id'],
-        label: jsonMap['label'],
-        address1: jsonMap['address1'],
-        address2: jsonMap['address2'],
-        city: jsonMap['city'],
-        country: jsonMap['country'],
-        zipCode: jsonMap['zip_code'],
-        society: SocietyModel.fromJson(jsonMap['society_detail']),
-        latitude: jsonMap['latitude'],
-        longitude: jsonMap['longitude'],
-      );
+  static AddressModel fromJson(Map<String, dynamic> jsonMap) {
+    final societyMap = jsonMap.containsKey('society_detail')
+        ? jsonMap['society_detail']
+        : jsonMap['society'];
+
+    return AddressModel(
+      id: jsonMap['id'],
+      label: jsonMap['label'],
+      address1: jsonMap['address1'],
+      address2: jsonMap['address2'],
+      city: jsonMap['city'],
+      country: jsonMap['country'],
+      zipCode: jsonMap['zip_code'],
+      society: SocietyModel.fromJson(societyMap),
+      latitude: jsonMap['latitude'],
+      longitude: jsonMap['longitude'],
+    );
+  }
 
   static Map<String, dynamic> toJson(AddressModel userAddressModel) => {
+        'id': userAddressModel.id,
         'label': userAddressModel.label,
         'address1': userAddressModel.address1,
         'address2': userAddressModel.address2,

@@ -13,8 +13,11 @@ class UserTransactionBloc
   @override
   Stream<UserTransactionState> mapEventToState(
       UserTransactionEvent event) async* {
-    if (event is FetchUserTransactions) {
+    if (event is FetchUserTransactionsEvent) {
       yield* _handleFetchTransactionEvent(event);
+    } else if (event is FetchUserCashOffersEvent) {
+      yield* _handleCashOffersEvent(event);
+
     }
   }
 
@@ -23,5 +26,12 @@ class UserTransactionBloc
     yield TransactionFetchingState();
     final transactions = await userTransactionUseCase.getTransactions();
     yield TransactionFetchSuccessfulState(transactions: transactions);
+  }
+
+  Stream<UserTransactionState> _handleCashOffersEvent(
+      UserTransactionEvent event) async* {
+    yield CashOfferFetchingState();
+    final offers = await userTransactionUseCase.getCashOffers();
+    yield CashOfferFetchSuccessfulState(cashOffers: offers);
   }
 }

@@ -27,6 +27,7 @@ class ChooseYourLocationScreenState extends State<ChooseYourLocationScreen> {
   GoogleMapController mapController;
   GoogleMapsPlaces _places;
   String _selectedLocation;
+  Address _selectedPlace;
   final _iconSize = LayoutConstants.dimen_40.w;
 
   Future<void> _onSearch() async {
@@ -139,15 +140,23 @@ class ChooseYourLocationScreenState extends State<ChooseYourLocationScreen> {
     final screenCoordinate =
         ScreenCoordinate(x: middleX.round(), y: middleY.round());
     final middlePoint = await mapController.getLatLng(screenCoordinate);
+    final addresses =
+        await _getPlaceForLatLng(middlePoint.latitude, middlePoint.longitude);
+    _selectedPlace = addresses.first;
+  }
+
+  Future<List<Address>> _getPlaceForLatLng(
+      double latitude, double longitude) async {
     try {
-      final places = await Geocoder.local.findAddressesFromCoordinates(
-          Coordinates(middlePoint.latitude, middlePoint.longitude));
+      final places = await Geocoder.local
+          .findAddressesFromCoordinates(Coordinates(latitude, longitude));
       setState(() {
         _selectedLocation = places.first?.addressLine ?? '';
       });
       return places;
     } catch (error) {
       debugPrint('err: $error');
+      return [];
     }
   }
 
@@ -176,9 +185,10 @@ class ChooseYourLocationScreenState extends State<ChooseYourLocationScreen> {
   Future<void> _getLatLongFor({Prediction prediction}) async {
     if (prediction != null) {
       final detail = await _places.getDetailsByPlaceId(prediction.placeId);
-      setState(() {
-        _selectedLocation = prediction.description;
-      });
+      final addresses = await _getPlaceForLatLng(
+          detail.result.geometry.location.lat,
+          detail.result.geometry.location.lng);
+      _selectedPlace = addresses.first;
       await _animateCameraToLocation(detail.result.geometry.location);
     }
   }
@@ -276,8 +286,8 @@ class ChooseYourLocationScreenState extends State<ChooseYourLocationScreen> {
         ),
       );
 
-  void _showEnterAddressDetailsBottomSheet() {
-    showModalBottomSheet(
+  Future<void> _showEnterAddressDetailsBottomSheet() async {
+   final _ = await showModalBottomSheet(
       context: context,
       enableDrag: true,
       isDismissible: true,
@@ -290,6 +300,7 @@ class ChooseYourLocationScreenState extends State<ChooseYourLocationScreen> {
       ),
       builder: _buildBottomSheet,
     );
+   Navigator.pop(context);
   }
 
   Widget _buildBottomSheet(BuildContext context) => DraggableScrollableSheet(
@@ -298,6 +309,7 @@ class ChooseYourLocationScreenState extends State<ChooseYourLocationScreen> {
         initialChildSize: 0.80,
         builder: (context, controller) => EnterNewAddressScreen(
           scrollController: controller,
+          address: _selectedPlace,
         ),
       );
 }

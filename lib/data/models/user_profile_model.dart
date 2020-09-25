@@ -9,26 +9,30 @@ class UserProfileModel extends UserProfileEntity {
     String phoneNumber,
     String userProfileImageUrl,
     String referralCode,
+    double currentBalance
   }) : super(
-          salutation: salutation,
-          firstName: firstName,
-          lastName: lastName,
-          email: email,
-          phoneNumber: phoneNumber,
-          userProfileImageUrl: userProfileImageUrl,
-          referralCode: referralCode,
-        );
+    salutation: salutation,
+    firstName: firstName,
+    lastName: lastName,
+    email: email,
+    phoneNumber: phoneNumber,
+    userProfileImageUrl: userProfileImageUrl,
+    referralCode: referralCode,
+    currentBalance: currentBalance,
+  );
 
   factory UserProfileModel.fromJson(Map<String, dynamic> jsonMap) =>
       UserProfileModel(
-        salutation: getSalutation(jsonMap['gender']),
-        firstName: jsonMap['first_name'],
-        lastName: jsonMap['last_name'],
-        email: jsonMap['email'],
-        referralCode: jsonMap['referal_code'],
+          salutation: getSalutation(jsonMap['gender']),
+          firstName: jsonMap['first_name'],
+          lastName: jsonMap['last_name'],
+          email: jsonMap['email'],
+          referralCode: jsonMap['referal_code'],
+          currentBalance: jsonMap['current_balance'],
       );
 
-  static Map<String, dynamic> toJson(UserProfileModel userProfileModel) => {
+  static Map<String, dynamic> toJson(UserProfileModel userProfileModel) =>
+      {
         'first_name': userProfileModel.firstName,
         'last_name': userProfileModel.lastName,
         'email': userProfileModel.email,

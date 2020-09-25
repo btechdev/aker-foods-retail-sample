@@ -6,6 +6,7 @@ class UserProfileEntity {
   final String phoneNumber;
   final String userProfileImageUrl;
   final String referralCode;
+  final double currentBalance;
 
   UserProfileEntity({
     this.salutation,
@@ -15,5 +16,6 @@ class UserProfileEntity {
     this.phoneNumber,
     this.userProfileImageUrl,
     this.referralCode,
+    this.currentBalance
   });
 }

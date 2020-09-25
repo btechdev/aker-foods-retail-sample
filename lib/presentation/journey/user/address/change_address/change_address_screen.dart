@@ -2,6 +2,7 @@ import 'package:aker_foods_retail/common/constants/layout_constants.dart';
 import 'package:aker_foods_retail/common/extensions/pixel_dimension_util_extensions.dart';
 import 'package:aker_foods_retail/data/models/address_model.dart';
 import 'package:aker_foods_retail/presentation/theme/app_colors.dart';
+import 'package:aker_foods_retail/presentation/theme/text_themes.dart';
 import 'package:flutter/material.dart';
 
 class ChangeAddressScreen extends StatelessWidget {
@@ -86,8 +87,14 @@ class ChangeAddressScreen extends StatelessWidget {
 
       default:
         return ListTile(
-          title: Text(savedAddresses[index - 7].address1),
-          subtitle: Text(savedAddresses[index - 7].address2),
+          title: Text(
+            savedAddresses[index - 7].address1,
+            style: Theme.of(context).textTheme.subtitle1,
+          ),
+          subtitle: Text(
+            savedAddresses[index - 7].address2,
+            style: Theme.of(context).textTheme.addressSubtitle,
+          ),
           trailing: _getTrailing(index),
           onTap: () {
             onSelectAddress(savedAddresses[index - 7]);

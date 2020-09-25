@@ -2,6 +2,7 @@
 
 abstract class UserTransactionEvent {}
 
-class FetchUserTransactions extends UserTransactionEvent {}
+class FetchUserTransactionsEvent extends UserTransactionEvent {}
 
 
+class FetchUserCashOffersEvent extends UserTransactionEvent {}
