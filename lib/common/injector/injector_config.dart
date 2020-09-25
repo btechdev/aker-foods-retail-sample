@@ -1,8 +1,11 @@
 import 'package:aker_foods_retail/common/local_preferences/local_preferences.dart';
 import 'package:aker_foods_retail/common/utils/firebase_auth_utils.dart';
+import 'package:aker_foods_retail/config/app_update_config.dart';
+import 'package:aker_foods_retail/data/local_data_sources/app_update_local_data_source.dart';
 import 'package:aker_foods_retail/data/local_data_sources/authentication_local_data_source.dart';
 import 'package:aker_foods_retail/data/local_data_sources/cart_local_data_source.dart';
 import 'package:aker_foods_retail/data/local_data_sources/user_address_local_data_source.dart';
+import 'package:aker_foods_retail/data/remote_data_sources/app_update_remote_data_source.dart';
 import 'package:aker_foods_retail/data/remote_data_sources/cart_remote_data_source.dart';
 import 'package:aker_foods_retail/data/remote_data_sources/products_remote_data_source.dart';
 import 'package:aker_foods_retail/data/remote_data_sources/user_address_remote_data_source.dart';
@@ -129,6 +132,7 @@ abstract class InjectorConfig {
   @Register.factory(AuthenticationLocalDataSource)
   @Register.factory(UserAddressLocalDataSource)
   @Register.factory(CartLocalDataSource)
+  @Register.factory(AppUpdateLocalDataSource)
   void _configureLocalDataSources();
 
   /// ============ Register RemoteDataSources ============
@@ -138,11 +142,13 @@ abstract class InjectorConfig {
   @Register.factory(UserOrderRemoteDataSource)
   @Register.factory(ProductsRemoteDataSource)
   @Register.factory(CartRemoteDataSource)
+  @Register.factory(AppUpdateRemoteDataSource)
   void _configureRemoteDataSources();
 
   /// ============ Register Common Classes ============
   @Register.singleton(ApiClient)
   @Register.singleton(LocalPreferences)
   @Register.singleton(FirebaseAuthUtils)
+  @Register.factory(AppUpdateConfig)
   void _configureCommon();
 }

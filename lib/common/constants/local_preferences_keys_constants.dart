@@ -3,4 +3,5 @@ class PreferencesKeys {
   static const String firebaseIdToken = 'firebaseIdToken';
   static const String userIsNew = 'userIsNew';
   static const String selectedAddress = 'selectedAddress';
+  static const String appUpdateInfo = 'appUpdateInfo';
 }

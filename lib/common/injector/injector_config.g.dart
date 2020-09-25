@@ -83,6 +83,8 @@ class _$InjectorConfig extends InjectorConfig {
     container.registerFactory((c) =>
         UserAddressLocalDataSource(localPreferences: c<LocalPreferences>()));
     container.registerFactory((c) => CartLocalDataSource());
+    container.registerFactory((c) =>
+        AppUpdateLocalDataSource(localPreferences: c<LocalPreferences>()));
   }
 
   void _configureRemoteDataSources() {
@@ -99,6 +101,8 @@ class _$InjectorConfig extends InjectorConfig {
         (c) => ProductsRemoteDataSource(apiClient: c<ApiClient>()));
     container.registerFactory(
         (c) => CartRemoteDataSource(apiClient: c<ApiClient>()));
+    container.registerFactory(
+        (c) => AppUpdateRemoteDataSource(apiClient: c<ApiClient>()));
   }
 
   void _configureCommon() {
@@ -107,5 +111,8 @@ class _$InjectorConfig extends InjectorConfig {
     container.registerSingleton((c) => LocalPreferences());
     container.registerSingleton(
         (c) => FirebaseAuthUtils(authUseCase: c<AuthenticationUseCase>()));
+    container.registerFactory((c) => AppUpdateConfig(
+        appUpdateRemoteDataSource: c<AppUpdateRemoteDataSource>(),
+        appUpdateLocalDataSource: c<AppUpdateLocalDataSource>()));
   }
 }
