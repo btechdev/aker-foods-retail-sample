@@ -1,7 +1,9 @@
 import 'package:aker_foods_retail/data/local_data_sources/cart_local_data_source.dart';
+import 'package:aker_foods_retail/data/models/billing_model.dart';
 import 'package:aker_foods_retail/data/models/cart_model.dart';
 import 'package:aker_foods_retail/data/models/cart_product_model.dart';
 import 'package:aker_foods_retail/data/models/coupon_model.dart';
+import 'package:aker_foods_retail/data/models/pre_checkout_body_model.dart';
 import 'package:aker_foods_retail/data/models/product_model.dart';
 import 'package:aker_foods_retail/data/remote_data_sources/cart_remote_data_source.dart';
 import 'package:aker_foods_retail/domain/repositories/cart_repository.dart';
@@ -22,6 +24,12 @@ class CartRepositoryImpl extends CartRepository {
   @override
   Future<CartModel> getCartData() async =>
       cartLocalDataSource.getModelTypeData();
+
+  @override
+  Future<BillingModel> validateCartPreCheckout(
+      PreCheckoutBodyModel model) async {
+    return cartRemoteDataSource.validateCartPreCheckout(model);
+  }
 
   @override
   Future<CartModel> addProduct(ProductModel productModel) async {
@@ -55,6 +63,6 @@ class CartRepositoryImpl extends CartRepository {
       }
     }
     await cartLocalDataSource.insertOrUpdateData(cartModel);
-    return cartModel;
+    return cartLocalDataSource.getModelTypeData();
   }
 }

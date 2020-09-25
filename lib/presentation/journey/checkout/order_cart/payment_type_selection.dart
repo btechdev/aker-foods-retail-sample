@@ -1,5 +1,6 @@
 import 'package:aker_foods_retail/common/constants/layout_constants.dart';
 import 'package:flutter/material.dart';
+
 import '../../../../common/extensions/pixel_dimension_util_extensions.dart';
 
 enum PaymentSelectionType { cod, online }
@@ -15,8 +16,9 @@ class _PaymentTypeSelectionState extends State<PaymentTypeSelection> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(
-          left: LayoutConstants.dimen_16.w, top: LayoutConstants.dimen_16.h),
+      padding: EdgeInsets.symmetric(
+        horizontal: LayoutConstants.dimen_16.w,
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

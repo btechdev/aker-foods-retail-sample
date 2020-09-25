@@ -46,15 +46,9 @@ class ProductModel extends ProductEntity {
             ProductSubcategoryModel.fromJson(jsonMap['subcategory_detail']),
         baseQuantity: jsonMap['base_quantity'],
         salesUnit: jsonMap['sales_unit'],
-        amount: double.parse(jsonMap['amount']),
-        discountedAmount: double.parse(jsonMap['discounted_amount']),
+        amount: jsonMap['amount'],
+        discountedAmount: jsonMap['discounted_amount'],
         imageUrl: jsonMap['image'],
         isInStock: jsonMap['in_stock'] == 1,
       );
-
-// TODO(Bhushan): What does these values indicate?
-//"in_stock":1,"display_order":0,"is_active":true
-
-// TODO(Bhushan): Why values are in String and not double?
-//"amount":"100.00","discounted_amount":"100.00"
 }

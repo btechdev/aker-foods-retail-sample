@@ -1,49 +1,113 @@
+import 'package:aker_foods_retail/common/constants/app_constants.dart';
 import 'package:aker_foods_retail/common/constants/layout_constants.dart';
+import 'package:aker_foods_retail/common/extensions/pixel_dimension_util_extensions.dart';
+import 'package:aker_foods_retail/domain/entities/billing_entity.dart';
 import 'package:aker_foods_retail/presentation/theme/app_colors.dart';
 import 'package:flutter/material.dart';
-import '../../../../common/extensions/pixel_dimension_util_extensions.dart';
 
-class BillDetailsWidget extends StatelessWidget {
+class BillDetailsWidget extends StatefulWidget {
+  final BillingEntity billingEntity;
+
+  const BillDetailsWidget({
+    Key key,
+    @required this.billingEntity,
+  }) : super(key: key);
+
   @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(LayoutConstants.dimen_16.w),
-      child: _getDetails(context),
-    );
-  }
+  State<StatefulWidget> createState() => BillDetailsWidgetState();
+}
 
-  Column _getDetails(BuildContext context) => Column(
+class BillDetailsWidgetState extends State<BillDetailsWidget> {
+  String _textWithRupeePrefix(double value) =>
+      '${AppConstants.rupeeSymbol} $value';
+
+  @override
+  Widget build(BuildContext context) => Container(
+        padding: EdgeInsets.all(LayoutConstants.dimen_16.w),
+        child:
+            widget.billingEntity == null ? Container() : _billDetailsColumn(),
+      );
+
+  Column _billDetailsColumn() => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _getHeaderText(context),
+          _getHeaderText(),
           SizedBox(height: LayoutConstants.dimen_12.h),
-          _getPaymentSection(
-            context,
-            title: '1 x Total Items Price',
-            amount: 'Rs 22',
+          _billDetailsRow(
+            descriptionText: 'Cart total value',
+            amountText: _textWithRupeePrefix(widget.billingEntity.totalAmount),
           ),
           SizedBox(height: LayoutConstants.dimen_8.h),
-          _getPaymentSection(
-            context,
-            title: '50% off upto Rs 75',
-            amount: '- Rs 11',
-            color: AppColor.primaryColor,
-          ),
-          SizedBox(height: LayoutConstants.dimen_8.h),
-          _getPaymentSection(
-            context,
-            title: 'Delivery Charges',
-            amount: 'Rs 50',
-          ),
-          SizedBox(height: LayoutConstants.dimen_8.h),
+          ..._getDiscountDetailsWidgets(),
           const Divider(),
           SizedBox(height: LayoutConstants.dimen_12.h),
-          _getTotalPayment(context, 'Rs 61'),
-          SizedBox(height: LayoutConstants.dimen_8.h),
+          _finalAmountToPayRow(widget.billingEntity.totalAmount),
         ],
       );
 
-  Row _getTotalPayment(BuildContext context, String amount) => Row(
+  Text _getHeaderText() => Text(
+        'Bill Details',
+        style: Theme.of(context).textTheme.headline6,
+      );
+
+  Row _billDetailsRow({
+    String descriptionText,
+    String amountText,
+    Color textColor = AppColor.black,
+  }) =>
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            descriptionText,
+            style: Theme.of(context).textTheme.subtitle1.copyWith(
+                  color: textColor,
+                ),
+          ),
+          Text(
+            amountText,
+            style: Theme.of(context).textTheme.subtitle1.copyWith(
+                  color: textColor,
+                ),
+          ),
+        ],
+      );
+
+  List<Widget> _getDiscountDetailsWidgets() {
+    final List<Widget> widgets = [];
+    if (widget.billingEntity.isCouponApplied ?? false) {
+      widgets
+        ..add(_billDetailsRow(
+          descriptionText: 'Coupon discount amount',
+          amountText: '- '
+              '${_textWithRupeePrefix(widget.billingEntity.couponAmountSaved)}',
+          textColor: AppColor.primaryColor,
+        ))
+        ..add(SizedBox(height: LayoutConstants.dimen_8.h));
+    }
+
+    final otherDiscountAmount = widget.billingEntity.totalAmount -
+        widget.billingEntity.discountedAmount;
+    if (otherDiscountAmount > 0) {
+      widgets
+        ..add(_billDetailsRow(
+          descriptionText: 'Other discount amount',
+          amountText: '- ${_textWithRupeePrefix(otherDiscountAmount)}',
+          textColor: AppColor.primaryColor,
+        ))
+        ..add(SizedBox(height: LayoutConstants.dimen_8.h));
+    }
+    widgets
+      ..add(_billDetailsRow(
+        descriptionText: 'Total amount saved',
+        amountText: '${_textWithRupeePrefix(widget.billingEntity.totalSaved)}',
+        textColor: AppColor.primaryColor,
+      ))
+      ..add(SizedBox(height: LayoutConstants.dimen_8.h));
+    return widgets;
+  }
+
+  Row _finalAmountToPayRow(double amount) => Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
@@ -51,31 +115,9 @@ class BillDetailsWidget extends StatelessWidget {
             style: Theme.of(context).textTheme.bodyText1,
           ),
           Text(
-            amount,
+            _textWithRupeePrefix(amount),
             style: Theme.of(context).textTheme.bodyText1,
           ),
         ],
       );
-
-  Text _getHeaderText(BuildContext context) => Text(
-        'Bill Details',
-        style: Theme.of(context).textTheme.headline6,
-      );
-
-  Row _getPaymentSection(BuildContext context,
-      {String title, String amount, Color color = AppColor.black}) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          title,
-          style: Theme.of(context).textTheme.subtitle1.copyWith(color: color),
-        ),
-        Text(
-          amount,
-          style: Theme.of(context).textTheme.subtitle1.copyWith(color: color),
-        ),
-      ],
-    );
-  }
 }

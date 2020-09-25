@@ -1,31 +1,68 @@
+import 'package:aker_foods_retail/domain/entities/cart_entity.dart';
 import 'package:flutter/foundation.dart';
 
 abstract class CartState {
   final int totalProductCount;
+  final CartEntity cartEntity;
 
-  CartState({@required this.totalProductCount});
+  CartState({
+    this.totalProductCount,
+    this.cartEntity,
+  });
 }
 
 class CartInitialState extends CartState {
-  CartInitialState() : super(totalProductCount: 0);
+  CartInitialState({
+    int totalProductCount = 0,
+  }) : super(
+          totalProductCount: totalProductCount,
+        );
+}
+
+class CartLoadingState extends CartState {
+  CartLoadingState({
+    int totalProductCount = 0,
+  }) : super(
+          totalProductCount: totalProductCount,
+        );
 }
 
 class CartLoadedState extends CartState {
   final Map<int, int> productIdCountMap;
 
   CartLoadedState({
-    this.productIdCountMap,
-  }) : super(totalProductCount: productIdCountMap.length);
+    @required CartEntity cartEntity,
+    @required this.productIdCountMap,
+  }) : super(
+          cartEntity: cartEntity,
+          totalProductCount: productIdCountMap.length,
+        );
+}
+
+class CartEmptyState extends CartState {
+  CartEmptyState({
+    int totalProductCount = 0,
+  }) : super(
+          totalProductCount: totalProductCount,
+        );
 }
 
 class CartProductUpdatedState extends CartLoadedState {
   CartProductUpdatedState({
-    Map<int, int> productIdCountMap,
-  }) : super(productIdCountMap: productIdCountMap);
+    @required CartEntity cartEntity,
+    @required Map<int, int> productIdCountMap,
+  }) : super(
+          cartEntity: cartEntity,
+          productIdCountMap: productIdCountMap,
+        );
 }
 
 class CartPromoCodeUpdatedState extends CartLoadedState {
   CartPromoCodeUpdatedState({
-    Map<int, int> productIdCountMap,
-  }) : super(productIdCountMap: productIdCountMap);
+    @required CartEntity cartEntity,
+    @required Map<int, int> productIdCountMap,
+  }) : super(
+          cartEntity: cartEntity,
+          productIdCountMap: productIdCountMap,
+        );
 }

@@ -1,4 +1,6 @@
 import 'package:aker_foods_retail/data/models/coupon_model.dart';
+import 'package:aker_foods_retail/data/models/pre_checkout_body_model.dart';
+import 'package:aker_foods_retail/domain/entities/billing_entity.dart';
 import 'package:aker_foods_retail/domain/entities/cart_entity.dart';
 import 'package:aker_foods_retail/domain/entities/product_entity.dart';
 import 'package:aker_foods_retail/domain/repositories/cart_repository.dart';
@@ -9,6 +11,11 @@ class CartUseCase {
   CartUseCase({this.cartRepository});
 
   Future<CartEntity> getCartData() async => cartRepository.getCartData();
+
+  Future<BillingEntity> validateCartPreCheckout(CartEntity cartEntity) async =>
+      cartRepository.validateCartPreCheckout(
+        PreCheckoutBodyModel.fromCartData(cartEntity),
+      );
 
   Future<CartEntity> addProduct(ProductEntity productEntity) async =>
       cartRepository.addProduct(productEntity);

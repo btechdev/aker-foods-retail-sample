@@ -58,7 +58,7 @@ class _CheckoutOrderScreenState extends State<CheckoutOrderScreen> {
               },
             )),
         _getReferralContainer(),
-        BillDetailsWidget(),
+        //BillDetailsWidget(),
         const Divider(),
         OrderDeliverySelection(),
         const Divider(),
@@ -91,7 +91,7 @@ class _CheckoutOrderScreenState extends State<CheckoutOrderScreen> {
 
   Future<void> _navigateToReferralCodeSelection() async {
     final code =
-        await Navigator.pushNamed(context, RouteConstants.applyReferralCode);
+        await Navigator.pushNamed(context, RouteConstants.applyCouponPromoCode);
     if (code is CouponEntity) {
       if (code != null) {
         setState(() {

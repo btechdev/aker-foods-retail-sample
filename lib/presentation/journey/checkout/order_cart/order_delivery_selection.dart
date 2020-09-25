@@ -22,10 +22,9 @@ class _OrderDeliverySelectionState extends State<OrderDeliverySelection> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(
-          left: LayoutConstants.dimen_16.w,
-          top: LayoutConstants.dimen_16.h,
-          right: LayoutConstants.dimen_16.w),
+      padding: EdgeInsets.symmetric(
+        horizontal: LayoutConstants.dimen_16.w,
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

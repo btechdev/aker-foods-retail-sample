@@ -9,7 +9,7 @@ class RouteConstants {
   static const selectSociety = '/select-society';
   static const checkoutOrder = '/checkout-order';
   static const setupUserProfile = '/setup-user-profile';
-  static const applyReferralCode = '/apply-referral-code';
+  static const applyCouponPromoCode = '/apply-coupon-promo-code';
 
   static const myOrders = '/my-orders';
   static const orderDetails = '/order-details';

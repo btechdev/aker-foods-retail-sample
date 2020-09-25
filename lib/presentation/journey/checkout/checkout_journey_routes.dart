@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 class CheckoutJourneyRoutes {
   static Map<String, WidgetBuilder> all() => {
         RouteConstants.checkoutOrder: (context) => CheckoutOrderScreen(),
-        RouteConstants.applyReferralCode: (context) =>
-            ApplyReferralCodeScreen(),
+        RouteConstants.applyCouponPromoCode: (context) =>
+            ApplyCouponPromoCodeScreen(),
       };
 }

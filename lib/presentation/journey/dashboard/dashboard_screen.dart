@@ -1,8 +1,8 @@
 import 'package:aker_foods_retail/common/injector/injector.dart';
 import 'package:aker_foods_retail/presentation/common_blocs/cart_bloc/cart_bloc.dart';
 import 'package:aker_foods_retail/presentation/common_blocs/cart_bloc/cart_state.dart';
-import 'package:aker_foods_retail/presentation/journey/checkout/order_cart/checkout_order_screen.dart';
 import 'package:aker_foods_retail/presentation/journey/dashboard/bottom_navigation_bar_details.dart';
+import 'package:aker_foods_retail/presentation/journey/dashboard/cart/cart_page.dart';
 import 'package:aker_foods_retail/presentation/journey/dashboard/search/search_page.dart';
 import 'package:aker_foods_retail/presentation/journey/user/my_account/my_account_screen.dart';
 import 'package:aker_foods_retail/presentation/theme/app_colors.dart';
@@ -31,7 +31,7 @@ class DashboardScreenState extends State<DashboardScreen> {
     _bottomNavigationPageWidgets = [
       HomePage(),
       SearchPage(),
-      CheckoutOrderScreen(),
+      CartPage(),
       MyAccountScreen(),
     ];
   }

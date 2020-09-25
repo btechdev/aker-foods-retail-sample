@@ -9,15 +9,23 @@ class ValidateCartEvent extends CartEvent {}
 class ClearCartEvent extends CartEvent {}
 
 class AddProductToCartEvent extends CartEvent {
+  final bool needsCartValidation;
   final ProductEntity productEntity;
 
-  AddProductToCartEvent({this.productEntity});
+  AddProductToCartEvent({
+    this.needsCartValidation = false,
+    this.productEntity,
+  });
 }
 
 class RemoveProductFromCartEvent extends CartEvent {
+  final bool needsCartValidation;
   final ProductEntity productEntity;
 
-  RemoveProductFromCartEvent({this.productEntity});
+  RemoveProductFromCartEvent({
+    this.needsCartValidation = false,
+    this.productEntity,
+  });
 }
 
 class ApplyPromoCodeToCartEvent extends CartEvent {
