@@ -3,6 +3,8 @@ import 'package:aker_foods_retail/data/models/billing_model.dart';
 import 'package:aker_foods_retail/data/models/cart_model.dart';
 import 'package:aker_foods_retail/data/models/cart_product_model.dart';
 import 'package:aker_foods_retail/data/models/coupon_model.dart';
+import 'package:aker_foods_retail/data/models/create_order_body_model.dart';
+import 'package:aker_foods_retail/data/models/create_order_response_model.dart';
 import 'package:aker_foods_retail/data/models/pre_checkout_body_model.dart';
 import 'package:aker_foods_retail/data/models/product_model.dart';
 import 'package:aker_foods_retail/data/remote_data_sources/cart_remote_data_source.dart';
@@ -18,8 +20,8 @@ class CartRepositoryImpl extends CartRepository {
   });
 
   @override
-  Future<List<CouponModel>> getPromoCodes() async =>
-      cartRemoteDataSource.getPromoCodes();
+  Future<List<CouponModel>> getCoupons() async =>
+      cartRemoteDataSource.getCoupons();
 
   @override
   Future<CartModel> getCartData() async =>
@@ -29,6 +31,12 @@ class CartRepositoryImpl extends CartRepository {
   Future<BillingModel> validateCartPreCheckout(
       PreCheckoutBodyModel model) async {
     return cartRemoteDataSource.validateCartPreCheckout(model);
+  }
+
+  @override
+  Future<CreateOrderResponseModel> createOrder(
+      CreateOrderBodyModel model) async {
+    return cartRemoteDataSource.createOrder(model);
   }
 
   @override

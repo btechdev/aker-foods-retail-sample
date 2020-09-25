@@ -9,17 +9,17 @@ class OrderEntity {
   int totalItem;
   String createdAt;
   String deliveredAt;
-  String totalAmount;
-  String totalDiscountedAmount;
-  String subTotal;
-  String couponAmount;
+  double totalAmount;
+  double totalDiscountedAmount;
+  double subTotal;
+  double couponAmount;
   int paymentStatus;
   int paymentType;
-  String totalRefund;
+  double totalRefund;
   String note;
   ShippingAddressEntity shippingAddressDetails;
   List<CartItemDetailEntity> cartItemDetail;
-  String deliveryCharges;
+  double deliveryCharges;
 
   OrderEntity({
     this.id,

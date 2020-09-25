@@ -1,3 +1,4 @@
+import 'package:aker_foods_retail/domain/entities/address_entity.dart';
 import 'package:aker_foods_retail/domain/entities/billing_entity.dart';
 import 'package:aker_foods_retail/domain/entities/cart_entity.dart';
 import 'package:aker_foods_retail/domain/usecases/cart_use_case.dart';
@@ -21,6 +22,8 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       yield* _processAddProductToCartEvent(event);
     } else if (event is RemoveProductFromCartEvent) {
       yield* _processRemoveProductFromCartEvent(event);
+    } else if (event is CreateOrderCartEvent) {
+      yield* _processCreateOrderCartEvent(event);
     }
   }
 
@@ -96,6 +99,22 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       yield CartEmptyState();
       return;
     }
+    yield CartProductUpdatedState(
+      cartEntity: cartEntity,
+      productIdCountMap: idCountMap,
+    );
+  }
+
+  Stream<CartState> _processCreateOrderCartEvent(
+      CreateOrderCartEvent event) async* {
+    yield CartLoadingState(totalProductCount: state.totalProductCount);
+    final cartEntity = await cartUseCase.getCartData();
+    cartEntity.billingEntity = state.cartEntity?.billingEntity;
+    final Map<int, int> idCountMap = _productIdCountMap(cartEntity);
+    final createOrderResponse =
+        await cartUseCase.createOrder(2, cartEntity, AddressEntity(id: 21));
+
+    // TODO(Bhushan): Process order creation API response
     yield CartProductUpdatedState(
       cartEntity: cartEntity,
       productIdCountMap: idCountMap,

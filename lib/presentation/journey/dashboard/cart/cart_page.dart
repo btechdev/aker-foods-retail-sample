@@ -147,7 +147,8 @@ class _CartPageState extends State<CartPage> {
             vertical: LayoutConstants.dimen_16.h),
         child: RaisedButton(
           color: AppColor.primaryColor,
-          onPressed: () => {},
+          onPressed: () =>
+              BlocProvider.of<CartBloc>(context).add(CreateOrderCartEvent()),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(LayoutConstants.dimen_12.w),
           ),

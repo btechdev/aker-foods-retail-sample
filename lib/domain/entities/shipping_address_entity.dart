@@ -24,6 +24,6 @@ class ShippingAddressEntity {
   String zipCode;
   String city;
   String country;
-  String longitude;
-  String latitude;
+  double longitude;
+  double latitude;
 }

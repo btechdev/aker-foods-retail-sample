@@ -167,10 +167,10 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
           _getPaymentSection(
             context,
             title: 'Total Items Price',
-            amount: widget.order.subTotal,
+            amount: '${widget.order.subTotal}',
           ),
           SizedBox(height: LayoutConstants.dimen_8.h),
-          if (double.parse(widget.order.totalDiscountedAmount) > 0)
+          if (widget.order.totalDiscountedAmount > 0)
             _getPaymentSection(
               context,
               title: 'Discount',
@@ -186,7 +186,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
           SizedBox(height: LayoutConstants.dimen_8.h),
           const Divider(),
           SizedBox(height: LayoutConstants.dimen_12.h),
-          _getTotalPayment(context, widget.order.totalAmount),
+          _getTotalPayment(context, '${widget.order.totalAmount}'),
           SizedBox(height: LayoutConstants.dimen_8.h),
         ],
       );

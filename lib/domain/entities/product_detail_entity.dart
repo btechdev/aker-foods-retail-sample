@@ -25,8 +25,8 @@ class ProductDetailEntity {
   int categoryId;
   CategoryDetailEntity categoryDetail;
   double baseQuantity;
-  String amount;
-  String discountedAmount;
+  double amount;
+  double discountedAmount;
   String salesUnit;
   String image;
   int inStock;

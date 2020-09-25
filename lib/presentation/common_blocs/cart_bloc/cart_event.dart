@@ -38,3 +38,5 @@ class ApplyPromoCodeToCartEvent extends CartEvent {
 class RemovePromoCodeFromCartEvent extends CartEvent {}
 
 class ApplyDeliveryAddressToCartEvent extends CartEvent {}
+
+class CreateOrderCartEvent extends CartEvent {}
