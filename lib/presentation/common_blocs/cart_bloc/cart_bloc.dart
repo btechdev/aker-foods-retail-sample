@@ -111,8 +111,8 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     final cartEntity = await cartUseCase.getCartData();
     cartEntity.billingEntity = state.cartEntity?.billingEntity;
     final Map<int, int> idCountMap = _productIdCountMap(cartEntity);
-    final createOrderResponse =
-        await cartUseCase.createOrder(2, cartEntity, AddressEntity(id: 21));
+    final createOrderResponse = await cartUseCase.createOrder(
+        event.paymentType, cartEntity, AddressEntity(id: event.addressId));
 
     // TODO(Bhushan): Process order creation API response
     yield CartProductUpdatedState(

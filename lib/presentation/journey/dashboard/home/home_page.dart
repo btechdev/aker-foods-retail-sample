@@ -24,6 +24,7 @@ class HomePage extends StatefulWidget {
 class HomePageState extends State<HomePage> {
   // ignore: close_sinks
   ProductsBloc productsBloc;
+  Widget _categoriesSection;
 
   @override
   void initState() {
@@ -195,9 +196,9 @@ class HomePageState extends State<HomePage> {
           url: categories[i].imageUrl,
         ));
       }
-      return Row(
-        children: rowChildren,
-      );
+      return _categoriesSection = Row(children: rowChildren);
+    } else if (state is CategoryWiseProductsFetchSuccessState) {
+      return _categoriesSection;
     } else {
       return Container();
     }

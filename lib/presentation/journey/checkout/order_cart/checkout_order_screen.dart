@@ -62,7 +62,7 @@ class _CheckoutOrderScreenState extends State<CheckoutOrderScreen> {
         const Divider(),
         OrderDeliverySelection(),
         const Divider(),
-        PaymentTypeSelection(),
+//        PaymentTypeSelection(),
         const Divider(),
         OrderDeliveryAddressSelection(),
         SizedBox(

@@ -96,9 +96,8 @@ class ChangeAddressScreen extends StatelessWidget {
             style: Theme.of(context).textTheme.addressSubtitle,
           ),
           trailing: _getTrailing(index),
-          onTap: () {
-            onSelectAddress(savedAddresses[index - 7]);
-          },
+          onTap: () => onSelectAddress(savedAddresses[index - 7])
+
         );
     }
   }

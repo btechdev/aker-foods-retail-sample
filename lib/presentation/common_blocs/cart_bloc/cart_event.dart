@@ -39,4 +39,9 @@ class RemovePromoCodeFromCartEvent extends CartEvent {}
 
 class ApplyDeliveryAddressToCartEvent extends CartEvent {}
 
-class CreateOrderCartEvent extends CartEvent {}
+class CreateOrderCartEvent extends CartEvent {
+  final int paymentType;
+  final int addressId;
+
+  CreateOrderCartEvent({this.paymentType, this.addressId});
+}

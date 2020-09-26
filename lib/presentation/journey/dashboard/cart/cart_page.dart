@@ -26,6 +26,8 @@ class CartPage extends StatefulWidget {
 
 class _CartPageState extends State<CartPage> {
   String appliedCouponPromoCode = '';
+  int _paymentType = 1;
+  int _addressId;
 
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -83,9 +85,19 @@ class _CartPageState extends State<CartPage> {
             const Divider(),
             OrderDeliverySelection(),
             const Divider(),
-            PaymentTypeSelection(),
+            PaymentTypeSelection(
+              onPaymentSelection: (value) {
+                _paymentType = value;
+              },
+            ),
             const Divider(),
-            OrderDeliveryAddressSelection(),
+            OrderDeliveryAddressSelection(
+              onAddressSelection: (id) {
+                if (id is int) {
+                  _addressId = id;
+                }
+              },
+            ),
             SizedBox(height: LayoutConstants.dimen_32.h)
           ],
         ),
@@ -147,8 +159,10 @@ class _CartPageState extends State<CartPage> {
             vertical: LayoutConstants.dimen_16.h),
         child: RaisedButton(
           color: AppColor.primaryColor,
-          onPressed: () =>
-              BlocProvider.of<CartBloc>(context).add(CreateOrderCartEvent()),
+          onPressed: () => BlocProvider.of<CartBloc>(context).add(
+            CreateOrderCartEvent(
+                addressId: _addressId, paymentType: _paymentType),
+          ),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(LayoutConstants.dimen_12.w),
           ),

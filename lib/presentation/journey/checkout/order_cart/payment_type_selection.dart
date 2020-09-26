@@ -6,6 +6,10 @@ import '../../../../common/extensions/pixel_dimension_util_extensions.dart';
 enum PaymentSelectionType { cod, online }
 
 class PaymentTypeSelection extends StatefulWidget {
+  final Function onPaymentSelection;
+
+  PaymentTypeSelection({@required this.onPaymentSelection});
+
   @override
   _PaymentTypeSelectionState createState() => _PaymentTypeSelectionState();
 }
@@ -36,6 +40,8 @@ class _PaymentTypeSelectionState extends State<PaymentTypeSelection> {
                       setState(() {
                         _type = value;
                       });
+                      widget.onPaymentSelection(
+                          _type == PaymentSelectionType.cod ? 1 : 2);
                     },
                   ),
                 ),
