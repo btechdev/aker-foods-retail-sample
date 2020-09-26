@@ -85,8 +85,8 @@ class _OrderDeliveryAddressSelectionState
         style: Theme.of(context).textTheme.headline6,
       );
 
-  Future _getLocationSelectionBottomSheet(BuildContext context) {
-    return showModalBottomSheet(
+  Future<void> _getLocationSelectionBottomSheet(BuildContext context) async {
+    final _ = await showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       isDismissible: true,
@@ -100,6 +100,7 @@ class _OrderDeliveryAddressSelectionState
         onAddressChange: (address) {
           changeAddressBloc.add(FetchCurrentAddressEvent());
           widget.onAddressSelection(address.id);
+          Navigator.pop(context);
         },
       ),
     );

@@ -204,7 +204,11 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
         borderRadius: BorderRadius.circular(LayoutConstants.dimen_12.w),
       ),
       builder: (BuildContext context) =>
-          ChangeAddressModeSelectionBottomSheet(),
+          ChangeAddressModeSelectionBottomSheet(
+            onAddressChange: (address) {
+              Navigator.pop(context);
+            },
+          ),
     );
   }
 
