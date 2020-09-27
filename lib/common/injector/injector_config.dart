@@ -1,5 +1,6 @@
 import 'package:aker_foods_retail/common/local_preferences/local_preferences.dart';
 import 'package:aker_foods_retail/common/utils/firebase_auth_utils.dart';
+import 'package:aker_foods_retail/common/utils/data_connection_util.dart';
 import 'package:aker_foods_retail/config/app_update_config.dart';
 import 'package:aker_foods_retail/data/local_data_sources/app_update_local_data_source.dart';
 import 'package:aker_foods_retail/data/local_data_sources/authentication_local_data_source.dart';
@@ -39,6 +40,7 @@ import 'package:aker_foods_retail/domain/usecases/user_profile_user_case.dart';
 import 'package:aker_foods_retail/domain/usecases/user_transaction_use_case.dart';
 import 'package:aker_foods_retail/network/api/api_client.dart';
 import 'package:aker_foods_retail/presentation/common_blocs/cart_bloc/cart_bloc.dart';
+import 'package:aker_foods_retail/presentation/common_blocs/data_connection_bloc/data_connection_bloc.dart';
 import 'package:aker_foods_retail/presentation/common_blocs/firebase_auth_bloc/firebase_auth_bloc.dart';
 import 'package:aker_foods_retail/presentation/common_blocs/products_bloc/products_bloc.dart';
 import 'package:aker_foods_retail/presentation/common_blocs/snack_bar_bloc/snack_bar_bloc.dart';
@@ -79,6 +81,7 @@ abstract class InjectorConfig {
 
   /// ============ Register Blocs ============
   @Register.singleton(SnackBarBloc)
+  @Register.singleton(DataConnectionBloc)
   @Register.singleton(FirebaseAuthBloc)
   @Register.singleton(DashboardBloc)
   @Register.singleton(CartBloc)
@@ -158,8 +161,9 @@ abstract class InjectorConfig {
   void _configureRemoteDataSources();
 
   /// ============ Register Common Classes ============
-  @Register.singleton(ApiClient)
+  @Register.singleton(DataConnectionUtil)
   @Register.singleton(LocalPreferences)
+  @Register.singleton(ApiClient)
   @Register.singleton(FirebaseAuthUtils)
   @Register.factory(AppUpdateConfig)
   void _configureCommon();

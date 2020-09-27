@@ -11,6 +11,8 @@ class _$InjectorConfig extends InjectorConfig {
     final KiwiContainer container = KiwiContainer();
     container.registerSingleton((c) => SnackBarBloc());
     container.registerSingleton(
+        (c) => DataConnectionBloc(dataConnectionUtil: c<DataConnectionUtil>()));
+    container.registerSingleton(
         (c) => FirebaseAuthBloc(authUseCase: c<AuthenticationUseCase>()));
     container.registerSingleton((c) => DashboardBloc());
     container.registerSingleton((c) => CartBloc(c<CartUseCase>()));
@@ -116,8 +118,11 @@ class _$InjectorConfig extends InjectorConfig {
 
   void _configureCommon() {
     final KiwiContainer container = KiwiContainer();
-    container.registerSingleton((c) => ApiClient());
+    container.registerSingleton((c) => DataConnectionUtil());
     container.registerSingleton((c) => LocalPreferences());
+    container.registerSingleton((c) => ApiClient(
+        dataConnectionBloc: c<DataConnectionBloc>(),
+        dataConnectionUtil: c<DataConnectionUtil>()));
     container.registerSingleton(
         (c) => FirebaseAuthUtils(authUseCase: c<AuthenticationUseCase>()));
     container.registerFactory((c) => AppUpdateConfig(

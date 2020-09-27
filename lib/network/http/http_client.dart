@@ -2,10 +2,13 @@ import 'dart:convert';
 import 'dart:io' as dart_io;
 
 import 'package:aker_foods_retail/common/extensions/string_extensions.dart';
+import 'package:aker_foods_retail/common/utils/data_connection_util.dart';
 import 'package:aker_foods_retail/config/configuration.dart';
 import 'package:aker_foods_retail/network/http/http_constants.dart';
 import 'package:aker_foods_retail/network/http/http_method_enum.dart';
 import 'package:aker_foods_retail/network/http/http_util.dart';
+import 'package:aker_foods_retail/presentation/common_blocs/data_connection_bloc/data_connection_bloc.dart';
+import 'package:aker_foods_retail/presentation/common_blocs/data_connection_bloc/data_connection_event.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart';
 import 'package:http/io_client.dart';
@@ -18,7 +21,16 @@ class HttpClient {
   String host;
   Map<String, String> header;
 
-  HttpClient({@required this.host, @required this.header}) {
+  // ignore: close_sinks
+  DataConnectionBloc dataConnectionBloc;
+  DataConnectionUtil dataConnectionUtil;
+
+  HttpClient({
+    @required this.host,
+    @required this.header,
+    @required this.dataConnectionBloc,
+    @required this.dataConnectionUtil,
+  }) {
     final httpClient = dart_io.HttpClient()
       ..badCertificateCallback =
           (dart_io.X509Certificate cert, String host, int port) =>
@@ -45,10 +57,22 @@ class HttpClient {
     return Response.fromStream(streamedResponse);
   }
 
+  Future<bool> _isDataConnectionAvailable() async {
+    final bool connected = await dataConnectionUtil.isConnected;
+    if (!connected) {
+      dataConnectionBloc.add(IndicateDataConnectionStatusEvent());
+    }
+    return connected;
+  }
+
   dynamic get(
     String path, {
     Map<String, dynamic> overrideHeader = const {},
   }) async {
+    if (!await _isDataConnectionAvailable()) {
+      return;
+    }
+
     final Map<String, String> requestHeader = {...header, ...overrideHeader};
 
     // TODO(Bhushan): Find a better way to log this data (eg. interceptor)
@@ -71,6 +95,10 @@ class HttpClient {
     dynamic data, {
     Map<String, dynamic> overrideHeader = const {},
   }) async {
+    if (!await _isDataConnectionAvailable()) {
+      return;
+    }
+
     final Map<String, String> requestHeader = {...header, ...overrideHeader};
     final contentType = requestHeader[HttpConstants.contentType];
 
@@ -105,6 +133,10 @@ class HttpClient {
     dynamic data, {
     Map<String, dynamic> overrideHeader = const {},
   }) async {
+    if (!await _isDataConnectionAvailable()) {
+      return;
+    }
+
     final Map<String, String> requestHeader = {...header, ...overrideHeader};
 
     debugPrint(
@@ -125,6 +157,10 @@ class HttpClient {
   }
 
   dynamic put(String path, dynamic data) async {
+    if (!await _isDataConnectionAvailable()) {
+      return;
+    }
+
     debugPrint(
       'HTTP request\n'
       'Method: PUT\n'
@@ -142,6 +178,10 @@ class HttpClient {
   }
 
   dynamic delete(String path) async {
+    if (!await _isDataConnectionAvailable()) {
+      return;
+    }
+
     debugPrint(
       'HTTP request\n'
       'Method: DELETE\n'
@@ -160,6 +200,10 @@ class HttpClient {
       String path, Map<String, dart_io.File> mapFile, Map<String, dynamic> data,
       [HttpMethodType method = HttpMethodType.post,
       Map<String, dynamic> overrideHeader]) async {
+    if (!await _isDataConnectionAvailable()) {
+      return;
+    }
+
     final request = MultipartRequest(
         HttpMethod(type: method).toString(), getParsedUrl(path))
       ..headers['accept'] = 'application/json'
@@ -184,6 +228,10 @@ class HttpClient {
   }
 
   dynamic getImage(String url) async {
+    if (!await _isDataConnectionAvailable()) {
+      return;
+    }
+
     final Response response = await _client.get(url);
     return response;
   }
