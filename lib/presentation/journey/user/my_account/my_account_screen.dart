@@ -1,22 +1,22 @@
 import 'package:aker_foods_retail/common/constants/app_constants.dart';
+import 'package:aker_foods_retail/common/constants/layout_constants.dart';
+import 'package:aker_foods_retail/common/extensions/pixel_dimension_util_extensions.dart';
 import 'package:aker_foods_retail/common/injector/injector.dart';
 import 'package:aker_foods_retail/data/models/address_model.dart';
+import 'package:aker_foods_retail/domain/entities/my_account_option_data_entity.dart';
+import 'package:aker_foods_retail/domain/entities/referral_entity.dart';
 import 'package:aker_foods_retail/presentation/app/route_constants.dart';
+import 'package:aker_foods_retail/presentation/journey/user/address/change_address_mode_selection_bottom_sheet.dart';
 import 'package:aker_foods_retail/presentation/journey/user/bloc/user_profile_bloc.dart';
 import 'package:aker_foods_retail/presentation/journey/user/bloc/user_profile_event.dart';
 import 'package:aker_foods_retail/presentation/journey/user/bloc/user_profile_state.dart';
 import 'package:aker_foods_retail/presentation/journey/user/edit_profile/edit_profile_screen.dart';
 import 'package:aker_foods_retail/presentation/journey/wallet/wallet_transactions_screen.dart';
+import 'package:aker_foods_retail/presentation/theme/app_colors.dart';
 import 'package:aker_foods_retail/presentation/widgets/circular_loader_widget.dart';
 import 'package:aker_foods_retail/presentation/widgets/empty_state_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../../../../common/constants/layout_constants.dart';
-import '../../../../common/extensions/pixel_dimension_util_extensions.dart';
-import '../../../../domain/entities/my_account_option_data_entity.dart';
-import '../../../theme/app_colors.dart';
-import '../address/change_address_mode_selection_bottom_sheet.dart';
 
 class MyAccountScreen extends StatefulWidget {
   MyAccountScreen({Key key}) : super(key: key);
@@ -29,6 +29,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
   // ignore: close_sinks
   UserProfileBloc userProfileBloc;
   var currentBalance = 0.0;
+  ReferralEntity referralEntity;
 
   final options = [
     MyAccountOptionDataEntity(
@@ -74,6 +75,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
             builder: (context, state) {
               if (state is UserProfileFetchSuccessState) {
                 currentBalance = state.user.currentBalance;
+                referralEntity = state.user.referral;
               }
               return Column(
                 children: [
@@ -203,12 +205,11 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(LayoutConstants.dimen_12.w),
       ),
-      builder: (BuildContext context) =>
-          ChangeAddressModeSelectionBottomSheet(
-            onAddressChange: (address) {
-              Navigator.pop(context);
-            },
-          ),
+      builder: (BuildContext context) => ChangeAddressModeSelectionBottomSheet(
+        onAddressChange: (address) {
+          Navigator.pop(context);
+        },
+      ),
     );
   }
 
@@ -266,7 +267,11 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
         );
         break;
       case 2:
-        Navigator.pushNamed(context, RouteConstants.referral);
+        Navigator.pushNamed(
+          context,
+          RouteConstants.referral,
+          arguments: referralEntity,
+        );
         break;
       case 3:
         debugPrint('Logout');

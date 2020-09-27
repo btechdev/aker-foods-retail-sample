@@ -1,3 +1,5 @@
+import 'package:aker_foods_retail/domain/entities/referral_entity.dart';
+
 class UserProfileEntity {
   final String salutation;
   final String firstName;
@@ -7,6 +9,7 @@ class UserProfileEntity {
   final String userProfileImageUrl;
   final String referralCode;
   final double currentBalance;
+  final ReferralEntity referral;
 
   UserProfileEntity({
     this.salutation,
@@ -16,6 +19,7 @@ class UserProfileEntity {
     this.phoneNumber,
     this.userProfileImageUrl,
     this.referralCode,
-    this.currentBalance
+    this.currentBalance,
+    this.referral,
   });
 }

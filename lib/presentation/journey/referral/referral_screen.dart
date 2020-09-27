@@ -1,8 +1,13 @@
+import 'dart:io';
+
 import 'package:aker_foods_retail/common/constants/app_constants.dart';
 import 'package:aker_foods_retail/common/constants/layout_constants.dart';
 import 'package:aker_foods_retail/common/extensions/pixel_dimension_util_extensions.dart';
 import 'package:aker_foods_retail/common/utils/pixel_dimension_util.dart';
+import 'package:aker_foods_retail/domain/entities/referral_entity.dart';
 import 'package:aker_foods_retail/presentation/theme/app_colors.dart';
+import 'package:esys_flutter_share/esys_flutter_share.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class ReferralScreen extends StatefulWidget {
@@ -11,12 +16,17 @@ class ReferralScreen extends StatefulWidget {
 }
 
 class _ReferralScreenState extends State<ReferralScreen> {
+  ReferralEntity referralEntity;
+
   @override
-  Widget build(BuildContext context) => Scaffold(
-        appBar: _getAppBar(),
-        body: _getBanner(),
-        floatingActionButton: _shareFloatingActionButton(),
-      );
+  Widget build(BuildContext context) {
+    referralEntity = ModalRoute.of(context).settings.arguments;
+    return Scaffold(
+      appBar: _getAppBar(),
+      body: _getBanner(),
+      floatingActionButton: _shareFloatingActionButton(),
+    );
+  }
 
   AppBar _getAppBar() => AppBar(
         title: Text(
@@ -37,7 +47,7 @@ class _ReferralScreenState extends State<ReferralScreen> {
       );
 
   FloatingActionButton _shareFloatingActionButton() => FloatingActionButton(
-        onPressed: () => {},
+        onPressed: () => _onShare(context),
         backgroundColor: AppColor.primaryColor,
         child: const Icon(
           Icons.share,
@@ -54,13 +64,11 @@ class _ReferralScreenState extends State<ReferralScreen> {
           _getHeaderText('Balance'),
           _getValueText('${AppConstants.rupeeSymbol} 0.0'),
           SizedBox(height: LayoutConstants.dimen_20.h),
-          _getReferralCodeDescriptionText(
-              'Share referral code with your friends and get'
-              ' ${AppConstants.rupeeSymbol} 75 as rewards '
-              'when they apply and order from AkerFoods'),
+          _getReferralCodeDescriptionText('${referralEntity.title ?? ''}'
+              '${referralEntity.description ?? ''}'),
           SizedBox(height: LayoutConstants.dimen_20.h),
           _getHeaderText('Your referral code:'),
-          _getValueText('ABCD'),
+          _getValueText(referralEntity.code ?? ''),
         ],
       );
 
@@ -86,4 +94,16 @@ class _ReferralScreenState extends State<ReferralScreen> {
               color: AppColor.white,
             ),
       );
+
+  Future<void> _onShare(BuildContext context) async {
+    // TODO(soham): Handle the network call to download image properly
+    final request =
+        await HttpClient().getUrl(Uri.parse(referralEntity.imageUrl));
+    final response = await request.close();
+    final bytes = await consolidateHttpClientResponseBytes(response);
+    await Share.file('Aker Foods', 'image.jpg', bytes, 'image/jpg',
+        text: '${referralEntity.title} \n'
+            '${referralEntity.description}\n'
+            'Apply code: ${referralEntity.code}');
+  }
 }

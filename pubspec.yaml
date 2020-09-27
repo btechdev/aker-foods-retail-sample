@@ -35,6 +35,7 @@ dependencies:
   onesignal_flutter: ^2.0.0 # SDK for getting & processing push notifications
   flutter_segment: ^2.2.2 # Flutter Segment SDK for analytics & tracking events
   razorpay_flutter: ^1.2.2
+  esys_flutter_share: ^1.0.2 #share referral code across apps
 
   # Widgets & Utils
   url_launcher: ^5.5.2 # Launching a URL in the mobile platform
