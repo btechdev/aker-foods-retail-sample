@@ -1,4 +1,3 @@
-import 'package:aker_foods_retail/domain/entities/address_entity.dart';
 import 'package:aker_foods_retail/domain/entities/cart_entity.dart';
 
 class CreateOrderBodyModel {
@@ -10,13 +9,13 @@ class CreateOrderBodyModel {
 
   factory CreateOrderBodyModel.fromData(
     int paymentMode,
+    int selectedAddressId,
     CartEntity cartEntity,
-    AddressEntity addressEntity,
   ) =>
       CreateOrderBodyModel(
         jsonMap: {
           'payment_mode': paymentMode,
-          'shipping_address_id': addressEntity.id,
+          'shipping_address_id': selectedAddressId,
           'coupon_code': cartEntity.promoCode,
           'items': cartEntity.products.map((cartProductEntity) {
             return {

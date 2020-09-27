@@ -15,7 +15,8 @@ class _$InjectorConfig extends InjectorConfig {
     container.registerSingleton(
         (c) => FirebaseAuthBloc(authUseCase: c<AuthenticationUseCase>()));
     container.registerSingleton((c) => DashboardBloc());
-    container.registerSingleton((c) => CartBloc(c<CartUseCase>()));
+    container.registerSingleton((c) => CartBloc(
+        snackBarBloc: c<SnackBarBloc>(), cartUseCase: c<CartUseCase>()));
     container.registerFactory(
         (c) => SelectSocietyBloc(userAddressUseCase: c<UserAddressUseCase>()));
     container.registerFactory(
@@ -49,8 +50,9 @@ class _$InjectorConfig extends InjectorConfig {
     container.registerFactory(
         (c) => UserOrderUseCase(userOrderRepository: c<UserOrderRepository>()));
     container.registerFactory((c) => ProductsUseCase(c<ProductsRepository>()));
-    container.registerFactory(
-        (c) => CartUseCase(cartRepository: c<CartRepository>()));
+    container.registerFactory((c) => CartUseCase(
+        cartRepository: c<CartRepository>(),
+        userAddressRepository: c<UserAddressRepository>()));
     container.registerFactory((c) =>
         BannerInfoUseCase(bannerInfoRepository: c<BannerInfoRepository>()));
   }
@@ -78,8 +80,8 @@ class _$InjectorConfig extends InjectorConfig {
     container.registerFactory<ProductsRepository>((c) => ProductsRepositoryImpl(
         productsRemoteDataSource: c<ProductsRemoteDataSource>()));
     container.registerFactory<CartRepository>((c) => CartRepositoryImpl(
-        cartLocalDataSource: c<CartLocalDataSource>(),
-        cartRemoteDataSource: c<CartRemoteDataSource>()));
+        cartRemoteDataSource: c<CartRemoteDataSource>(),
+        cartLocalDataSource: c<CartLocalDataSource>()));
     container.registerFactory<BannerInfoRepository>((c) =>
         BannerInfoRepositoryImpl(
             bannerInfoRemoteDataSource: c<BannerInfoRemoteDataSource>()));

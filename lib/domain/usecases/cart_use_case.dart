@@ -7,23 +7,38 @@ import 'package:aker_foods_retail/domain/entities/cart_entity.dart';
 import 'package:aker_foods_retail/domain/entities/create_order_response_entity.dart';
 import 'package:aker_foods_retail/domain/entities/product_entity.dart';
 import 'package:aker_foods_retail/domain/repositories/cart_repository.dart';
+import 'package:aker_foods_retail/domain/repositories/user_address_repository.dart';
 
 class CartUseCase {
   final CartRepository cartRepository;
+  final UserAddressRepository userAddressRepository;
 
-  CartUseCase({this.cartRepository});
+  CartUseCase({
+    this.cartRepository,
+    this.userAddressRepository,
+  });
 
   Future<CartEntity> getCartData() async => cartRepository.getCartData();
+
+  Future<AddressEntity> getSelectedAddress() async =>
+      userAddressRepository.getSelectedAddress();
 
   Future<BillingEntity> validateCartPreCheckout(CartEntity cartEntity) async =>
       cartRepository.validateCartPreCheckout(
         PreCheckoutBodyModel.fromCartData(cartEntity),
       );
 
-  Future<CreateOrderResponseEntity> createOrder(int paymentMode,
-          CartEntity cartEntity, AddressEntity addressEntity) async =>
+  Future<CreateOrderResponseEntity> createOrder(
+    int paymentMode,
+    int selectedAddressId,
+    CartEntity cartEntity,
+  ) async =>
       cartRepository.createOrder(
-        CreateOrderBodyModel.fromData(paymentMode, cartEntity, addressEntity),
+        CreateOrderBodyModel.fromData(
+          paymentMode,
+          selectedAddressId,
+          cartEntity,
+        ),
       );
 
   Future<CartEntity> addProduct(ProductEntity productEntity) async =>

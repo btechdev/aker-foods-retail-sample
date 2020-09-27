@@ -1,4 +1,5 @@
 import 'package:aker_foods_retail/common/constants/layout_constants.dart';
+import 'package:aker_foods_retail/common/constants/payment_constants.dart';
 import 'package:aker_foods_retail/common/extensions/pixel_dimension_util_extensions.dart';
 import 'package:aker_foods_retail/domain/entities/cart_product_entity.dart';
 import 'package:aker_foods_retail/domain/entities/coupon_entity.dart';
@@ -26,8 +27,7 @@ class CartPage extends StatefulWidget {
 
 class _CartPageState extends State<CartPage> {
   String appliedCouponPromoCode = '';
-  int _paymentType = 1;
-  int _addressId;
+  int _paymentType = PaymentTypeConstants.cashOnDelivery;
 
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -86,15 +86,14 @@ class _CartPageState extends State<CartPage> {
             OrderDeliverySelection(),
             const Divider(),
             PaymentTypeSelection(
-              onPaymentSelection: (value) {
-                _paymentType = value;
-              },
+              onPaymentSelection: (typeInt) => _paymentType = typeInt,
             ),
             const Divider(),
             OrderDeliveryAddressSelection(
               onAddressSelection: (id) {
                 if (id is int) {
-                  _addressId = id;
+                  //_addressId = id;
+                  // TODO(Bhushan): Check if this is needed
                 }
               },
             ),
@@ -160,8 +159,7 @@ class _CartPageState extends State<CartPage> {
         child: RaisedButton(
           color: AppColor.primaryColor,
           onPressed: () => BlocProvider.of<CartBloc>(context).add(
-            CreateOrderCartEvent(
-                addressId: _addressId, paymentType: _paymentType),
+            CreateOrderCartEvent(paymentType: _paymentType),
           ),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(LayoutConstants.dimen_12.w),

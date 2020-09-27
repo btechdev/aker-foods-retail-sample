@@ -11,12 +11,12 @@ import 'package:aker_foods_retail/data/remote_data_sources/cart_remote_data_sour
 import 'package:aker_foods_retail/domain/repositories/cart_repository.dart';
 
 class CartRepositoryImpl extends CartRepository {
-  final CartLocalDataSource cartLocalDataSource;
   final CartRemoteDataSource cartRemoteDataSource;
+  final CartLocalDataSource cartLocalDataSource;
 
   CartRepositoryImpl({
-    this.cartLocalDataSource,
     this.cartRemoteDataSource,
+    this.cartLocalDataSource,
   });
 
   @override

@@ -41,7 +41,8 @@ class ApplyDeliveryAddressToCartEvent extends CartEvent {}
 
 class CreateOrderCartEvent extends CartEvent {
   final int paymentType;
-  final int addressId;
 
-  CreateOrderCartEvent({this.paymentType, this.addressId});
+  CreateOrderCartEvent({
+    this.paymentType,
+  });
 }

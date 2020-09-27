@@ -102,6 +102,10 @@ PODS:
   - "permission_handler (5.0.1+1)":
     - Flutter
   - PromisesObjC (1.2.10)
+  - razorpay-pod (1.1.7)
+  - razorpay_flutter (1.1.5):
+    - Flutter
+    - razorpay-pod
   - Segment-Amplitude (3.0.1):
     - Amplitude-iOS (~> 4.8.0)
     - Analytics (~> 3.7.0)
@@ -147,6 +151,8 @@ DEPENDENCIES:
   - path_provider_linux (from `.symlinks/plugins/path_provider_linux/ios`)
   - path_provider_macos (from `.symlinks/plugins/path_provider_macos/ios`)
   - permission_handler (from `.symlinks/plugins/permission_handler/ios`)
+  - razorpay-pod (= 1.1.7)
+  - razorpay_flutter (from `.symlinks/plugins/razorpay_flutter/ios`)
   - shared_preferences (from `.symlinks/plugins/shared_preferences/ios`)
   - shared_preferences_linux (from `.symlinks/plugins/shared_preferences_linux/ios`)
   - shared_preferences_macos (from `.symlinks/plugins/shared_preferences_macos/ios`)
@@ -176,6 +182,7 @@ SPEC REPOS:
     - nanopb
     - OneSignal
     - PromisesObjC
+    - razorpay-pod
     - Segment-Amplitude
     - Segment-Branch
 
@@ -214,6 +221,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/path_provider_macos/ios"
   permission_handler:
     :path: ".symlinks/plugins/permission_handler/ios"
+  razorpay_flutter:
+    :path: ".symlinks/plugins/razorpay_flutter/ios"
   shared_preferences:
     :path: ".symlinks/plugins/shared_preferences/ios"
   shared_preferences_linux:
@@ -268,6 +277,8 @@ SPEC CHECKSUMS:
   path_provider_macos: f760a3c5b04357c380e2fddb6f9db6f3015897e0
   permission_handler: eac8e15b4a1a3fba55b761d19f3f4e6b005d15b6
   PromisesObjC: b14b1c6b68e306650688599de8a45e49fae81151
+  razorpay-pod: 6ee0c8c7afad8eead9524d5eb516bc35ac1604ef
+  razorpay_flutter: bf22a7c0e12d9f906b6a493f546ee9afe7f8b508
   Segment-Amplitude: 1b3b02a2e92f4b08a413a72bf7aa44f78566ab3b
   Segment-Branch: f255ba1354f6aa1bc8654d450b3b933380f2558d
   shared_preferences: af6bfa751691cdc24be3045c43ec037377ada40d
@@ -280,6 +291,6 @@ SPEC CHECKSUMS:
   url_launcher_macos: fd7894421cd39320dce5f292fc99ea9270b2a313
   url_launcher_web: e5527357f037c87560776e36436bf2b0288b965c
 
-PODFILE CHECKSUM: b6aa1a506930a33cb6284c8c64247ba5bdd080ea
+PODFILE CHECKSUM: e9494251bf292ba07951aa5395f47e7acc54fad3
 
 COCOAPODS: 1.9.3
