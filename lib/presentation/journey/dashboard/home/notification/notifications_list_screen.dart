@@ -1,21 +1,15 @@
 import 'package:aker_foods_retail/common/constants/layout_constants.dart';
 import 'package:aker_foods_retail/common/extensions/pixel_dimension_util_extensions.dart';
+import 'package:aker_foods_retail/common/injector/injector.dart';
 import 'package:aker_foods_retail/common/utils/widget_util.dart';
+import 'package:aker_foods_retail/domain/entities/notification_entity.dart';
 import 'package:aker_foods_retail/presentation/theme/app_colors.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-// TODO(Bhushan): Dummy notification class for demo
-class _NotificationEntity {
-  final String title;
-  final String content;
-  final bool isRead;
-
-  _NotificationEntity(
-    this.title,
-    this.content, {
-    this.isRead = false,
-  });
-}
+import 'bloc/notification_bloc.dart';
+import 'bloc/notification_event.dart';
+import 'bloc/notification_state.dart';
 
 class NotificationsListScreen extends StatefulWidget {
   @override
@@ -23,22 +17,36 @@ class NotificationsListScreen extends StatefulWidget {
 }
 
 class NotificationsListScreenState extends State<NotificationsListScreen> {
-  List<_NotificationEntity> dummyNotifications = [
-    _NotificationEntity(
-      'Welcome to Aker Foods',
-      '''Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.''',
-    ),
-    _NotificationEntity(
-      'Notification 1',
-      '''Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.''',
-      isRead: true,
-    ),
-  ];
+  NotificationBloc notificationBloc;
+
+  @override
+  void initState() {
+    super.initState();
+    notificationBloc = Injector.resolve<NotificationBloc>()
+      ..add(FetchNotificationsEvent());
+  }
+
+  @override
+  void dispose() {
+    notificationBloc?.close();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: _getAppBar(),
-        body: _notificationsListView(),
+        body: BlocProvider<NotificationBloc>(
+          create: (context) => notificationBloc,
+          child: BlocBuilder<NotificationBloc, NotificationState>(
+            builder: (context, state) {
+              if (state is FetchNotificationSuccessState) {
+                return _notificationsListView(state.notifications);
+              } else {
+                return Container();
+              }
+            },
+          ),
+        ),
       );
 
   AppBar _getAppBar() => AppBar(
@@ -51,14 +59,17 @@ class NotificationsListScreenState extends State<NotificationsListScreen> {
         ),
       );
 
-  ListView _notificationsListView() => ListView.builder(
+  ListView _notificationsListView(List<NotificationEntity> notifications) =>
+      ListView.builder(
         shrinkWrap: true,
-        itemCount: dummyNotifications.length,
-        itemBuilder: _buildNotificationsListItem,
+        itemCount: notifications.length,
+        itemBuilder: (context, index) => _buildNotificationsListItem(context,
+            notificationEntity: notifications[index]),
       );
 
-  Widget _buildNotificationsListItem(BuildContext context, int index) {
-    final bool isNotificationRead = dummyNotifications[index].isRead ?? false;
+  Widget _buildNotificationsListItem(BuildContext context,
+      {NotificationEntity notificationEntity}) {
+    final isNotificationRead = false;
     return Container(
       margin: EdgeInsets.symmetric(
         horizontal: LayoutConstants.dimen_16.w,
@@ -76,14 +87,14 @@ class NotificationsListScreenState extends State<NotificationsListScreen> {
           ),
           borderRadius: BorderRadius.circular(LayoutConstants.dimen_8.w),
         ),
-        child: _cardContentContainer(context, index, isNotificationRead),
+        child: _cardContentContainer(context, notificationEntity, false),
       ),
     );
   }
 
   Container _cardContentContainer(
     BuildContext context,
-    int index,
+    NotificationEntity notification,
     bool isNotificationRead,
   ) =>
       Container(
@@ -96,11 +107,11 @@ class NotificationsListScreenState extends State<NotificationsListScreen> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             isNotificationRead
-                ? _notificationTitleText(context, index)
-                : _notificationTitleRow(context, index),
+                ? _notificationTitleText(context, notification.title)
+                : _notificationTitleRow(context, notification.title),
             SizedBox(height: LayoutConstants.dimen_4.h),
             Text(
-              '${dummyNotifications[index].content}',
+              '${notification.description}',
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
               style: Theme.of(context).textTheme.subtitle1.copyWith(
@@ -111,10 +122,10 @@ class NotificationsListScreenState extends State<NotificationsListScreen> {
         ),
       );
 
-  Row _notificationTitleRow(BuildContext context, int index) => Row(
+  Row _notificationTitleRow(BuildContext context, String title) => Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          _notificationTitleText(context, index),
+          _notificationTitleText(context, title),
           Container(
             padding: EdgeInsets.only(left: LayoutConstants.dimen_8.w),
             child: CircleAvatar(
@@ -125,8 +136,8 @@ class NotificationsListScreenState extends State<NotificationsListScreen> {
         ],
       );
 
-  Text _notificationTitleText(BuildContext context, int index) => Text(
-        '${dummyNotifications[index].title}',
+  Text _notificationTitleText(BuildContext context, String title) => Text(
+        title,
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
         style: Theme.of(context).textTheme.bodyText1,

@@ -1,10 +1,11 @@
+import 'package:aker_foods_retail/data/models/address_model.dart';
 import 'package:aker_foods_retail/data/models/cash_offer_model.dart';
+import 'package:aker_foods_retail/data/models/coupon_model.dart';
+import 'package:aker_foods_retail/data/models/notification_model.dart';
+import 'package:aker_foods_retail/data/models/order_model.dart';
 import 'package:aker_foods_retail/data/models/product_category_model.dart';
 import 'package:aker_foods_retail/data/models/product_model.dart';
 import 'package:aker_foods_retail/data/models/product_subcategory_model.dart';
-import 'package:aker_foods_retail/data/models/address_model.dart';
-import 'package:aker_foods_retail/data/models/coupon_model.dart';
-import 'package:aker_foods_retail/data/models/order_model.dart';
 import 'package:aker_foods_retail/data/models/society_model.dart';
 import 'package:aker_foods_retail/data/models/transaction_model.dart';
 
@@ -25,4 +26,6 @@ Future<void> configureApiModels() async {
   ApiResponseParser.addParsingFunction(
       TransactionModel, TransactionModel.fromJson);
   ApiResponseParser.addParsingFunction(CashOfferModel, CashOfferModel.fromJson);
+  ApiResponseParser.addParsingFunction(
+      NotificationModel, NotificationModel.fromJson);
 }
