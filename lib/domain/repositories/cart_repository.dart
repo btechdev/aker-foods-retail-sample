@@ -17,5 +17,7 @@ abstract class CartRepository {
 
   Future<CartModel> removeProduct(ProductModel productModel);
 
+  Future<CartModel> saveCart(CartModel cartModel);
+
   Future<List<CouponModel>> getCoupons();
 }

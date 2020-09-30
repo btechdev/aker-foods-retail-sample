@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:aker_foods_retail/common/exceptions/bad_request_exception.dart';
 import 'package:aker_foods_retail/common/exceptions/forbidden_exception.dart';
 import 'package:aker_foods_retail/common/exceptions/not_found_exception.dart';
+import 'package:aker_foods_retail/common/exceptions/product_out_of_stock_exception.dart';
 import 'package:aker_foods_retail/common/exceptions/server_error_exception.dart';
 import 'package:aker_foods_retail/common/exceptions/unauthorized_exception.dart';
 import 'package:aker_foods_retail/common/extensions/string_extensions.dart';
@@ -62,7 +63,13 @@ class HttpUtil {
         throw NotFoundException(
           getErrorMessage(json.decode(response.body)),
         );
-
+      case 406:
+        throw ProductOutOfStockException(
+          //getErrorMessage(json.decode(response.body)),
+          'There is no error message from server for out of stock products',
+          outOfStockProductIds:
+              _getOutOfStockProductIds(json.decode(response.body)),
+        );
       case 500:
       default:
         throw ServerErrorException(
@@ -96,6 +103,15 @@ class HttpUtil {
     return unknownError;
   }
 
+  static Set<String> _getOutOfStockProductIds(dynamic errorBody) {
+    final Map<String, dynamic> outOfStockProductsMap =
+        errorBody['item_unstocked'];
+    if (outOfStockProductsMap != null) {
+      return outOfStockProductsMap.keys.toSet();
+    }
+    return Set();
+  }
+
   static dynamic _retryRequestAfterRefreshAuthorization(
       Response response) async {
     if (_hasAttemptedRefreshAuthorization) {
@@ -125,8 +141,8 @@ class HttpUtil {
   static dynamic _executeNewRequestWithUpdatedApiClient(
       Request request, String newIdToken) async {
     try {
-      // NOTE: New request needs to be created as the `request` is already
-      // finalized and `send()` can not finalize the already finalized request.
+      /// NOTE: New request needs to be created as the `request` is already
+      /// finalized and `send()` can not finalize the already finalized request.
       final Request newRequest = Request(request.method, request.url);
       newRequest.headers[HttpConstants.authorization] =
           '$firebaseTokenPrefix $newIdToken';

@@ -7,10 +7,14 @@ import 'package:flutter/material.dart';
 
 class BillDetailsWidget extends StatefulWidget {
   final BillingEntity billingEntity;
+  final bool showErrorMessage;
+  final String message;
 
   const BillDetailsWidget({
     Key key,
     @required this.billingEntity,
+    this.showErrorMessage,
+    this.message,
   }) : super(key: key);
 
   @override
@@ -24,8 +28,28 @@ class BillDetailsWidgetState extends State<BillDetailsWidget> {
   @override
   Widget build(BuildContext context) => Container(
         padding: EdgeInsets.all(LayoutConstants.dimen_16.w),
-        child:
-            widget.billingEntity == null ? Container() : _billDetailsColumn(),
+        child: _getBody(),
+      );
+
+  Widget _getBody() {
+    if (widget.showErrorMessage == true) {
+      return _errorContainer();
+    } else if (widget.billingEntity == null) {
+      return Container();
+    } else {
+      return _billDetailsColumn();
+    }
+  }
+
+  Container _errorContainer() => Container(
+        alignment: Alignment.center,
+        child: Text(
+          widget.message,
+          textAlign: TextAlign.center,
+          style: Theme.of(context).textTheme.subtitle2.copyWith(
+                color: AppColor.cautionColor,
+              ),
+        ),
       );
 
   Column _billDetailsColumn() => Column(

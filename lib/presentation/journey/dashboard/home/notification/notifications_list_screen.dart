@@ -67,9 +67,10 @@ class NotificationsListScreenState extends State<NotificationsListScreen> {
             notificationEntity: notifications[index]),
       );
 
-  Widget _buildNotificationsListItem(BuildContext context,
-      {NotificationEntity notificationEntity}) {
-    final isNotificationRead = false;
+  Widget _buildNotificationsListItem(
+    BuildContext context, {
+    NotificationEntity notificationEntity,
+  }) {
     return Container(
       margin: EdgeInsets.symmetric(
         horizontal: LayoutConstants.dimen_16.w,
@@ -80,11 +81,7 @@ class NotificationsListScreenState extends State<NotificationsListScreen> {
         onTap: () => {},
         borderRadius: BorderRadius.circular(LayoutConstants.dimen_8.w),
         shapeBorder: RoundedRectangleBorder(
-          side: BorderSide(
-            color: isNotificationRead
-                ? AppColor.transparent
-                : AppColor.primaryColor,
-          ),
+          side: const BorderSide(color: AppColor.primaryColor),
           borderRadius: BorderRadius.circular(LayoutConstants.dimen_8.w),
         ),
         child: _cardContentContainer(context, notificationEntity, false),

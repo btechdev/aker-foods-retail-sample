@@ -1,9 +1,11 @@
 import 'package:aker_foods_retail/common/constants/payment_constants.dart';
+import 'package:aker_foods_retail/common/exceptions/product_out_of_stock_exception.dart';
 import 'package:aker_foods_retail/data/models/razorpay_payment_model.dart';
 import 'package:aker_foods_retail/domain/entities/billing_entity.dart';
 import 'package:aker_foods_retail/domain/entities/cart_entity.dart';
 import 'package:aker_foods_retail/domain/entities/payment_details_entity.dart';
 import 'package:aker_foods_retail/domain/usecases/cart_use_case.dart';
+import 'package:aker_foods_retail/domain/usecases/products_use_case.dart';
 import 'package:aker_foods_retail/presentation/common_blocs/cart_bloc/cart_event.dart';
 import 'package:aker_foods_retail/presentation/common_blocs/cart_bloc/cart_state.dart';
 import 'package:aker_foods_retail/presentation/common_blocs/snack_bar_bloc/snack_bar_bloc.dart';
@@ -16,10 +18,12 @@ import 'package:razorpay_flutter/razorpay_flutter.dart';
 class CartBloc extends Bloc<CartEvent, CartState> {
   final SnackBarBloc snackBarBloc;
   final CartUseCase cartUseCase;
+  final ProductsUseCase productsUseCase;
 
   CartBloc({
     this.snackBarBloc,
     this.cartUseCase,
+    this.productsUseCase,
   }) : super(CartInitialState());
 
   @override
@@ -34,6 +38,8 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       yield* _processRemoveProductFromCartEvent(event);
     } else if (event is CreateOrderCartEvent) {
       yield* _processCreateOrderCartEvent(event);
+    } else if (event is NotifyUserAboutProductEvent) {
+      yield* _handleNotifyUserAboutProductEvent(event);
     }
   }
 
@@ -49,6 +55,29 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     final billingEntity = await cartUseCase.validateCartPreCheckout(cartEntity);
     debugPrint('ValidateCartPreCheckout => ${billingEntity.toString()}');
     return billingEntity;
+  }
+
+  Stream<CartState> _processError(
+      dynamic error, CartEntity cartEntity, Map<int, int> idCountMap) async* {
+    if (error is ProductOutOfStockException) {
+      for (final cartProduct in cartEntity.products) {
+        final idString = '${cartProduct?.product?.id}';
+        if (error.outOfStockProductIds.contains(idString)) {
+          cartProduct?.product?.isInStock = false;
+        }
+      }
+      yield CartLoadedState(
+        hasOutOfStockProducts: true,
+        message: error.message,
+        cartEntity: cartEntity,
+        productIdCountMap: idCountMap,
+      );
+      return;
+    }
+    snackBarBloc.add(ShowSnackBarEvent(
+      type: CustomSnackBarType.error,
+      text: error.toString(),
+    ));
   }
 
   Stream<CartState> _processLoadCartEvent(LoadCartEvent event) async* {
@@ -68,56 +97,67 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     yield CartLoadingState(totalProductCount: state.totalProductCount);
     final CartEntity cartEntity = await cartUseCase.getCartData();
     final Map<int, int> idCountMap = _productIdCountMap(cartEntity);
-    if (idCountMap.isNotEmpty) {
-      yield CartLoadingState(totalProductCount: state.totalProductCount);
-      cartEntity.billingEntity = await _validateCart(cartEntity);
-    } else if (idCountMap.isEmpty) {
-      yield CartEmptyState();
-      return;
+    try {
+      if (idCountMap.isNotEmpty) {
+        yield CartLoadingState(totalProductCount: state.totalProductCount);
+        cartEntity.billingEntity = await _validateCart(cartEntity);
+      } else if (idCountMap.isEmpty) {
+        yield CartEmptyState();
+        return;
+      }
+      yield CartLoadedState(
+        cartEntity: cartEntity,
+        productIdCountMap: idCountMap,
+      );
+    } catch (error) {
+      yield* _processError(error, cartEntity, idCountMap);
     }
-    yield CartLoadedState(
-      cartEntity: cartEntity,
-      productIdCountMap: idCountMap,
-    );
   }
 
   Stream<CartState> _processAddProductToCartEvent(
       AddProductToCartEvent event) async* {
     final cartEntity = await cartUseCase.addProduct(event.productEntity);
     final Map<int, int> idCountMap = _productIdCountMap(cartEntity);
-    if (event.needsCartValidation && idCountMap.isNotEmpty) {
-      yield CartLoadingState(totalProductCount: state.totalProductCount);
-      cartEntity.billingEntity = await _validateCart(cartEntity);
-    } else if (idCountMap.isEmpty) {
-      yield CartEmptyState();
-      return;
+    try {
+      if (event.needsCartValidation && idCountMap.isNotEmpty) {
+        yield CartLoadingState(totalProductCount: state.totalProductCount);
+        cartEntity.billingEntity = await _validateCart(cartEntity);
+      } else if (idCountMap.isEmpty) {
+        yield CartEmptyState();
+        return;
+      }
+      yield CartProductUpdatedState(
+        cartEntity: cartEntity,
+        productIdCountMap: idCountMap,
+      );
+    } catch (error) {
+      _processError(error, cartEntity, idCountMap);
     }
-    yield CartProductUpdatedState(
-      cartEntity: cartEntity,
-      productIdCountMap: idCountMap,
-    );
   }
 
   Stream<CartState> _processRemoveProductFromCartEvent(
       RemoveProductFromCartEvent event) async* {
     final cartEntity = await cartUseCase.removeProduct(event.productEntity);
     final Map<int, int> idCountMap = _productIdCountMap(cartEntity);
-    if (event.needsCartValidation && idCountMap.isNotEmpty) {
-      yield CartLoadingState(totalProductCount: state.totalProductCount);
-      cartEntity.billingEntity = await _validateCart(cartEntity);
-    } else if (idCountMap.isEmpty) {
-      yield CartEmptyState();
-      return;
+    try {
+      if (event.needsCartValidation && idCountMap.isNotEmpty) {
+        yield CartLoadingState(totalProductCount: state.totalProductCount);
+        cartEntity.billingEntity = await _validateCart(cartEntity);
+      } else if (idCountMap.isEmpty) {
+        yield CartEmptyState();
+        return;
+      }
+      yield CartProductUpdatedState(
+        cartEntity: cartEntity,
+        productIdCountMap: idCountMap,
+      );
+    } catch (error) {
+      _processError(error, cartEntity, idCountMap);
     }
-    yield CartProductUpdatedState(
-      cartEntity: cartEntity,
-      productIdCountMap: idCountMap,
-    );
   }
 
   Stream<CartState> _processCreateOrderCartEvent(
       CreateOrderCartEvent event) async* {
-    debugPrint('********${event.paymentType}*********');
     yield CartLoadingState(totalProductCount: state.totalProductCount);
     final cartEntity = await cartUseCase.getCartData();
     final addressEntity = await cartUseCase.getSelectedAddress();
@@ -180,5 +220,41 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       type: CustomSnackBarType.error,
       text: 'Balance added to wallet: ${response.walletName}',
     ));
+  }
+
+  Stream<CartState> _handleNotifyUserAboutProductEvent(
+      NotifyUserAboutProductEvent event) async* {
+    final productId = event.productEntity.id;
+    final status = await productsUseCase.notifyUserForProduct(productId);
+    if (status) {
+      final cartEntity = await cartUseCase.getCartData();
+      cartEntity.products.removeWhere(
+        (cartProduct) => cartProduct?.product?.id == productId,
+      );
+      await cartUseCase.saveCart(cartEntity);
+      final Map<int, int> idCountMap = _productIdCountMap(cartEntity);
+      if (idCountMap.isNotEmpty) {
+        yield CartLoadingState(totalProductCount: state.totalProductCount);
+        cartEntity.billingEntity = await _validateCart(cartEntity);
+      } else {
+        yield CartEmptyState();
+        return;
+      }
+      yield CartProductUpdatedState(
+        cartEntity: cartEntity,
+        productIdCountMap: idCountMap,
+      );
+
+      snackBarBloc.add(ShowSnackBarEvent(
+        type: CustomSnackBarType.success,
+        text: 'You will be notified when the product is back in stock',
+      ));
+    } else {
+      snackBarBloc.add(ShowSnackBarEvent(
+        type: CustomSnackBarType.error,
+        text: 'Something went wrong. We are unable to process your request',
+      ));
+      yield NotifyUserAboutProductFailure();
+    }
   }
 }

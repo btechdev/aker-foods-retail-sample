@@ -73,5 +73,6 @@ class ProductTable extends HiveObject {
         amount: amount,
         discountedAmount: discountedAmount,
         imageUrl: imageUrl,
+        isInStock: true,
       );
 }

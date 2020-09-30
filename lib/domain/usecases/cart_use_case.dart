@@ -1,3 +1,4 @@
+import 'package:aker_foods_retail/data/models/cart_model.dart';
 import 'package:aker_foods_retail/data/models/coupon_model.dart';
 import 'package:aker_foods_retail/data/models/create_order_body_model.dart';
 import 'package:aker_foods_retail/data/models/pre_checkout_body_model.dart';
@@ -46,6 +47,9 @@ class CartUseCase {
 
   Future<CartEntity> removeProduct(ProductEntity productEntity) async =>
       cartRepository.removeProduct(productEntity);
+
+  Future<CartEntity> saveCart(CartEntity cartEntity) async =>
+      cartRepository.saveCart(cartEntity);
 
   Future<List<CouponModel>> getCategories() async =>
       cartRepository.getCoupons();

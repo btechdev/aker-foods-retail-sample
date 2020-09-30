@@ -14,7 +14,7 @@ class ProductEntity {
   final double amount;
   final double discountedAmount;
   final String imageUrl;
-  final bool isInStock;
+  bool isInStock;
 
   ProductEntity({
     this.id,

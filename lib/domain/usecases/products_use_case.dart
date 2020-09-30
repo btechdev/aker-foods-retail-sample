@@ -31,4 +31,7 @@ class ProductsUseCase {
 
   Future<ProductEntity> getProductWithId({@required int productId}) async =>
       productsRepository.getProductWithId(productId);
+
+  Future<bool> notifyUserForProduct(int productId) async =>
+      productsRepository.notifyUserForProduct(productId);
 }

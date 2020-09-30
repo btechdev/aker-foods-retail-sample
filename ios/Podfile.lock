@@ -4,6 +4,8 @@ PODS:
   - Branch (0.33.1):
     - Branch/Core (= 0.33.1)
   - Branch/Core (0.33.1)
+  - esys_flutter_share (0.0.1):
+    - Flutter
   - Firebase/Auth (6.26.0):
     - Firebase/CoreOnly
     - FirebaseAuth (~> 6.5.3)
@@ -131,8 +133,11 @@ PODS:
     - Flutter
   - url_launcher_web (0.0.1):
     - Flutter
+  - url_launcher_windows (0.0.1):
+    - Flutter
 
 DEPENDENCIES:
+  - esys_flutter_share (from `.symlinks/plugins/esys_flutter_share/ios`)
   - firebase_auth (from `.symlinks/plugins/firebase_auth/ios`)
   - firebase_auth_web (from `.symlinks/plugins/firebase_auth_web/ios`)
   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
@@ -162,6 +167,7 @@ DEPENDENCIES:
   - url_launcher_linux (from `.symlinks/plugins/url_launcher_linux/ios`)
   - url_launcher_macos (from `.symlinks/plugins/url_launcher_macos/ios`)
   - url_launcher_web (from `.symlinks/plugins/url_launcher_web/ios`)
+  - url_launcher_windows (from `.symlinks/plugins/url_launcher_windows/ios`)
 
 SPEC REPOS:
   trunk:
@@ -187,6 +193,8 @@ SPEC REPOS:
     - Segment-Branch
 
 EXTERNAL SOURCES:
+  esys_flutter_share:
+    :path: ".symlinks/plugins/esys_flutter_share/ios"
   firebase_auth:
     :path: ".symlinks/plugins/firebase_auth/ios"
   firebase_auth_web:
@@ -241,11 +249,14 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/url_launcher_macos/ios"
   url_launcher_web:
     :path: ".symlinks/plugins/url_launcher_web/ios"
+  url_launcher_windows:
+    :path: ".symlinks/plugins/url_launcher_windows/ios"
 
 SPEC CHECKSUMS:
   Amplitude-iOS: 46c8e6e65c49bb1ad1909a9add1a68e1f8562b3f
   Analytics: 77fd5fb102a4a5eedafa2c2b0245ceb7b7c15e45
   Branch: 65d05ffb137ef504777cff6bd4fb6f770f17145a
+  esys_flutter_share: 403498dab005b36ce1f8d7aff377e81f0621b0b4
   Firebase: 7cf5f9c67f03cb3b606d1d6535286e1080e57eb6
   firebase_auth: c42c06a212439824b5da53437da905931e8e6b9a
   firebase_auth_web: 0955c07bcc06e84af76b9d4e32e6f31518f2d7de
@@ -290,6 +301,7 @@ SPEC CHECKSUMS:
   url_launcher_linux: ac237cb7a8058736e4aae38bdbcc748a4b394cc0
   url_launcher_macos: fd7894421cd39320dce5f292fc99ea9270b2a313
   url_launcher_web: e5527357f037c87560776e36436bf2b0288b965c
+  url_launcher_windows: 683d7c283894db8d1914d3ab2223b20cc1ad95d5
 
 PODFILE CHECKSUM: e9494251bf292ba07951aa5395f47e7acc54fad3
 

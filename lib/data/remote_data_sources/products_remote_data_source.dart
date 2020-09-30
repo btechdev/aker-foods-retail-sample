@@ -44,4 +44,15 @@ class ProductsRemoteDataSource {
     final jsonMap = await apiClient.get(urlPath);
     return ProductModel.fromJson(jsonMap);
   }
+
+  Future<bool> postNotifyUserAboutProduct(int productId) async {
+    final response = await apiClient.post(
+        '${ApiEndpoints.products}$productId/notify_me/', null);
+    if (response is Map<String, dynamic>) {
+      final message = response['message'];
+      return !(message == null);
+    } else {
+      return Future.value(false);
+    }
+  }
 }

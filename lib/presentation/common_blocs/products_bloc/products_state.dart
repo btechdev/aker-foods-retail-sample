@@ -96,6 +96,5 @@ class CategoryWiseProductsFetchSuccessState extends ProductsState {
       {this.categoryProductsMap, this.categories});
 
   @override
-  ProductsState clone() =>
-      CategoryWiseProductsFetchSuccessState();
+  ProductsState clone() => CategoryWiseProductsFetchSuccessState();
 }

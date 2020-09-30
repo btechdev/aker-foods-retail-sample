@@ -102,8 +102,15 @@ class HttpClient {
     final Map<String, String> requestHeader = {...header, ...overrideHeader};
     final contentType = requestHeader[HttpConstants.contentType];
 
-    final jsonBody = json.encode(data);
-    final encodedBody = HttpUtil.encodeRequestBody(data, contentType);
+    String jsonBody;
+    dynamic encodedBody;
+    if (data == null) {
+      jsonBody = '';
+      encodedBody = '';
+    } else {
+      jsonBody = json.encode(data);
+      encodedBody = HttpUtil.encodeRequestBody(data, contentType);
+    }
 
     debugPrint(
       'HTTP request\n'
@@ -126,6 +133,50 @@ class HttpClient {
     } catch (error) {
       rethrow;
     }
+
+    /*if (data == null) {
+      debugPrint('HTTP request\n'
+          'Method: POST\n'
+          'Header: ${parseDataAndSplitString(requestHeader)}\n'
+          'Url: ${getParsedUrl(path)}\n');
+
+      final response = await _client.post(
+        getParsedUrl(path),
+        headers: requestHeader,
+      );
+
+      try {
+        final httpResponse = HttpUtil.getResponse(response);
+        return httpResponse;
+      } catch (error) {
+        rethrow;
+      }
+    } else {
+      final jsonBody = json.encode(data);
+      final encodedBody = HttpUtil.encodeRequestBody(data, contentType);
+
+      debugPrint(
+        'HTTP request\n'
+        'Method: POST\n'
+        'Header: ${parseDataAndSplitString(requestHeader)}\n'
+        'Url: ${getParsedUrl(path)}\n'
+        'jsonBody: ${parseDataAndSplitString(jsonBody)}\n'
+        'encodedBody: ${parseDataAndSplitString(encodedBody)}',
+      );
+
+      final response = await _client.post(
+        getParsedUrl(path),
+        body: encodedBody,
+        headers: requestHeader,
+      );
+
+      try {
+        final httpResponse = HttpUtil.getResponse(response);
+        return httpResponse;
+      } catch (error) {
+        rethrow;
+      }
+    }*/
   }
 
   dynamic patch(

@@ -12,9 +12,10 @@ import 'package:aker_foods_retail/presentation/journey/checkout/order_cart/order
 import 'package:aker_foods_retail/presentation/journey/checkout/order_cart/order_delivery_selection.dart';
 import 'package:aker_foods_retail/presentation/journey/checkout/order_cart/payment_type_selection.dart';
 import 'package:aker_foods_retail/presentation/theme/app_colors.dart';
-import 'package:aker_foods_retail/presentation/widgets/in_stock_product_list_tile.dart';
 import 'package:aker_foods_retail/presentation/widgets/circular_loader_widget.dart';
 import 'package:aker_foods_retail/presentation/widgets/coupon_promo_code_widget.dart';
+import 'package:aker_foods_retail/presentation/widgets/in_stock_product_list_tile.dart';
+import 'package:aker_foods_retail/presentation/widgets/out_of_stock_product_list_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -59,7 +60,8 @@ class _CartPageState extends State<CartPage> {
   Widget _cartBlocBuilderWidget(BuildContext context, CartState state) {
     if (state is CartLoadingState) {
       return const CircularLoaderWidget();
-    } else if (state is CartLoadedState) {
+    } else if (state is CartLoadedState ||
+        state is NotifyUserAboutProductFailure) {
       return _cartBlocBuilderBody(state);
     }
     // TODO(Bhushan): Fix this issue of go to home button not showing
@@ -81,6 +83,8 @@ class _CartPageState extends State<CartPage> {
             const Divider(),
             BillDetailsWidget(
               billingEntity: state.cartEntity.billingEntity,
+              showErrorMessage: state.hasOutOfStockProducts ?? false,
+              message: state.message ?? '',
             ),
             const Divider(),
             OrderDeliverySelection(),
@@ -111,9 +115,24 @@ class _CartPageState extends State<CartPage> {
           vertical: LayoutConstants.dimen_8.h,
         ),
         itemCount: cartProducts?.length ?? 0,
-        itemBuilder: (context, index) => InStockProductListTile(
-          cartProduct: cartProducts[index],
-        ),
+        itemBuilder: (context, index) {
+          final cartProduct = cartProducts[index];
+          if (cartProduct?.product?.isInStock == true) {
+            return InStockProductListTile(cartProduct: cartProduct);
+          }
+          return OutOfStockProductListTile(
+            cartProduct: cartProduct,
+            onNotify: () => BlocProvider.of<CartBloc>(context).add(
+                NotifyUserAboutProductEvent(
+                    productEntity: cartProduct.product)),
+            onDelete: () => BlocProvider.of<CartBloc>(context).add(
+              RemoveProductFromCartEvent(
+                productEntity: cartProduct.product,
+                needsCartValidation: true,
+              ),
+            ),
+          );
+        },
       );
 
   InkWell _couponPromoCodeInkWell() => InkWell(

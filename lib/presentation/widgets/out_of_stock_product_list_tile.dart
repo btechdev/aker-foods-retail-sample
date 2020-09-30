@@ -1,6 +1,5 @@
 import 'package:aker_foods_retail/common/constants/layout_constants.dart';
 import 'package:aker_foods_retail/common/extensions/pixel_dimension_util_extensions.dart';
-import 'package:aker_foods_retail/data/repositories/products_repository_impl.dart';
 import 'package:aker_foods_retail/domain/entities/cart_product_entity.dart';
 import 'package:aker_foods_retail/presentation/theme/app_colors.dart';
 import 'package:aker_foods_retail/presentation/widgets/notify_me_button.dart';
@@ -68,9 +67,7 @@ class _OutOfStockProductListTileState extends State<OutOfStockProductListTile> {
   Container _productDetailsContainer(BuildContext context) => Container(
         alignment: Alignment.center,
         padding: EdgeInsets.only(left: LayoutConstants.dimen_12.w),
-        child: ProductInfoPrice(
-          product: ProductsRepositoryImpl.dummyProducts[0],
-        ),
+        child: ProductInfoPrice(product: widget.cartProduct?.product),
       );
 
   Column _actionsColumn(BuildContext context) => Column(

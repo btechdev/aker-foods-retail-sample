@@ -71,6 +71,12 @@ class CartRepositoryImpl extends CartRepository {
       }
     }
     await cartLocalDataSource.insertOrUpdateData(cartModel);
-    return cartLocalDataSource.getModelTypeData();
+    return cartModel;
+  }
+
+  @override
+  Future<CartModel> saveCart(CartModel cartModel) async {
+    await cartLocalDataSource.insertOrUpdateData(cartModel);
+    return cartModel;
   }
 }

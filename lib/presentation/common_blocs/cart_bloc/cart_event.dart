@@ -1,3 +1,4 @@
+import 'package:aker_foods_retail/domain/entities/cart_product_entity.dart';
 import 'package:aker_foods_retail/domain/entities/product_entity.dart';
 
 abstract class CartEvent {}
@@ -45,4 +46,11 @@ class CreateOrderCartEvent extends CartEvent {
   CreateOrderCartEvent({
     this.paymentType,
   });
+}
+
+class NotifyUserAboutProductEvent extends CartEvent {
+  final CartProductEntity cartProduct;
+  ProductEntity productEntity;
+
+  NotifyUserAboutProductEvent({this.cartProduct, this.productEntity});
 }

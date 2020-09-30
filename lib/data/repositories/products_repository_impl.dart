@@ -8,22 +8,6 @@ class ProductsRepositoryImpl implements ProductsRepository {
 
   ProductsRepositoryImpl({this.productsRemoteDataSource});
 
-  // TODO(Bhushan): Remove this and dependencies
-  static List<String> dummyCategories = [
-    'Vegetables',
-    'Fruits',
-    'Dairy',
-  ];
-
-  static List<ProductModel> dummyProducts = [
-    ProductModel(name: 'Onion Onion Onion Onion Onion', amount: 20),
-    ProductModel(name: 'Tomato', amount: 80),
-    ProductModel(name: 'Potato', amount: 25),
-    ProductModel(name: 'Beat Root', amount: 60),
-    ProductModel(name: 'Carrot', amount: 40),
-    ProductModel(name: 'Cucumber', amount: 40),
-  ];
-
   @override
   Future<List<ProductCategoryModel>> getCategories() async =>
       productsRemoteDataSource.getCategories();
@@ -34,12 +18,7 @@ class ProductsRepositoryImpl implements ProductsRepository {
 
   @override
   Future<List<ProductModel>> searchProducts(String searchText) async {
-    return dummyProducts
-        .where(
-          (product) =>
-              product.name.toLowerCase().contains(searchText.toLowerCase()),
-        )
-        .toList();
+    throw UnimplementedError('SearchProducts API is not yet integrated');
   }
 
   @override
@@ -57,4 +36,8 @@ class ProductsRepositoryImpl implements ProductsRepository {
   @override
   Future<ProductModel> getProductWithId(int productId) async =>
       productsRemoteDataSource.getProductWithId(productId);
+
+  @override
+  Future<bool> notifyUserForProduct(int productId) async =>
+      productsRemoteDataSource.postNotifyUserAboutProduct(productId);
 }

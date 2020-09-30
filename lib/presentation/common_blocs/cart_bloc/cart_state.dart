@@ -29,10 +29,14 @@ class CartLoadingState extends CartState {
 
 class CartLoadedState extends CartState {
   final Map<int, int> productIdCountMap;
+  final bool hasOutOfStockProducts;
+  final String message;
 
   CartLoadedState({
     @required CartEntity cartEntity,
     @required this.productIdCountMap,
+    this.hasOutOfStockProducts = false,
+    this.message,
   }) : super(
           cartEntity: cartEntity,
           totalProductCount: productIdCountMap.length,
@@ -66,3 +70,7 @@ class CartPromoCodeUpdatedState extends CartLoadedState {
           productIdCountMap: productIdCountMap,
         );
 }
+
+class NotifyUserAboutProductSuccess extends CartState {}
+
+class NotifyUserAboutProductFailure extends CartState {}
