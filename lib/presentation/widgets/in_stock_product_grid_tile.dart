@@ -12,21 +12,21 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'product_info_price_widget.dart';
 
-class ProductGridItemTile extends StatefulWidget {
+class InStockProductGridTile extends StatefulWidget {
   final ProductEntity product;
   final int productQuantityCountInCart;
 
-  const ProductGridItemTile({
+  const InStockProductGridTile({
     Key key,
     @required this.product,
     this.productQuantityCountInCart = 0,
   }) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => ProductGridItemTileState();
+  State<StatefulWidget> createState() => InStockProductGridTileState();
 }
 
-class ProductGridItemTileState extends State<ProductGridItemTile> {
+class InStockProductGridTileState extends State<InStockProductGridTile> {
   int _itemCountInCart = 0;
 
   @override
@@ -75,7 +75,7 @@ class ProductGridItemTileState extends State<ProductGridItemTile> {
     return _productAvatarContainer();
   }
 
-  Container _productAvatarContainer() => Container(
+  /*Container _productAvatarContainer() => Container(
         alignment: Alignment.center,
         color: AppColor.scaffoldBackgroundColor,
         padding: EdgeInsets.symmetric(
@@ -91,7 +91,40 @@ class ProductGridItemTileState extends State<ProductGridItemTile> {
                   'assets/images/logo_transparent_background.png',
                 ),
         ),
+      );*/
+
+  Container _productAvatarContainer() => Container(
+        alignment: Alignment.center,
+        color: AppColor.scaffoldBackgroundColor,
+        padding: EdgeInsets.symmetric(
+          horizontal: LayoutConstants.dimen_12.w,
+          vertical: LayoutConstants.dimen_16.h,
+        ),
+        child: _productImageClippedRect(),
       );
+
+  ClipRRect _productImageClippedRect() => ClipRRect(
+        borderRadius: LayoutConstants.defaultBorderRadius,
+        child: _productImage(),
+      );
+
+  Image _productImage() {
+    final imageWidth = LayoutConstants.dimen_100.w;
+    final imageHeight = LayoutConstants.dimen_100.h;
+    return widget.product.imageUrl.isNotNullAndEmpty
+        ? Image.network(
+            widget.product.imageUrl,
+            width: imageWidth,
+            height: imageHeight,
+            fit: BoxFit.cover,
+          )
+        : Image.asset(
+            'assets/images/logo_transparent_background.png',
+            width: imageWidth,
+            height: imageHeight,
+            fit: BoxFit.cover,
+          );
+  }
 
   Container _productInfoContainer() => Container(
         padding: EdgeInsets.symmetric(

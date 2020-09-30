@@ -8,21 +8,21 @@ import 'package:aker_foods_retail/presentation/widgets/product_info_price_widget
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class CartProductListItemTile extends StatefulWidget {
+class InStockProductListTile extends StatefulWidget {
   final bool onlyShowingDetails;
   final CartProductEntity cartProduct;
 
-  CartProductListItemTile({
+  InStockProductListTile({
     Key key,
     this.cartProduct,
     this.onlyShowingDetails = false,
   }) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _CartProductListItemTileState();
+  State<StatefulWidget> createState() => _InStockProductListTileState();
 }
 
-class _CartProductListItemTileState extends State<CartProductListItemTile> {
+class _InStockProductListTileState extends State<InStockProductListTile> {
   @override
   Widget build(BuildContext context) => Card(
         elevation: 0,
@@ -62,13 +62,23 @@ class _CartProductListItemTileState extends State<CartProductListItemTile> {
         child: _productImage(),
       );
 
-  Image _productImage() => Image.network(
-        widget.cartProduct?.product?.imageUrl ??
-            'https://picsum.photos/id/1080/100/100',
-        width: LayoutConstants.dimen_100.w,
-        height: LayoutConstants.dimen_100.h,
-        fit: BoxFit.cover,
-      );
+  Image _productImage() {
+    final imageWidth = LayoutConstants.dimen_100.w;
+    final imageHeight = LayoutConstants.dimen_100.h;
+    return widget.cartProduct?.product?.imageUrl?.isNotEmpty == true
+        ? Image.network(
+            widget.cartProduct?.product?.imageUrl,
+            width: imageWidth,
+            height: imageHeight,
+            fit: BoxFit.cover,
+          )
+        : Image.asset(
+            'assets/images/logo_transparent_background.png',
+            width: imageWidth,
+            height: imageHeight,
+            fit: BoxFit.cover,
+          );
+  }
 
   Container _productDetailsContainer(BuildContext context) => Container(
         alignment: Alignment.center,

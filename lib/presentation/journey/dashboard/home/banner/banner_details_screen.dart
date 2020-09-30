@@ -12,7 +12,8 @@ import 'package:aker_foods_retail/presentation/journey/dashboard/home/banner/ban
 import 'package:aker_foods_retail/presentation/journey/dashboard/home/banner/banner_bloc/banner_event.dart';
 import 'package:aker_foods_retail/presentation/journey/dashboard/home/banner/banner_bloc/banner_state.dart';
 import 'package:aker_foods_retail/presentation/theme/app_colors.dart';
-import 'package:aker_foods_retail/presentation/widgets/product_grid_item_tile.dart';
+import 'package:aker_foods_retail/presentation/widgets/in_stock_product_grid_tile.dart';
+import 'package:aker_foods_retail/presentation/widgets/out_of_stock_product_grid_tile.dart';
 import 'package:aker_foods_retail/presentation/widgets/products_category_header.dart';
 import 'package:aker_foods_retail/presentation/widgets/products_subcategory_header.dart';
 import 'package:flutter/material.dart';
@@ -25,8 +26,15 @@ class BannerDetailsScreen extends StatefulWidget {
 
 class BannerDetailsScreenState extends State<BannerDetailsScreen> {
   BannerBloc bannerBloc;
+  Map<int, int> productIdCountMap;
 
   BannerDataEntity _bannerData;
+
+  void _initialiseProductIdCountMap() {
+    final cartState = BlocProvider.of<CartBloc>(context).state;
+    productIdCountMap =
+        cartState is CartLoadedState ? cartState.productIdCountMap : Map();
+  }
 
   @override
   void initState() {
@@ -102,11 +110,14 @@ class BannerDetailsScreenState extends State<BannerDetailsScreen> {
         child: const CircularProgressIndicator(),
       );
 
-  Widget _wrapWithCustomScrollView(List<Widget> slivers) => CustomScrollView(
-        primary: true,
-        shrinkWrap: true,
-        slivers: slivers,
-      );
+  CustomScrollView _wrapWithCustomScrollView(List<Widget> slivers) {
+    _initialiseProductIdCountMap();
+    return CustomScrollView(
+      primary: true,
+      shrinkWrap: true,
+      slivers: slivers,
+    );
+  }
 
   // ======================================================================
 
@@ -162,7 +173,7 @@ class BannerDetailsScreenState extends State<BannerDetailsScreen> {
         sliver: SliverGrid(
           gridDelegate: _productsGridDelegate(),
           delegate: SliverChildBuilderDelegate(
-            (context, index) => _productGridItemTile(products[index]),
+            (context, index) => _productGridTile(products[index]),
             childCount: products.length,
           ),
         ),
@@ -178,16 +189,13 @@ class BannerDetailsScreenState extends State<BannerDetailsScreen> {
         crossAxisSpacing: LayoutConstants.dimen_8.w,
       );
 
-  ProductGridItemTile _productGridItemTile(ProductEntity product) {
-    final cartState = BlocProvider.of<CartBloc>(context).state;
-    int productQuantityAlreadyPresentInCart = 0;
-    if (cartState is CartLoadedState) {
-      productQuantityAlreadyPresentInCart =
-          cartState.productIdCountMap[product.id] ?? 0;
-    }
-    return ProductGridItemTile(
-      product: product,
-      productQuantityCountInCart: productQuantityAlreadyPresentInCart,
-    );
-  }
+  Widget _productGridTile(ProductEntity product) => product?.isInStock == true
+      ? InStockProductGridTile(
+          product: product,
+          productQuantityCountInCart: productIdCountMap[product.id] ?? 0,
+        )
+      : OutOfStockProductGridTile(
+          product: product,
+          onPressedNotify: () => {},
+        );
 }

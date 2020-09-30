@@ -5,13 +5,16 @@ import 'package:aker_foods_retail/common/injector/injector.dart';
 import 'package:aker_foods_retail/common/utils/widget_util.dart';
 import 'package:aker_foods_retail/domain/entities/product_entity.dart';
 import 'package:aker_foods_retail/presentation/app/route_constants.dart';
+import 'package:aker_foods_retail/presentation/common_blocs/cart_bloc/cart_bloc.dart';
+import 'package:aker_foods_retail/presentation/common_blocs/cart_bloc/cart_state.dart';
 import 'package:aker_foods_retail/presentation/common_blocs/products_bloc/products_bloc.dart';
 import 'package:aker_foods_retail/presentation/common_blocs/products_bloc/products_event.dart';
 import 'package:aker_foods_retail/presentation/common_blocs/products_bloc/products_state.dart';
 import 'package:aker_foods_retail/presentation/journey/dashboard/home/banner/aker_banner_widget.dart';
 import 'package:aker_foods_retail/presentation/journey/user/address/change_address_mode_selection_bottom_sheet.dart';
 import 'package:aker_foods_retail/presentation/theme/app_colors.dart';
-import 'package:aker_foods_retail/presentation/widgets/product_grid_item_tile.dart';
+import 'package:aker_foods_retail/presentation/widgets/in_stock_product_grid_tile.dart';
+import 'package:aker_foods_retail/presentation/widgets/out_of_stock_product_grid_tile.dart';
 import 'package:aker_foods_retail/presentation/widgets/products_category_header.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -24,7 +27,15 @@ class HomePage extends StatefulWidget {
 class HomePageState extends State<HomePage> {
   // ignore: close_sinks
   ProductsBloc productsBloc;
+  Map<int, int> productIdCountMap;
+
   Widget _categoriesSection;
+
+  void _initialiseProductIdCountMap() {
+    final cartState = BlocProvider.of<CartBloc>(context).state;
+    productIdCountMap =
+        cartState is CartLoadedState ? cartState.productIdCountMap : Map();
+  }
 
   @override
   void initState() {
@@ -109,6 +120,17 @@ class HomePageState extends State<HomePage> {
     );
   }
 
+  // =======================================================================
+
+  BlocBuilder _wrapWithBlocBuilder() {
+    return BlocBuilder<ProductsBloc, ProductsState>(
+      builder: (context, state) {
+        _initialiseProductIdCountMap();
+        return _getHomePageContent(state);
+      },
+    );
+  }
+
   Widget _getHomePageContent(ProductsState state) => CustomScrollView(
         primary: true,
         shrinkWrap: true,
@@ -169,14 +191,6 @@ class HomePageState extends State<HomePage> {
           )
         ],
       );
-
-  BlocBuilder _wrapWithBlocBuilder() {
-    return BlocBuilder<ProductsBloc, ProductsState>(
-      builder: (context, state) {
-        return _getHomePageContent(state);
-      },
-    );
-  }
 
   Widget _categoriesRow(ProductsState state) {
     if (state is ProductCategoriesFetchSuccessState) {
@@ -261,13 +275,19 @@ class HomePageState extends State<HomePage> {
             crossAxisSpacing: LayoutConstants.dimen_8.w,
           ),
           delegate: SliverChildBuilderDelegate(
-            (context, index) {
-              return ProductGridItemTile(
-                product: products[index],
-              );
-            },
+            (context, index) => _productGridTile(products[index]),
             childCount: products.length,
           ),
         ),
       );
+
+  Widget _productGridTile(ProductEntity product) => product?.isInStock == true
+      ? InStockProductGridTile(
+          product: product,
+          productQuantityCountInCart: productIdCountMap[product.id] ?? 0,
+        )
+      : OutOfStockProductGridTile(
+          product: product,
+          onPressedNotify: () => {},
+        );
 }

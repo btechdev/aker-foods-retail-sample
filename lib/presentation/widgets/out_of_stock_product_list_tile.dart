@@ -1,22 +1,29 @@
 import 'package:aker_foods_retail/common/constants/layout_constants.dart';
 import 'package:aker_foods_retail/common/extensions/pixel_dimension_util_extensions.dart';
 import 'package:aker_foods_retail/data/repositories/products_repository_impl.dart';
+import 'package:aker_foods_retail/domain/entities/cart_product_entity.dart';
 import 'package:aker_foods_retail/presentation/theme/app_colors.dart';
 import 'package:aker_foods_retail/presentation/widgets/notify_me_button.dart';
 import 'package:aker_foods_retail/presentation/widgets/product_info_price_widget.dart';
 import 'package:flutter/material.dart';
 
-class MyOrderOutOfStockCell extends StatefulWidget {
+class OutOfStockProductListTile extends StatefulWidget {
+  final CartProductEntity cartProduct;
   final Function onDelete;
   final Function onNotify;
 
-  MyOrderOutOfStockCell({this.onDelete, this.onNotify});
+  OutOfStockProductListTile({
+    this.cartProduct,
+    this.onDelete,
+    this.onNotify,
+  });
 
   @override
-  _MyOrderOutOfStockCellState createState() => _MyOrderOutOfStockCellState();
+  _OutOfStockProductListTileState createState() =>
+      _OutOfStockProductListTileState();
 }
 
-class _MyOrderOutOfStockCellState extends State<MyOrderOutOfStockCell> {
+class _OutOfStockProductListTileState extends State<OutOfStockProductListTile> {
   @override
   Widget build(BuildContext context) => Card(
         elevation: 0,
@@ -79,12 +86,23 @@ class _MyOrderOutOfStockCellState extends State<MyOrderOutOfStockCell> {
         ],
       );
 
-  Image _productImage() => Image.asset(
-        'assets/images/user-profile-vegies.jpeg',
-        width: LayoutConstants.dimen_100.w,
-        height: LayoutConstants.dimen_100.h,
-        fit: BoxFit.cover,
-      );
+  Image _productImage() {
+    final imageWidth = LayoutConstants.dimen_100.w;
+    final imageHeight = LayoutConstants.dimen_100.h;
+    return widget.cartProduct?.product?.imageUrl?.isNotEmpty == true
+        ? Image.network(
+            widget.cartProduct?.product?.imageUrl,
+            width: imageWidth,
+            height: imageHeight,
+            fit: BoxFit.cover,
+          )
+        : Image.asset(
+            'assets/images/logo_transparent_background.png',
+            width: imageWidth,
+            height: imageHeight,
+            fit: BoxFit.cover,
+          );
+  }
 
   Container _outOfStockOverlayContainer() => Container(
         width: LayoutConstants.dimen_100.w,

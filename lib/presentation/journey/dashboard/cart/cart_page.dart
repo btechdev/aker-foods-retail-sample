@@ -12,7 +12,7 @@ import 'package:aker_foods_retail/presentation/journey/checkout/order_cart/order
 import 'package:aker_foods_retail/presentation/journey/checkout/order_cart/order_delivery_selection.dart';
 import 'package:aker_foods_retail/presentation/journey/checkout/order_cart/payment_type_selection.dart';
 import 'package:aker_foods_retail/presentation/theme/app_colors.dart';
-import 'package:aker_foods_retail/presentation/widgets/cart_product_list_item_tile.dart';
+import 'package:aker_foods_retail/presentation/widgets/in_stock_product_list_tile.dart';
 import 'package:aker_foods_retail/presentation/widgets/circular_loader_widget.dart';
 import 'package:aker_foods_retail/presentation/widgets/coupon_promo_code_widget.dart';
 import 'package:flutter/material.dart';
@@ -111,7 +111,7 @@ class _CartPageState extends State<CartPage> {
           vertical: LayoutConstants.dimen_8.h,
         ),
         itemCount: cartProducts?.length ?? 0,
-        itemBuilder: (context, index) => CartProductListItemTile(
+        itemBuilder: (context, index) => InStockProductListTile(
           cartProduct: cartProducts[index],
         ),
       );

@@ -10,7 +10,8 @@ import 'package:aker_foods_retail/presentation/common_blocs/products_bloc/produc
 import 'package:aker_foods_retail/presentation/common_blocs/products_bloc/products_event.dart';
 import 'package:aker_foods_retail/presentation/common_blocs/products_bloc/products_state.dart';
 import 'package:aker_foods_retail/presentation/theme/app_colors.dart';
-import 'package:aker_foods_retail/presentation/widgets/product_grid_item_tile.dart';
+import 'package:aker_foods_retail/presentation/widgets/in_stock_product_grid_tile.dart';
+import 'package:aker_foods_retail/presentation/widgets/out_of_stock_product_grid_tile.dart';
 import 'package:aker_foods_retail/presentation/widgets/products_category_header.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -26,9 +27,16 @@ class SearchPageState extends State<SearchPage> {
   TextEditingController _searchFieldController;
 
   ProductsBloc productsBloc;
+  Map<int, int> productIdCountMap;
 
   List<ProductCategoryEntity> categories;
   List<ProductEntity> products;
+
+  void _initialiseProductIdCountMap() {
+    final cartState = BlocProvider.of<CartBloc>(context).state;
+    productIdCountMap =
+        cartState is CartLoadedState ? cartState.productIdCountMap : Map();
+  }
 
   @override
   void initState() {
@@ -62,10 +70,12 @@ class SearchPageState extends State<SearchPage> {
     } else if (state is SearchPageProductsLoadedState) {
       categories = state.categories;
       products = state.products;
+      _initialiseProductIdCountMap();
       return _buildProductsSliverList(context);
     } else if (state is ProductsSearchSuccessState) {
       categories = [];
       products = state.products;
+      _initialiseProductIdCountMap();
       return _buildProductsGrid(context);
     }
     return Container(
@@ -203,7 +213,7 @@ class SearchPageState extends State<SearchPage> {
         sliver: SliverGrid(
           gridDelegate: _productsGridDelegate(),
           delegate: SliverChildBuilderDelegate(
-            (context, index) => _productGridItemTile(categoryProducts[index]),
+            (context, index) => _productGridTile(categoryProducts[index]),
             childCount: categoryProducts.length,
           ),
         ),
@@ -242,7 +252,7 @@ class SearchPageState extends State<SearchPage> {
         ),
         itemCount: products.length,
         gridDelegate: _productsGridDelegate(),
-        itemBuilder: (context, index) => _productGridItemTile(products[index]),
+        itemBuilder: (context, index) => _productGridTile(products[index]),
       );
 
   // ======================================================================
@@ -255,16 +265,13 @@ class SearchPageState extends State<SearchPage> {
         crossAxisSpacing: LayoutConstants.dimen_8.w,
       );
 
-  ProductGridItemTile _productGridItemTile(ProductEntity product) {
-    final cartState = BlocProvider.of<CartBloc>(context).state;
-    int productQuantityAlreadyPresentInCart = 0;
-    if (cartState is CartLoadedState) {
-      productQuantityAlreadyPresentInCart =
-          cartState.productIdCountMap[product.id] ?? 0;
-    }
-    return ProductGridItemTile(
-      product: product,
-      productQuantityCountInCart: productQuantityAlreadyPresentInCart,
-    );
-  }
+  Widget _productGridTile(ProductEntity product) => product?.isInStock == true
+      ? InStockProductGridTile(
+          product: product,
+          productQuantityCountInCart: productIdCountMap[product.id] ?? 0,
+        )
+      : OutOfStockProductGridTile(
+          product: product,
+          onPressedNotify: () => {},
+        );
 }

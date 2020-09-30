@@ -1,3 +1,4 @@
+import 'package:aker_foods_retail/common/constants/app_constants.dart';
 import 'package:aker_foods_retail/domain/entities/banner_data_entity.dart';
 import 'package:aker_foods_retail/domain/entities/product_category_entity.dart';
 import 'package:aker_foods_retail/domain/entities/product_entity.dart';
@@ -58,8 +59,10 @@ class BannerBloc extends Bloc<BannerEvent, BannerState> {
     final Map<int, List<ProductEntity>> categoryProductsMap = Map();
     for (final id in ids) {
       try {
-        final products =
-            await productsUseCase.getProductsForCategory(categoryId: id);
+        final products = await productsUseCase.getProductsForCategory(
+          categoryId: id,
+          pageSize: AppConstants.apiDefaultPageSize,
+        );
         if (products?.isNotEmpty == true) {
           categories.add(products[0].category);
           categoryProductsMap[products[0].categoryId] = products;
@@ -79,8 +82,10 @@ class BannerBloc extends Bloc<BannerEvent, BannerState> {
     final Map<int, List<ProductEntity>> subcategoryProductsMap = Map();
     for (final id in ids) {
       try {
-        final products =
-            await productsUseCase.getProductsForSubcategory(subcategoryId: id);
+        final products = await productsUseCase.getProductsForSubcategory(
+          subcategoryId: id,
+          pageSize: AppConstants.apiDefaultPageSize,
+        );
         if (products?.isNotEmpty == true) {
           subcategories.add(products[0].subcategory);
           subcategoryProductsMap[products[0].subcategoryId] = products;
