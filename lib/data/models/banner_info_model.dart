@@ -1,8 +1,7 @@
-import 'package:aker_foods_retail/domain/entities/banner_actions_entity.dart';
-import 'package:aker_foods_retail/domain/entities/banner_info_entity.dart';
+import 'package:aker_foods_retail/domain/entities/banner_data_entity.dart';
 
-class BannerInfoModel extends BannerInfoEntity {
-  BannerInfoModel({
+class BannerDataModel extends BannerDataEntity {
+  BannerDataModel({
     String imageUrl,
     BannerActionModel action,
   }) : super(
@@ -10,17 +9,19 @@ class BannerInfoModel extends BannerInfoEntity {
           action: action,
         );
 
-  static List<BannerInfoModel> fromListJson(Map<String, dynamic> jsonMap) {
+  static List<BannerDataModel> fromListJson(Map<String, dynamic> jsonMap) {
     final List<dynamic> bannerList = jsonMap['banners'];
     final list = bannerList
-        .map((bannerMap) => BannerInfoModel.fromJson(bannerMap))
+        .map((bannerMap) => BannerDataModel.fromJson(bannerMap))
         .toList();
     return list;
   }
 
-  factory BannerInfoModel.fromJson(Map<String, dynamic> json) =>
-      BannerInfoModel(
-          imageUrl: json['url'], action: BannerActionModel.fromJson(json));
+  factory BannerDataModel.fromJson(Map<String, dynamic> json) =>
+      BannerDataModel(
+        imageUrl: json['url'],
+        action: BannerActionModel.fromJson(json['actions']),
+      );
 }
 
 class BannerActionModel extends BannerActionEntity {
@@ -33,5 +34,8 @@ class BannerActionModel extends BannerActionEntity {
         );
 
   factory BannerActionModel.fromJson(Map<String, dynamic> json) =>
-      BannerActionModel(type: json['id'], ids: json['ids']);
+      BannerActionModel(
+        type: json['type'],
+        ids: json['ids'].cast<int>(),
+      );
 }

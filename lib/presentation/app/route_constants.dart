@@ -20,4 +20,6 @@ class RouteConstants {
 
   static const notificationsList = '/notifications-list';
   static const referral = '/referral';
+
+  static const bannerDetails = '/banner-details';
 }

@@ -4,6 +4,7 @@ class AppConstants {
   static const phoneNumberLength = 10;
   static const productsGridCrossAxisCount = 2;
   static const searchMinTextLength = 3;
+  static const apiDefaultPageSize = 10;
 
   static const mapZoomLevel = 14.0;
 

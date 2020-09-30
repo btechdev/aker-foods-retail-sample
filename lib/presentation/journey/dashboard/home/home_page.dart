@@ -8,7 +8,7 @@ import 'package:aker_foods_retail/presentation/app/route_constants.dart';
 import 'package:aker_foods_retail/presentation/common_blocs/products_bloc/products_bloc.dart';
 import 'package:aker_foods_retail/presentation/common_blocs/products_bloc/products_event.dart';
 import 'package:aker_foods_retail/presentation/common_blocs/products_bloc/products_state.dart';
-import 'package:aker_foods_retail/presentation/journey/dashboard/home/aker_banner_widget.dart';
+import 'package:aker_foods_retail/presentation/journey/dashboard/home/banner/aker_banner_widget.dart';
 import 'package:aker_foods_retail/presentation/journey/user/address/change_address_mode_selection_bottom_sheet.dart';
 import 'package:aker_foods_retail/presentation/theme/app_colors.dart';
 import 'package:aker_foods_retail/presentation/widgets/product_grid_item_tile.dart';
@@ -116,7 +116,7 @@ class HomePageState extends State<HomePage> {
           SliverList(
             delegate: SliverChildListDelegate([
               SizedBox(height: LayoutConstants.dimen_12.h),
-              const AkerBanner(),
+              AkerBanner(),
               _categoriesCard(state),
               SizedBox(height: LayoutConstants.dimen_12.h),
             ]),

@@ -16,5 +16,8 @@ class DiscountEntity {
   double value;
   bool isPercentage;
 
-  DiscountEntity({this.value, this.isPercentage});
+  DiscountEntity({
+    this.value,
+    this.isPercentage,
+  });
 }

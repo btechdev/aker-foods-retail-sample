@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:aker_foods_retail/common/utils/database_utils.dart';
-import 'package:aker_foods_retail/config/app_update_config.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -30,10 +29,9 @@ Future<void> main() async {
   final localPreferences = Injector.resolve<LocalPreferences>();
   await localPreferences.init();
 
-  final appUpdateConfig = Injector.resolve<AppUpdateConfig>();
+  /*final appUpdateConfig = Injector.resolve<AppUpdateConfig>();
   await appUpdateConfig.getAppUpdateInfo();
-  final model = appUpdateConfig.getAppUpdateInfoFromLocal();
-//  debugPrint('$model');
+  final model = appUpdateConfig.getAppUpdateInfoFromLocal();*/
 
   // Enable Crashlytics based on environment and
   // Pass all uncaught errors from the framework to Crashlytics.

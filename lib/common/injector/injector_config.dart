@@ -50,7 +50,7 @@ import 'package:aker_foods_retail/presentation/common_blocs/products_bloc/produc
 import 'package:aker_foods_retail/presentation/common_blocs/snack_bar_bloc/snack_bar_bloc.dart';
 import 'package:aker_foods_retail/presentation/journey/checkout/order_cart/coupons_bloc/coupons_bloc.dart';
 import 'package:aker_foods_retail/presentation/journey/dashboard/bloc/dashboard_bloc.dart';
-import 'package:aker_foods_retail/presentation/journey/dashboard/home/bloc/banner_bloc.dart';
+import 'package:aker_foods_retail/presentation/journey/dashboard/home/banner/banner_bloc/banner_bloc.dart';
 import 'package:aker_foods_retail/presentation/journey/dashboard/home/notification/bloc/notification_bloc.dart';
 import 'package:aker_foods_retail/presentation/journey/orders/bloc/user_order_bloc.dart';
 import 'package:aker_foods_retail/presentation/journey/user/address/change_address/bloc/change_address_bloc.dart';

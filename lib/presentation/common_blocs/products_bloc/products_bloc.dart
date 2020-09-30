@@ -39,8 +39,14 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
 
   Stream<ProductsState> _handleProductForCategoriesEvent() async* {
     final Map<int, List<ProductEntity>> productsMap = {};
-    final list = await Future.wait(_categories.map((category) =>
-        productsUseCase.getProductsForCategories(category.id, 4)));
+    final list = await Future.wait(
+      _categories.map(
+        (category) => productsUseCase.getProductsForCategory(
+          categoryId: category.id,
+          pageSize: 4,
+        ),
+      ),
+    );
 
     for (var i = 0; i < _categories.length; i++) {
       productsMap[_categories[i].id] = list[i];

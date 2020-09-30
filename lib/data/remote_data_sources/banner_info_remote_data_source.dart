@@ -7,8 +7,8 @@ class BannerInfoRemoteDataSource {
 
   BannerInfoRemoteDataSource({this.apiClient});
 
-  Future<List<BannerInfoModel>> getBanners() async {
+  Future<List<BannerDataModel>> getBanners() async {
     final response = await apiClient.get(ApiEndpoints.dashboard);
-    return BannerInfoModel.fromListJson(response);
+    return BannerDataModel.fromListJson(response);
   }
 }

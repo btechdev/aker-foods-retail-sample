@@ -8,6 +8,11 @@ abstract class ProductsRepository {
 
   Future<List<ProductEntity>> searchProducts(String searchText);
 
-  Future<List<ProductEntity>> getProductsForCategories(
-      int cid, int pageSize);
+  Future<List<ProductEntity>> getProductsForCategory(
+      int categoryId, int pageSize);
+
+  Future<List<ProductEntity>> getProductsForSubcategory(
+      int subcategoryId, int pageSize);
+
+  Future<ProductEntity> getProductWithId(int productId);
 }
