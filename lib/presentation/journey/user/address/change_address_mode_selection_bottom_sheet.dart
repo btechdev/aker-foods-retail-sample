@@ -35,34 +35,43 @@ class ChangeAddressModeSelectionBottomSheetState
   Widget build(BuildContext context) => BlocProvider<ChangeAddressBloc>(
         create: (context) => changeAddressBloc,
         child: DraggableScrollableSheet(
-          expand: false,
-          maxChildSize: savedAddresses?.isNotEmpty == true ? 0.85 : 0.45,
-          initialChildSize: 0.45,
-          builder: (context, controller) =>
-              BlocBuilder<ChangeAddressBloc, ChangeAddressState>(
-            builder: (context, state) => ChangeAddressScreen(
-              scrollController: controller,
-              savedAddresses: savedAddresses.isEmpty
-                  ? _getAddresses(state)
-                  : savedAddresses,
-              onSearchTapped: _showGooglePlacesApiScreen,
-              currentAddress: _getCurrentAddress(state),
-              onSelectAddress: (address) {
-                changeAddressBloc
-                    .add(SelectCurrentAddressEvent(selectedAddress: address));
-                widget.onAddressChange(address);
-              },
-              onAddressTypeSelection: _navigateToConfirmLocationOnMapScreen,
-            ),
-          ),
-        ),
+            expand: false,
+            maxChildSize: savedAddresses?.isNotEmpty == true ? 1.0 : 0.45,
+            initialChildSize: 0.45,
+            builder: (context, controller) {
+              controller.addListener(() {
+                if (controller.position.maxScrollExtent ==
+                    controller.position.pixels) {
+                  changeAddressBloc.add(FetchAddressesEvent());
+                }
+              });
+              return BlocBuilder<ChangeAddressBloc, ChangeAddressState>(
+                builder: (context, state) => ChangeAddressScreen(
+                  scrollController: controller,
+                  savedAddresses: savedAddresses.isEmpty
+                      ? _getAddresses(state)
+                      : savedAddresses,
+                  onSearchTapped: _showGooglePlacesApiScreen,
+                  currentAddress: _getCurrentAddress(state),
+                  onSelectAddress: (address) {
+                    changeAddressBloc.add(
+                        SelectCurrentAddressEvent(selectedAddress: address));
+                    widget.onAddressChange(address);
+                  },
+                  onAddressTypeSelection: _navigateToConfirmLocationOnMapScreen,
+                ),
+              );
+            }),
       );
 
   List<AddressModel> _getAddresses(ChangeAddressState state) {
-    if (state is FetchAddressSuccessfulState) {
+    if (state is FetchAddressSuccessfulState ||
+        state is FetchAddressPaginationFailedState) {
       changeAddressBloc.add(FetchCurrentAddressEvent());
       savedAddresses = state.addresses;
       return state.addresses;
+    } else if (state is FetchSelectedAddressSuccessState) {
+      return savedAddresses;
     } else {
       return [];
     }

@@ -9,6 +9,7 @@ import 'package:aker_foods_retail/presentation/journey/wallet/bloc/user_transact
 import 'package:aker_foods_retail/presentation/journey/wallet/bloc/user_transaction_event.dart';
 import 'package:aker_foods_retail/presentation/journey/wallet/bloc/user_transaction_state.dart';
 import 'package:aker_foods_retail/presentation/theme/app_colors.dart';
+import 'package:aker_foods_retail/presentation/widgets/circular_loader_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -16,6 +17,7 @@ import '../../../common/extensions/pixel_dimension_util_extensions.dart';
 
 class WalletTransactionsScreen extends StatefulWidget {
   final double currentWalletBalance;
+
   WalletTransactionsScreen({this.currentWalletBalance});
 
   @override
@@ -25,17 +27,30 @@ class WalletTransactionsScreen extends StatefulWidget {
 
 class _WalletTransactionsScreenState extends State<WalletTransactionsScreen> {
   UserTransactionBloc userTransactionBloc;
-  bool isLoading = false;
+  bool _isLoading = false;
+  final _scrollController = ScrollController();
+
+  void _scrollControllerListener() {
+    final scrollPosition = _scrollController.position;
+    if (scrollPosition.maxScrollExtent == scrollPosition.pixels &&
+        !_isLoading) {
+      _isLoading = !_isLoading;
+      userTransactionBloc.add(FetchUserTransactionsEvent());
+    }
+  }
+
 
   @override
   void initState() {
     super.initState();
+    _scrollController.addListener(_scrollControllerListener);
     userTransactionBloc = Injector.resolve<UserTransactionBloc>()
       ..add(FetchUserTransactionsEvent());
   }
 
   @override
   void dispose() {
+    userTransactionBloc?.close();
     super.dispose();
   }
 
@@ -89,6 +104,7 @@ class _WalletTransactionsScreenState extends State<WalletTransactionsScreen> {
 
   Container _getBodyContainer(
       BuildContext context, UserTransactionState state) {
+    _isLoading = false;
     return Container(
       child: Column(
         children: <Widget>[
@@ -155,39 +171,38 @@ class _WalletTransactionsScreenState extends State<WalletTransactionsScreen> {
             SizedBox(height: LayoutConstants.dimen_16.h),
             Flexible(
               fit: FlexFit.loose,
-              child: (state is TransactionFetchSuccessfulState)
-                  ? _getListView(state)
-                  : Container(),
+              child: _getListViewContainer(state),
             ),
           ],
         ),
       );
+  
+  Widget _getListViewContainer(UserTransactionState state) {
+    if (state is TransactionFetchingState) {
+      return const CircularLoaderWidget();
+    }
+    
+    _isLoading = false;
+    if (state is TransactionFetchSuccessfulState ||
+        state is TransactionPaginationFailedState) {
+      return _getListView(state);
+    } else {
+      return Container();
+    }
+  }
 
-  ListView _getListView(TransactionFetchSuccessfulState state) {
-    final _scrollController = ScrollController();
-    _scrollController.addListener(() {
-      if (_scrollController.position.maxScrollExtent ==
-          _scrollController.position.pixels) {
-        if (!isLoading) {
-          isLoading = !isLoading;
-          debugPrint('get next page');
-        }
-      }
-    });
-
-    return ListView.builder(
+  ListView _getListView(UserTransactionState state) => ListView.builder(
+      controller: _scrollController,
       itemCount: state.transactions.length,
       shrinkWrap: true,
-      itemBuilder: (context, index) =>
-          Container(
-            height: LayoutConstants.dimen_130.h,
-            padding: EdgeInsets.symmetric(
-              vertical: LayoutConstants.dimen_12.h,
-            ),
-            child: _getDetailsContainer(state.transactions[index]),
-          ),
+      itemBuilder: (context, index) => Container(
+        height: LayoutConstants.dimen_130.h,
+        padding: EdgeInsets.symmetric(
+          vertical: LayoutConstants.dimen_12.h,
+        ),
+        child: _getDetailsContainer(state.transactions[index]),
+      ),
     );
-  }
 
   Container _getDetailsContainer(TransactionEntity item) => Container(
         padding: EdgeInsets.all(LayoutConstants.dimen_16.w),

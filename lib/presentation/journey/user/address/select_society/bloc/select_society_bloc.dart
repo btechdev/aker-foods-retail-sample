@@ -1,3 +1,4 @@
+import 'package:aker_foods_retail/domain/entities/society_entity.dart';
 import 'package:aker_foods_retail/domain/usecases/user_address_use_case.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -5,7 +6,13 @@ import 'select_society_event.dart';
 import 'select_society_state.dart';
 
 class SelectSocietyBloc extends Bloc<SelectSocietyEvent, SelectSocietyState> {
+  // TODO(Bhushan): Handle general pagination & search societies pagination
+  static const pageSize = 1000;
+
   final UserAddressUseCase userAddressUseCase;
+
+  final List<SocietyEntity> _societies = [];
+  final int _currentPage = 1;
 
   SelectSocietyBloc({this.userAddressUseCase}) : super(EmptyState());
 
@@ -13,24 +20,24 @@ class SelectSocietyBloc extends Bloc<SelectSocietyEvent, SelectSocietyState> {
   Stream<SelectSocietyState> mapEventToState(SelectSocietyEvent event) async* {
     if (event is FetchSocietiesFirstPageEvent) {
       yield* _handleFetchSocietiesFirstPageEvent();
-    } else if (event is SearchSocitiesEvent) {
-      yield* _handleSearchSocitiesEvent(event);
-    } else if (event is SearchSocitiesCancelEvent) {
+    } else if (event is SearchSocietiesEvent) {
+      yield* _handleSearchSocietiesEvent(event);
+    } else if (event is SearchSocietiesCancelEvent) {
       yield* _handleFetchSocietiesFirstPageEvent();
     }
   }
 
   Stream<SelectSocietyState> _handleFetchSocietiesFirstPageEvent() async* {
     yield FetchingSocietiesState();
-    final societies = await userAddressUseCase.getSocieties();
-    yield SocietiesLoadedState(societies: societies);
+    await _fetchSocieties();
+    yield SocietiesLoadedState(societies: _societies);
   }
 
-  Stream<SelectSocietyState> _handleSearchSocitiesEvent(
-      SearchSocitiesEvent event) async* {
+  Stream<SelectSocietyState> _handleSearchSocietiesEvent(
+      SearchSocietiesEvent event) async* {
     yield SearchingSocietiesState();
-    final societies = await userAddressUseCase.getSocieties();
-    final filteredSocieties = societies
+    await _fetchSocieties();
+    final filteredSocieties = _societies
         .where((society) => society.name
             .toLowerCase()
             .contains(event.searchKeyword.toLowerCase()))
@@ -38,5 +45,13 @@ class SelectSocietyBloc extends Bloc<SelectSocietyEvent, SelectSocietyState> {
     yield filteredSocieties.isEmpty
         ? SocitiesSearchFailedState()
         : SocitiesSearchSuccessState(societies: filteredSocieties);
+  }
+
+  Future<void> _fetchSocieties() async {
+    if (_societies?.isEmpty == true) {
+      final response =
+          await userAddressUseCase.getSocieties(_currentPage, pageSize);
+      _societies.addAll(response.data);
+    }
   }
 }

@@ -1,4 +1,5 @@
 import 'package:aker_foods_retail/common/exceptions/server_error_exception.dart';
+import 'package:aker_foods_retail/data/models/address_model.dart';
 import 'package:aker_foods_retail/domain/usecases/user_address_use_case.dart';
 import 'package:aker_foods_retail/presentation/journey/user/address/change_address/bloc/change_address_event.dart';
 import 'package:aker_foods_retail/presentation/journey/user/address/change_address/bloc/change_address_state.dart';
@@ -6,7 +7,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ChangeAddressBloc extends Bloc<ChangeAddressEvent, ChangeAddressState> {
+  static const pageSize = 10;
+
   final UserAddressUseCase userAddressUseCase;
+  final List<AddressModel> _addresses = [];
+
+  bool _isLastPageFetched = false;
+  int _currentPage = 1;
+  String _next;
 
   ChangeAddressBloc({this.userAddressUseCase}) : super(EmptyState());
 
@@ -22,29 +30,38 @@ class ChangeAddressBloc extends Bloc<ChangeAddressEvent, ChangeAddressState> {
   }
 
   Stream<ChangeAddressState> _handleFetchAddressEvent() async* {
-    yield FetchingAddressState();
+    if (_isLastPageFetched) {
+      return;
+    }
+
+    if (_next == null) {
+      yield FetchingAddressState();
+    }
+
     try {
-      final addresses = await userAddressUseCase.getAddresses();
-      yield FetchAddressSuccessfulState(addresses: addresses);
-    } catch (error) {
-      if (error is ServerErrorException) {
-        yield FetchAddressFailedState(errorMessage: error.message);
-      }
+      final response =
+          await userAddressUseCase.getAddresses(_currentPage, pageSize);
+      _addresses.addAll(response.data);
+      _next = response.next;
+      _currentPage++;
+      _isLastPageFetched = _next == null;
+      yield FetchAddressSuccessfulState(addresses: _addresses);
+    } catch (e) {
+      yield FetchAddressPaginationFailedState(addresses: _addresses);
     }
   }
 
   Stream<ChangeAddressState> _handleSelectCurrentAddressEvent(
       SelectCurrentAddressEvent event) async* {
     final status =
-    await userAddressUseCase.setSelectedAddress(event.selectedAddress);
+        await userAddressUseCase.setSelectedAddress(event.selectedAddress);
     if (status) {
       try {
         final address = await userAddressUseCase.getSelectedAddress();
         yield address == null
             ? FetchSelectedAddressFailedState()
             : FetchSelectedAddressSuccessState(addressModel: address);
-
-      } catch(error) {
+      } catch (error) {
         yield FetchSelectedAddressFailedState();
       }
     } else {
@@ -59,11 +76,8 @@ class ChangeAddressBloc extends Bloc<ChangeAddressEvent, ChangeAddressState> {
       yield address == null
           ? FetchSelectedAddressFailedState()
           : FetchSelectedAddressSuccessState(addressModel: address);
-
-    } catch(error) {
-      debugPrint(error.toString());
+    } catch (error) {
       yield FetchSelectedAddressFailedState();
     }
   }
-
 }

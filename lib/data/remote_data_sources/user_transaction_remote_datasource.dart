@@ -9,9 +9,11 @@ class UserTransactionRemoteDataSource {
 
   UserTransactionRemoteDataSource({this.apiClient});
 
-  Future<List<TransactionModel>> getTransactions() async {
-    final jsonMap = await apiClient.get(ApiEndpoints.transactions);
-    return ApiResponse.fromJson<TransactionModel>(jsonMap).data;
+  Future<ApiResponse<TransactionModel>> getTransactions(
+      int pageNo, int pageSize) async {
+    final jsonMap = await apiClient
+        .get('${ApiEndpoints.transactions}?page=$pageNo&page_size=$pageSize');
+    return ApiResponse<TransactionModel>.fromJsonMap(jsonMap);
   }
 
   Future<List<CashOfferModel>> getCashOffers() async {

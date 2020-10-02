@@ -18,7 +18,7 @@ mixin ApiDataModelMixin<T> implements ApiDataModel<T> {
   List<T> fromListJson(List<Map<String, dynamic>> jsonArrayMap);
 }*/
 
-class ApiResponse {
+class ApiResponse<T> {
   final int count;
   final String next;
   final String previous;
@@ -33,6 +33,32 @@ class ApiResponse {
 
   // ignore: prefer_constructors_over_static_methods
   static ApiResponse fromJson<T>(Map<String, dynamic> jsonMap) {
+    final int count = jsonMap['count'];
+    final String next = jsonMap['next'];
+    final String previous = jsonMap['previous'];
+    dynamic data;
+    if (jsonMap.containsKey('results')) {
+      final List<dynamic> mapList = jsonMap['results'];
+      data = ApiResponseParser.listFromJson<T>(mapList);
+    } else if (jsonMap.containsKey('result')) {
+      final Map<String, dynamic> map = jsonMap['result'];
+      data = ApiResponseParser.objectFromJson<T>(map);
+    } else {
+      throw JsonParsingException(
+        message: 'Json parsing for ${T.runtimeType} '
+            'has failed as no payload with key '
+            '\'results\' or \'result\' found',
+      );
+    }
+    return ApiResponse(
+      count: count,
+      next: next,
+      previous: previous,
+      data: data,
+    );
+  }
+
+  factory ApiResponse.fromJsonMap(Map<String, dynamic> jsonMap) {
     final int count = jsonMap['count'];
     final String next = jsonMap['next'];
     final String previous = jsonMap['previous'];

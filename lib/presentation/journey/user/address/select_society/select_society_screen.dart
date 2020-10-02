@@ -51,13 +51,13 @@ class SelectSocietyScreenState extends State<SelectSocietyScreen> {
 
   void _clearSearchTextField() {
     _searchFieldController.clear();
-    selectSocietyBloc.add(SearchSocitiesCancelEvent());
+    selectSocietyBloc.add(SearchSocietiesCancelEvent());
   }
 
   void _searchTextChanged(String text) {
     if (_searchFieldController.text.trim().isNotEmpty &&
         _searchFieldController.text.trim().length > 3) {
-      selectSocietyBloc.add(SearchSocitiesEvent(
+      selectSocietyBloc.add(SearchSocietiesEvent(
           searchKeyword: _searchFieldController.text.trim()));
     } else if (_searchFieldController.text.trim().isEmpty) {
       selectSocietyBloc.add(FetchSocietiesFirstPageEvent());

@@ -2,10 +2,10 @@ abstract class SelectSocietyEvent {}
 
 class FetchSocietiesFirstPageEvent extends SelectSocietyEvent {}
 
-class SearchSocitiesEvent extends SelectSocietyEvent {
+class SearchSocietiesEvent extends SelectSocietyEvent {
   final String searchKeyword;
 
-  SearchSocitiesEvent({this.searchKeyword});
+  SearchSocietiesEvent({this.searchKeyword});
 }
 
-class SearchSocitiesCancelEvent extends SelectSocietyEvent {}
+class SearchSocietiesCancelEvent extends SelectSocietyEvent {}

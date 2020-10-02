@@ -8,8 +8,10 @@ class UserOrderRemoteDataSource {
 
   UserOrderRemoteDataSource({this.apiClient});
 
-  Future<List<OrderModel>> getOrders() async {
-    final jsonMap = await apiClient.get(ApiEndpoints.orderHistory);
-    return ApiResponse.fromJson<OrderModel>(jsonMap).data;
+  Future<ApiResponse<OrderModel>> getOrders(
+      int pageNo, int pageSize) async {
+    final jsonMap = await apiClient
+        .get('${ApiEndpoints.orderHistory}?page=$pageNo&page_size=$pageSize');
+    return ApiResponse<OrderModel>.fromJsonMap(jsonMap);
   }
 }

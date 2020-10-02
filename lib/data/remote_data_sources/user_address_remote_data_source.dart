@@ -10,9 +10,11 @@ class UserAddressRemoteDataSource {
 
   UserAddressRemoteDataSource({this.apiClient});
 
-  Future<List<SocietyModel>> getSocieties() async {
-    final jsonMap = await apiClient.get(ApiEndpoints.societies);
-    return ApiResponse.fromJson<SocietyModel>(jsonMap).data;
+  Future<ApiResponse<SocietyModel>> getSocieties(
+      int pageNo, int pageSize) async {
+    final jsonMap = await apiClient
+        .get('${ApiEndpoints.societies}?page=$pageNo&page_size=$pageSize');
+    return ApiResponse<SocietyModel>.fromJsonMap(jsonMap);
   }
 
   Future<void> createNewAddress(AddressModel address) async {
@@ -27,8 +29,10 @@ class UserAddressRemoteDataSource {
     }
   }
 
-  Future<List<AddressModel>> getUserAddresses() async {
-    final jsonMap = await apiClient.get(ApiEndpoints.newAddress);
-    return ApiResponse.fromJson<AddressModel>(jsonMap).data;
+  Future<ApiResponse<AddressModel>> getUserAddresses(
+      int pageNo, int pageSize) async {
+    final jsonMap = await apiClient
+        .get('${ApiEndpoints.newAddress}?page=$pageNo&page_size=$pageSize');
+    return ApiResponse<AddressModel>.fromJsonMap(jsonMap);
   }
 }
