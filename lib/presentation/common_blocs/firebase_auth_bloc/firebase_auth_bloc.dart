@@ -21,6 +21,7 @@ class FirebaseAuthBloc extends Bloc<FirebaseAuthEvent, FirebaseAuthState> {
 
   @override
   Stream<FirebaseAuthState> mapEventToState(FirebaseAuthEvent event) async* {
+    debugPrint('$event');
     switch (event.runtimeType) {
       case VerifyPhoneNumberEvent:
         yield* mapVerifyPhoneNumberEvent(event);
@@ -76,10 +77,12 @@ class FirebaseAuthBloc extends Bloc<FirebaseAuthEvent, FirebaseAuthState> {
 
   Stream<FirebaseAuthState> mapAuthenticateWithSmsCodeEvent(
       AuthenticateWithSmsCodeEvent event) async* {
+    debugPrint('event-bloc');
     try {
       final authCredential = PhoneAuthProvider.credential(
           smsCode: event.smsCode, verificationId: _verificationId);
       final user = await signInWithAuthCredential(authCredential);
+      debugPrint('$user');
       await authUseCase.saveUserAuthentication(user);
       yield OtpVerificationSuccessState(user: user);
 

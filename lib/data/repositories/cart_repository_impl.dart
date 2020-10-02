@@ -9,6 +9,7 @@ import 'package:aker_foods_retail/data/models/pre_checkout_body_model.dart';
 import 'package:aker_foods_retail/data/models/product_model.dart';
 import 'package:aker_foods_retail/data/remote_data_sources/cart_remote_data_source.dart';
 import 'package:aker_foods_retail/domain/repositories/cart_repository.dart';
+import 'package:flutter/cupertino.dart';
 
 class CartRepositoryImpl extends CartRepository {
   final CartRemoteDataSource cartRemoteDataSource;
@@ -78,5 +79,11 @@ class CartRepositoryImpl extends CartRepository {
   Future<CartModel> saveCart(CartModel cartModel) async {
     await cartLocalDataSource.insertOrUpdateData(cartModel);
     return cartModel;
+  }
+
+  @override
+  Future<void> clearCart() async {
+    debugPrint('Here-2');
+    await cartLocalDataSource.deleteAll();
   }
 }

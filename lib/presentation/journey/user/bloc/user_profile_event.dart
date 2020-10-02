@@ -15,3 +15,5 @@ class SetupUserProfileEvent extends UserProfileEvent {
 
   SetupUserProfileEvent({this.user});
 }
+
+class LogoutUserEvent extends UserProfileEvent {}

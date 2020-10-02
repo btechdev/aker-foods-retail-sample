@@ -21,8 +21,9 @@ class _$InjectorConfig extends InjectorConfig {
         productsUseCase: c<ProductsUseCase>()));
     container.registerFactory(
         (c) => SelectSocietyBloc(userAddressUseCase: c<UserAddressUseCase>()));
-    container.registerFactory(
-        (c) => UserProfileBloc(userProfileUseCase: c<UserProfileUseCase>()));
+    container.registerFactory((c) => UserProfileBloc(
+        userProfileUseCase: c<UserProfileUseCase>(),
+        cartUseCase: c<CartUseCase>()));
     container.registerFactory((c) =>
         EnterNewAddressBloc(userAddressUseCase: c<UserAddressUseCase>()));
     container.registerFactory(
@@ -76,7 +77,8 @@ class _$InjectorConfig extends InjectorConfig {
             userAddressLocalDataSource: c<UserAddressLocalDataSource>()));
     container.registerFactory<UserProfileRepository>((c) =>
         UserProfileRepositoryImpl(
-            userProfileRemoteDataSource: c<UserProfileRemoteDataSource>()));
+            userProfileRemoteDataSource: c<UserProfileRemoteDataSource>(),
+            authenticationLocalDataSource: c<AuthenticationLocalDataSource>()));
     container.registerFactory<UserTransactionRepository>((c) =>
         UserTransactionRepositoryImpl(
             userTransactionRemoteDataSource:

@@ -47,4 +47,6 @@ class AuthenticationLocalDataSource {
   Future<bool> removeNewUserFlag() => localPreferences.remove(
         PreferencesKeys.userIsNew,
       );
+
+  Future<bool> clearLocalPreferences() => localPreferences.clear();
 }
