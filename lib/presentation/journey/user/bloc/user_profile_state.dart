@@ -39,8 +39,6 @@ class UserProfileFetchFailedState extends UserProfileState {
   UserProfileFetchFailedState({@required this.errorMessage});
 }
 
-class LoggingOutUserState extends UserProfileState {}
+class UserLoggingOutState extends UserProfileState {}
 
-class LogoutUserSuccessState extends UserProfileState {}
-
-class LogoutUserFailureState extends UserProfileState {}
+class UserLoggedOutState extends UserProfileState {}

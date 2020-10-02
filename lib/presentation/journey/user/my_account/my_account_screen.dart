@@ -26,9 +26,9 @@ class MyAccountScreen extends StatefulWidget {
 }
 
 class _MyAccountScreenState extends State<MyAccountScreen> {
-  // ignore: close_sinks
   UserProfileBloc userProfileBloc;
-  var currentBalance = 0.0;
+
+  double currentBalance = 0.0;
   ReferralEntity referralEntity;
 
   final options = [
@@ -60,46 +60,26 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
       ..add(FetchUserProfileEvent());
   }
 
+  void _userProfileBlocListener(BuildContext context, UserProfileState state) {
+    if (state is UserLoggedOutState) {
+      Navigator.of(context).pushNamedAndRemoveUntil(
+        RouteConstants.enterPhoneNumber,
+        (_) => false,
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) => BlocProvider<UserProfileBloc>(
         create: (context) => userProfileBloc,
         child: Scaffold(
           appBar: _getAppBar(context),
-          body: _wrapBlocBuilderWithListener(),
+          body: BlocListener<UserProfileBloc, UserProfileState>(
+            listener: _userProfileBlocListener,
+            child: _bodyWrappedWithBloc(),
+          ),
         ),
       );
-
-  BlocListener<UserProfileBloc, UserProfileState>
-      _wrapBlocBuilderWithListener() =>
-          BlocListener<UserProfileBloc, UserProfileState>(
-            listener: (context, state) {
-              if (state is LogoutUserSuccessState) {
-                Navigator.of(context).pushNamedAndRemoveUntil(
-                    RouteConstants.enterPhoneNumber,
-                    (_) => false);
-              }
-            },
-            child: _getUserProfileContainerWrappedWithBloc(),
-          );
-
-  BlocBuilder<UserProfileBloc, UserProfileState>
-      _getUserProfileContainerWrappedWithBloc() =>
-          BlocBuilder<UserProfileBloc, UserProfileState>(
-            builder: (context, state) {
-              if (state is UserProfileFetchSuccessState) {
-                currentBalance = state.user.currentBalance;
-                referralEntity = state.user.referral;
-              } else if (state is LoggingOutUserState) {
-                return const CircularLoaderWidget();
-              }
-              return Column(
-                children: [
-                  _getUserProfile(context, state),
-                  _getSettings(),
-                ],
-              );
-            },
-          );
 
   AppBar _getAppBar(BuildContext context) {
     return AppBar(
@@ -110,6 +90,25 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
       ),
     );
   }
+
+  Widget _bodyWrappedWithBloc() =>
+      BlocBuilder<UserProfileBloc, UserProfileState>(
+        builder: (context, state) {
+          if (state is UserLoggingOutState) {
+            return const CircularLoaderWidget();
+          }
+          if (state is UserProfileFetchSuccessState) {
+            currentBalance = state.user.currentBalance;
+            referralEntity = state.user.referral;
+          }
+          return Column(
+            children: [
+              _getUserProfile(context, state),
+              _getSettings(),
+            ],
+          );
+        },
+      );
 
   Widget _getUserInfoWidget(UserProfileState state) =>
       state is UserProfileFetchingState
@@ -289,12 +288,12 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
         );
         break;
       case 3:
-        logout();
+        _showConfirmLogoutDialog();
         break;
     }
   }
 
-  Future<void> logout() async => showDialog(
+  Future<void> _showConfirmLogoutDialog() async => showDialog(
         context: context,
         child: AlertDialog(
           title: Text(
@@ -307,15 +306,13 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
           ),
           actions: <Widget>[
             FlatButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
+              onPressed: () => Navigator.pop(context),
               child: Text('No', style: Theme.of(context).textTheme.bodyText1),
             ),
             FlatButton(
               onPressed: () {
-                userProfileBloc.add(LogoutUserEvent());
                 Navigator.pop(context);
+                userProfileBloc.add(LogoutUserEvent());
               },
               child: Text('Yes', style: Theme.of(context).textTheme.bodyText1),
             ),
