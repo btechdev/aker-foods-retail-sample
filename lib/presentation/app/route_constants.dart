@@ -22,4 +22,5 @@ class RouteConstants {
   static const referral = '/referral';
 
   static const bannerDetails = '/banner-details';
+  static const splash = '/splash';
 }

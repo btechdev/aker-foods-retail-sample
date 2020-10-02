@@ -1,4 +1,3 @@
-import 'package:aker_foods_retail/common/extensions/string_extensions.dart';
 import 'package:aker_foods_retail/common/local_preferences/local_preferences.dart';
 import 'package:aker_foods_retail/common/utils/pixel_dimension_util.dart';
 import 'package:aker_foods_retail/presentation/app/app_bloc_listeners.dart';
@@ -44,21 +43,6 @@ class App extends StatelessWidget {
         title: 'Aker Foods Retail',
         theme: AppTheme.defaultTheme(),
         routes: Routes.getAll(),
-        initialRoute: appInitialRoute,
+        initialRoute: RouteConstants.splash,
       );
-
-  String get appInitialRoute {
-    final String idToken =
-        localPreferences.get(PreferencesKeys.firebaseIdToken);
-    if (idToken.isNullOrEmpty) {
-      return RouteConstants.enterPhoneNumber;
-    }
-
-    final bool userIsNew = localPreferences.get(PreferencesKeys.userIsNew);
-    if (userIsNew) {
-      return RouteConstants.setupUserProfile;
-    }
-
-    return RouteConstants.dashboard;
-  }
 }

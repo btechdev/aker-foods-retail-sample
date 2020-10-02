@@ -24,6 +24,8 @@ dependencies:
   flutter_statusbarcolor: ^0.2.3 # To manage status bar color of device
   flutter_svg: ^0.18.1 # To render SVG
 
+  package_info: ^0.4.3 # To get the platform specific application details
+
   equatable: ^1.2.4 # To check the equality of objects
   kiwi: ^2.0.0 # For Dependency Injection
   pedantic: ^1.8.0 # Analysis
