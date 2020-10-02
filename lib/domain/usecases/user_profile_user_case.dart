@@ -14,4 +14,7 @@ class UserProfileUseCase {
 
   Future<void> updateUserProfile(UserProfileModel user) async =>
       userProfileRepository.updateUserProfile(user);
+
+  Future<bool> clearLocalPreferences() async =>
+      userProfileRepository.clearLocalPreferences();
 }

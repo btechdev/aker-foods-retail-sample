@@ -38,4 +38,6 @@ class LocalPreferences {
   dynamic get(String key) => sharedPreferences.get(key);
 
   Future<bool> remove(String key) => sharedPreferences.remove(key);
+
+  Future<bool> clear() => sharedPreferences.clear();
 }

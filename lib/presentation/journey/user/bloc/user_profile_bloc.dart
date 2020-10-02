@@ -1,14 +1,21 @@
 import 'package:aker_foods_retail/common/constants/app_constants.dart';
 import 'package:aker_foods_retail/common/exceptions/server_exception.dart';
+import 'package:aker_foods_retail/domain/usecases/cart_use_case.dart';
 import 'package:aker_foods_retail/domain/usecases/user_profile_user_case.dart';
 import 'package:aker_foods_retail/presentation/journey/user/bloc/user_profile_event.dart';
 import 'package:aker_foods_retail/presentation/journey/user/bloc/user_profile_state.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class UserProfileBloc extends Bloc<UserProfileEvent, UserProfileState> {
   final UserProfileUseCase userProfileUseCase;
+  final CartUseCase cartUseCase;
 
-  UserProfileBloc({this.userProfileUseCase}) : super(EmptyState());
+  UserProfileBloc({
+    this.userProfileUseCase,
+    this.cartUseCase,
+  }) : super(EmptyState());
 
   @override
   Stream<UserProfileState> mapEventToState(UserProfileEvent event) async* {
@@ -18,6 +25,8 @@ class UserProfileBloc extends Bloc<UserProfileEvent, UserProfileState> {
       yield* _handleSetupUserProfileEvent(event);
     } else if (event is UpdateUserProfileEvent) {
       yield* _handleUpdateUserProfileEvent(event);
+    } else if (event is LogoutUserEvent) {
+      yield* _handleLogoutUserEvent();
     }
   }
 
@@ -57,5 +66,23 @@ class UserProfileBloc extends Bloc<UserProfileEvent, UserProfileState> {
           e is ServerException ? e.message : AppConstants.unknownError;
       yield UserProfileUpdateFailedState(errorMessage: message);
     }
+  }
+
+  Stream<UserProfileState> _handleLogoutUserEvent() async* {
+    debugPrint('Handling logout user event');
+    try {
+      debugPrint('Logging out from Firebase');
+      await FirebaseAuth.instance.signOut();
+    } catch (_) {}
+
+    try {
+      yield UserLoggingOutState();
+      await cartUseCase.clearCart();
+      final result = await userProfileUseCase.clearLocalPreferences();
+      debugPrint('Logout user result: $result');
+    } catch (_) {}
+
+    debugPrint('Yielding UserLoggedOutState');
+    yield UserLoggedOutState();
   }
 }

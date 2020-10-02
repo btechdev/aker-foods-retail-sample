@@ -53,4 +53,6 @@ class CartUseCase {
 
   Future<List<CouponModel>> getCategories() async =>
       cartRepository.getCoupons();
+
+  Future<void> clearCart() async => cartRepository.clearCart();
 }

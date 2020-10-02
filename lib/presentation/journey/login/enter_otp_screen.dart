@@ -88,6 +88,7 @@ class _EnterOTPScreen extends State<EnterOtpScreen>
     if (_firstTime) {
       phoneNumber = ModalRoute.of(context).settings.arguments;
       debugPrint('EnterOtpScreen building with => $phoneNumber');
+      debugPrint('$_authBloc');
       _authBloc.add(VerifyPhoneNumberEvent(phoneNumber: phoneNumber));
       _firstTime = false;
     }

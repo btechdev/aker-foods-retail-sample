@@ -26,9 +26,9 @@ class MyAccountScreen extends StatefulWidget {
 }
 
 class _MyAccountScreenState extends State<MyAccountScreen> {
-  // ignore: close_sinks
   UserProfileBloc userProfileBloc;
-  var currentBalance = 0.0;
+
+  double currentBalance = 0.0;
   ReferralEntity referralEntity;
 
   final options = [
@@ -60,31 +60,26 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
       ..add(FetchUserProfileEvent());
   }
 
+  void _userProfileBlocListener(BuildContext context, UserProfileState state) {
+    if (state is UserLoggedOutState) {
+      Navigator.of(context).pushNamedAndRemoveUntil(
+        RouteConstants.enterPhoneNumber,
+        (_) => false,
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) => BlocProvider<UserProfileBloc>(
         create: (context) => userProfileBloc,
         child: Scaffold(
           appBar: _getAppBar(context),
-          body: _getUserProfileContainerWrappedWithBloc(),
+          body: BlocListener<UserProfileBloc, UserProfileState>(
+            listener: _userProfileBlocListener,
+            child: _bodyWrappedWithBloc(),
+          ),
         ),
       );
-
-  BlocBuilder<UserProfileBloc, UserProfileState>
-      _getUserProfileContainerWrappedWithBloc() =>
-          BlocBuilder<UserProfileBloc, UserProfileState>(
-            builder: (context, state) {
-              if (state is UserProfileFetchSuccessState) {
-                currentBalance = state.user.currentBalance;
-                referralEntity = state.user.referral;
-              }
-              return Column(
-                children: [
-                  _getUserProfile(context, state),
-                  _getSettings(),
-                ],
-              );
-            },
-          );
 
   AppBar _getAppBar(BuildContext context) {
     return AppBar(
@@ -95,6 +90,25 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
       ),
     );
   }
+
+  Widget _bodyWrappedWithBloc() =>
+      BlocBuilder<UserProfileBloc, UserProfileState>(
+        builder: (context, state) {
+          if (state is UserLoggingOutState) {
+            return const CircularLoaderWidget();
+          }
+          if (state is UserProfileFetchSuccessState) {
+            currentBalance = state.user.currentBalance;
+            referralEntity = state.user.referral;
+          }
+          return Column(
+            children: [
+              _getUserProfile(context, state),
+              _getSettings(),
+            ],
+          );
+        },
+      );
 
   Widget _getUserInfoWidget(UserProfileState state) =>
       state is UserProfileFetchingState
@@ -274,10 +288,37 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
         );
         break;
       case 3:
-        debugPrint('Logout');
+        _showConfirmLogoutDialog();
         break;
     }
   }
+
+  Future<void> _showConfirmLogoutDialog() async => showDialog(
+        context: context,
+        child: AlertDialog(
+          title: Text(
+            'Do you want to logout this application?',
+            style: Theme.of(context).textTheme.bodyText1,
+          ),
+          content: Text(
+            'We hate to see you leave',
+            style: Theme.of(context).textTheme.bodyText2,
+          ),
+          actions: <Widget>[
+            FlatButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text('No', style: Theme.of(context).textTheme.bodyText1),
+            ),
+            FlatButton(
+              onPressed: () {
+                Navigator.pop(context);
+                userProfileBloc.add(LogoutUserEvent());
+              },
+              child: Text('Yes', style: Theme.of(context).textTheme.bodyText1),
+            ),
+          ],
+        ),
+      );
 
   Container _getUserDetailsContainer(
       BuildContext context, UserProfileFetchSuccessState state) {
