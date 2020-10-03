@@ -91,6 +91,22 @@ class _SplashPageState extends State<SplashPage> {
         ),
       );
 
+// TODO(soham): Remove later button
+  RaisedButton _laterButton() =>
+      RaisedButton(
+        onPressed: () {
+          Navigator.pop(context);
+        _redirectToNextScreen();
+        },
+        child: Text(
+          'Later',
+          style: Theme.of(context).textTheme.button.copyWith(
+            color: AppColor.white,
+          ),
+        ),
+      );
+
+
   Future<void> _showForceUpdateDialog(
       ForceUpdateDataModel forceUpdateData) async {
     await showDialog(
@@ -108,6 +124,7 @@ class _SplashPageState extends State<SplashPage> {
           style: Theme.of(context).textTheme.subtitle2,
         ),
         actions: [
+          _laterButton(),
           _updateButton(forceUpdateData),
         ],
       ),

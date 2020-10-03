@@ -1,4 +1,5 @@
 import 'package:aker_foods_retail/data/models/order_model.dart';
+import 'package:aker_foods_retail/data/models/order_payment_reinitiate_response_model.dart';
 import 'package:aker_foods_retail/network/api/api_client.dart';
 import 'package:aker_foods_retail/network/api/api_endpoints.dart';
 import 'package:aker_foods_retail/network/api/api_response.dart';
@@ -13,5 +14,18 @@ class UserOrderRemoteDataSource {
     final jsonMap = await apiClient
         .get('${ApiEndpoints.orderHistory}?page=$pageNo&page_size=$pageSize');
     return ApiResponse<OrderModel>.fromJsonMap(jsonMap);
+  }
+
+  Future<OrderPaymentReinitiateResponseModel> reinitiatePaymentForOrder(
+      String orderId) async {
+    final response = await apiClient.post(
+        '${ApiEndpoints.createOrder}$orderId/intiate-transaction/', null);
+    return OrderPaymentReinitiateResponseModel.fromJson(response);
+  }
+
+  Future<bool> verifyTransactionForOrder(String orderId) async {
+    final response = await apiClient
+        .get('${ApiEndpoints.createOrder}$orderId/verify-transaction/');
+    return response['message'] == 'successfull';
   }
 }

@@ -1,6 +1,9 @@
 import 'package:aker_foods_retail/common/constants/layout_constants.dart';
+import 'package:aker_foods_retail/common/injector/injector.dart';
 import 'package:aker_foods_retail/common/utils/date_utils.dart';
 import 'package:aker_foods_retail/domain/entities/order_entity.dart';
+import 'package:aker_foods_retail/presentation/journey/orders/bloc/user_order_bloc.dart';
+import 'package:aker_foods_retail/presentation/journey/orders/bloc/user_order_event.dart';
 import 'package:aker_foods_retail/presentation/journey/orders/order_detail_items_list.dart';
 import 'package:aker_foods_retail/presentation/theme/app_colors.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +19,25 @@ class OrderDetailsScreen extends StatefulWidget {
 }
 
 class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
+  UserOrderBloc userOrderBloc;
+
   @override
+  void initState() {
+    super.initState();
+    userOrderBloc = Injector.resolve<UserOrderBloc>();
+  }
+
+  @override
+  void dispose() {
+    userOrderBloc?.close();
+    super.dispose();
+  }
+
+  void _handleCompletePayment() {
+    userOrderBloc
+        .add(ReinitiatePaymentForOrderEvent(orderId: widget.order.orderId));
+  }
+
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: _getAppBar(),
@@ -74,7 +95,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
             child: _getDeliveryDetailsContainerHeader('Delivery Address'),
           ),
           SizedBox(height: LayoutConstants.dimen_8.h),
-          _getDeliveryDetailsContainer(
+          _getDeliveryAddressContainer(
               '${widget.order.shippingAddressDetails.address1} ',
               widget.order.shippingAddressDetails.address2,
               '${widget.order.shippingAddressDetails.society.name}'),
@@ -129,6 +150,53 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
       );
 
   Column _getDeliveryDetailsContainerText(
+          String title, String subtitle, String extra) =>
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            title,
+            style: Theme.of(context).textTheme.subtitle2,
+          ),
+          SizedBox(height: LayoutConstants.dimen_12.h),
+          Text(
+            subtitle,
+            style: Theme.of(context).textTheme.subtitle2,
+          ),
+          SizedBox(height: LayoutConstants.dimen_12.h),
+          if (widget.order.status == 'FAILED')
+            Expanded(
+              child: SizedBox(
+                height: LayoutConstants.dimen_32.h,
+                child: RaisedButton(
+                  onPressed: _handleCompletePayment,
+                  child: Text(
+                    'Complete Payment',
+                    style: Theme.of(context)
+                        .textTheme
+                        .subtitle1
+                        .copyWith(color: AppColor.white),
+                  ),
+                ),
+              ),
+            ),
+          Container(),
+        ],
+      );
+
+  Container _getDeliveryAddressContainer(
+          String title, String subtitle, String extra) =>
+      Container(
+        margin: EdgeInsets.symmetric(horizontal: LayoutConstants.dimen_16.w),
+        padding: EdgeInsets.all(LayoutConstants.dimen_16.w),
+        height: LayoutConstants.dimen_120.h,
+        decoration: BoxDecoration(
+            color: AppColor.white,
+            borderRadius: BorderRadius.circular(LayoutConstants.dimen_12.w)),
+        child: _getDeliveryAddressContainerText(title, subtitle, extra),
+      );
+
+  Column _getDeliveryAddressContainerText(
           String title, String subtitle, String extra) =>
       Column(
         crossAxisAlignment: CrossAxisAlignment.start,

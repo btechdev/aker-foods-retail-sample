@@ -8,3 +8,13 @@ class FetchUserOrders extends UserOrderEvent {
 
   FetchUserOrders({this.pageNo, this.pageSize});
 }
+
+class ReinitiatePaymentForOrderEvent extends UserOrderEvent {
+  final String orderId;
+  ReinitiatePaymentForOrderEvent({this.orderId});
+}
+
+class VerifyOrderTransactionEvent extends UserOrderEvent{
+  final String orderId;
+  VerifyOrderTransactionEvent({this.orderId});
+}
