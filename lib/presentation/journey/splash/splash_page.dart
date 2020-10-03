@@ -42,13 +42,14 @@ class _SplashPageState extends State<SplashPage> {
         children: [
           Image.asset(
             'assets/images/splash_image.png',
-            height: PixelDimensionUtil.screenHeightDp,
-            width: PixelDimensionUtil.screenWidthDp,
+            width: PixelDimensionUtil.screenWidth,
+            height: PixelDimensionUtil.screenHeight,
+            fit: BoxFit.fill,
           ),
           Positioned(
-            bottom: LayoutConstants.dimen_32,
-            left: PixelDimensionUtil.screenWidthDp / 2 -
-                LayoutConstants.dimen_28.w,
+            top: LayoutConstants.dimen_76.h,
+            left:
+                PixelDimensionUtil.screenWidth / 2 - LayoutConstants.dimen_16.w,
             child: _isLoading
                 ? SizedBox(
                     height: LayoutConstants.dimen_32.h,
@@ -92,20 +93,18 @@ class _SplashPageState extends State<SplashPage> {
       );
 
 // TODO(soham): Remove later button
-  RaisedButton _laterButton() =>
-      RaisedButton(
+  RaisedButton _laterButton() => RaisedButton(
         onPressed: () {
           Navigator.pop(context);
-        _redirectToNextScreen();
+          _redirectToNextScreen();
         },
         child: Text(
           'Later',
           style: Theme.of(context).textTheme.button.copyWith(
-            color: AppColor.white,
-          ),
+                color: AppColor.white,
+              ),
         ),
       );
-
 
   Future<void> _showForceUpdateDialog(
       ForceUpdateDataModel forceUpdateData) async {

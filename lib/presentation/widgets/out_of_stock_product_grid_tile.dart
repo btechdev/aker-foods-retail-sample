@@ -40,6 +40,7 @@ class OutOfStockProductGridTileState extends State<OutOfStockProductGridTile> {
         children: [
           _productImageContainer(),
           _productInfoContainer(),
+          SizedBox(height: LayoutConstants.dimen_8.h),
           Container(
             padding:
                 EdgeInsets.symmetric(horizontal: LayoutConstants.dimen_12.w),

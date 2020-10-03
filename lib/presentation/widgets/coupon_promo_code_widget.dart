@@ -20,9 +20,9 @@ class CouponPromoCodeWidget extends StatelessWidget {
         padding: EdgeInsets.symmetric(
           horizontal: LayoutConstants.dimen_16.w,
         ),
-        child: code.isEmpty
-            ? _primaryColorText(context, 'Apply coupon/promo code')
-            : _appliedCodeRow(context),
+        child: code?.isNotEmpty == true
+            ? _appliedCodeRow(context)
+            : _primaryColorText(context, 'Apply coupon/promo code'),
       );
 
   Text _primaryColorText(BuildContext context, String text) => Text(
