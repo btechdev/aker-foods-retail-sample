@@ -15,6 +15,7 @@ import 'package:aker_foods_retail/presentation/widgets/out_of_stock_product_grid
 import 'package:aker_foods_retail/presentation/widgets/products_category_header.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 class SearchPage extends StatefulWidget {
   @override
@@ -202,7 +203,7 @@ class SearchPageState extends State<SearchPage> {
         child: ProductsCategoryHeader(title: title),
       );
 
-  SliverPadding _productsSliverGridWithPadding(
+  /*SliverPadding _productsSliverGridWithPadding(
           List<ProductEntity> categoryProducts) =>
       SliverPadding(
         padding: EdgeInsets.only(
@@ -216,6 +217,23 @@ class SearchPageState extends State<SearchPage> {
             (context, index) => _productGridTile(categoryProducts[index]),
             childCount: categoryProducts.length,
           ),
+        ),
+      );*/
+  SliverPadding _productsSliverGridWithPadding(
+          List<ProductEntity> categoryProducts) =>
+      SliverPadding(
+        padding: EdgeInsets.only(
+          left: LayoutConstants.dimen_12.w,
+          right: LayoutConstants.dimen_12.w,
+          bottom: LayoutConstants.dimen_12.h,
+        ),
+        sliver: SliverStaggeredGrid.countBuilder(
+          crossAxisCount: AppConstants.productsGridCrossAxisCount,
+          mainAxisSpacing: LayoutConstants.dimen_8.h,
+          crossAxisSpacing: LayoutConstants.dimen_8.w,
+          staggeredTileBuilder: (index) => const StaggeredTile.fit(1),
+          itemBuilder: (context, index) => _productGridTile(products[index]),
+          itemCount: products.length,
         ),
       );
 

@@ -18,7 +18,7 @@ class NotifyMeButton extends StatelessWidget {
       height: LayoutConstants.dimen_32.h,
       child: FlatButton(
         onPressed: onPressed,
-        padding: EdgeInsets.zero,
+        padding: EdgeInsets.symmetric(horizontal: LayoutConstants.dimen_8.w),
         shape: _roundedRectangleBorder(),
         child: Text(
           'Notify Me'.toUpperCase(),
