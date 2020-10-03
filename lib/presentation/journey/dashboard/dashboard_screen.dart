@@ -28,10 +28,19 @@ class DashboardScreenState extends State<DashboardScreen> {
   @override
   void initState() {
     super.initState();
+    final pageCallback = (DashboardBottomNavigationItem navigationItem) {
+      /*
+      // TODO(Bhushan): Use this when DashboardBloc is configured at app-level
+      BlocProvider.of<DashboardBloc>(context).add(
+        NavigateToPageEvent(pageIndex: navigationItem.index),
+      );*/
+      _pageController.jumpToPage(navigationItem.index);
+    };
+
     _bottomNavigationPageWidgets = [
       HomePage(),
       SearchPage(),
-      CartPage(),
+      CartPage(navigateToPageCallback: pageCallback),
       MyAccountScreen(),
     ];
   }

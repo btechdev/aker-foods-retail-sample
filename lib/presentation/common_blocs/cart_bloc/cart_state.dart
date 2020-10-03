@@ -27,6 +27,14 @@ class CartLoadingState extends CartState {
         );
 }
 
+class CartEmptyState extends CartState {
+  CartEmptyState({
+    int totalProductCount = 0,
+  }) : super(
+          totalProductCount: totalProductCount,
+        );
+}
+
 class CartLoadedState extends CartState {
   final Map<int, int> productIdCountMap;
   final bool hasOutOfStockProducts;
@@ -43,13 +51,19 @@ class CartLoadedState extends CartState {
         );
 }
 
-class CartEmptyState extends CartState {
-  CartEmptyState({
-    int totalProductCount = 0,
+/*class CartLoadingState extends CartLoadedState {
+  CartLoadingState({
+    CartEntity cartEntity,
+    Map<int, int> productIdCountMap,
+    bool hasOutOfStockProducts,
+    final String message,
   }) : super(
-          totalProductCount: totalProductCount,
+          cartEntity: cartEntity,
+          productIdCountMap: productIdCountMap,
+          hasOutOfStockProducts: hasOutOfStockProducts,
+          message: message,
         );
-}
+}*/
 
 class CartProductUpdatedState extends CartLoadedState {
   CartProductUpdatedState({
@@ -70,7 +84,3 @@ class CartPromoCodeUpdatedState extends CartLoadedState {
           productIdCountMap: productIdCountMap,
         );
 }
-
-class NotifyUserAboutProductSuccess extends CartState {}
-
-class NotifyUserAboutProductFailure extends CartState {}

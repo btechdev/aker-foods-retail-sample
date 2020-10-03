@@ -11,8 +11,8 @@ import 'package:aker_foods_retail/presentation/journey/checkout/order_cart/bill_
 import 'package:aker_foods_retail/presentation/journey/checkout/order_cart/order_delivery_address.dart';
 import 'package:aker_foods_retail/presentation/journey/checkout/order_cart/order_delivery_selection.dart';
 import 'package:aker_foods_retail/presentation/journey/checkout/order_cart/payment_type_selection.dart';
+import 'package:aker_foods_retail/presentation/journey/dashboard/bottom_navigation_bar_details.dart';
 import 'package:aker_foods_retail/presentation/theme/app_colors.dart';
-import 'package:aker_foods_retail/presentation/widgets/circular_loader_widget.dart';
 import 'package:aker_foods_retail/presentation/widgets/coupon_promo_code_widget.dart';
 import 'package:aker_foods_retail/presentation/widgets/in_stock_product_list_tile.dart';
 import 'package:aker_foods_retail/presentation/widgets/out_of_stock_product_list_tile.dart';
@@ -20,7 +20,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CartPage extends StatefulWidget {
-  CartPage({Key key}) : super(key: key);
+  final void Function(DashboardBottomNavigationItem navigationItem)
+      navigateToPageCallback;
+
+  CartPage({
+    Key key,
+    this.navigateToPageCallback,
+  }) : super(key: key);
 
   @override
   _CartPageState createState() => _CartPageState();
@@ -30,11 +36,15 @@ class _CartPageState extends State<CartPage> {
   String appliedCouponPromoCode = '';
   int _paymentType = PaymentTypeConstants.cashOnDelivery;
 
+  void _cartBlocListener(BuildContext context, CartState state) {
+    debugPrint('CartBloc => Listener: $state');
+  }
+
   @override
-  Widget build(BuildContext context) => Scaffold(
-        appBar: _getAppBar(),
-        body: _getBody(),
-        bottomNavigationBar: _cartBottomWidget(),
+  Widget build(BuildContext context) => BlocConsumer<CartBloc, CartState>(
+        cubit: BlocProvider.of<CartBloc>(context)..add(ValidateCartEvent()),
+        listener: _cartBlocListener,
+        builder: _cartBlocBuilderWidget,
       );
 
   AppBar _getAppBar() => AppBar(
@@ -47,64 +57,146 @@ class _CartPageState extends State<CartPage> {
         backgroundColor: AppColor.white,
       );
 
-  Widget _getBody() => BlocConsumer<CartBloc, CartState>(
-        cubit: BlocProvider.of<CartBloc>(context)..add(ValidateCartEvent()),
-        listener: _cartBlocListener,
-        builder: _cartBlocBuilderWidget,
-      );
-
-  void _cartBlocListener(BuildContext context, CartState state) {
-    debugPrint('CartBloc => listener: $state');
-  }
-
   Widget _cartBlocBuilderWidget(BuildContext context, CartState state) {
-    if (state is CartLoadingState) {
-      return const CircularLoaderWidget();
-    } else if (state is CartLoadedState ||
-        state is NotifyUserAboutProductFailure) {
-      return _cartBlocBuilderBody(state);
+    if (state is CartLoadingState && state.totalProductCount == 0) {
+      return _loaderWithScaffold();
     }
-    // TODO(Bhushan): Fix this issue of go to home button not showing
-    debugPrint('Building empty cart container');
-    return _emptyCartIndicatorContainer();
+    /*if (state is CartLoadingState && state.totalProductCount > 0) {
+      return _cartDetailsWithScaffold(state, showLoader: true);
+    }*/
+    if (state is CartLoadedState) {
+      appliedCouponPromoCode = state.cartEntity?.promoCode;
+      return _cartDetailsWithScaffold(state);
+    }
+    if (state is CartEmptyState) {
+      return _emptyCartIndicatorWithScaffold();
+    }
+    return Container();
   }
 
-  Widget _cartBlocBuilderBody(CartLoadedState state) => SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Flexible(
-              fit: FlexFit.loose,
-              child: _cartProductsList(state.cartEntity?.products),
-            ),
-            SizedBox(height: LayoutConstants.dimen_4.h),
-            const Divider(),
-            _couponPromoCodeInkWell(),
-            const Divider(),
-            BillDetailsWidget(
-              billingEntity: state.cartEntity.billingEntity,
-              showErrorMessage: state.hasOutOfStockProducts ?? false,
-              message: state.message ?? '',
-            ),
-            const Divider(),
-            OrderDeliverySelection(),
-            const Divider(),
-            PaymentTypeSelection(
-              onPaymentSelection: (typeInt) => _paymentType = typeInt,
-            ),
-            const Divider(),
-            OrderDeliveryAddressSelection(
-              onAddressSelection: (id) {
-                if (id is int) {
-                  //_addressId = id;
-                  // TODO(Bhushan): Check if this is needed
-                }
-              },
-            ),
-            SizedBox(height: LayoutConstants.dimen_32.h)
-          ],
+  Scaffold _loaderWithScaffold() => Scaffold(
+        appBar: _getAppBar(),
+        body: Container(
+          alignment: Alignment.center,
+          child: const CircularProgressIndicator(),
         ),
       );
+
+  Scaffold _emptyCartIndicatorWithScaffold() => Scaffold(
+        appBar: _getAppBar(),
+        body: Container(
+          alignment: Alignment.center,
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: _emptyCartIndicatorWidgets(),
+            ),
+          ),
+        ),
+      );
+
+  Scaffold _cartDetailsWithScaffold(CartState state,
+          {bool showLoader = false}) =>
+      Scaffold(
+        appBar: _getAppBar(),
+        bottomNavigationBar:
+            showLoader ? Container() : _cartBottomWidget(state),
+        body: Container(
+          alignment: Alignment.center,
+          child: Stack(
+            children: [
+              SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: _cartDetailsWidgets(state),
+                ),
+              ),
+              if (showLoader)
+                Container(
+                  width: double.infinity,
+                  height: double.infinity,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(color: AppColor.black25),
+                  child: const CircularProgressIndicator(),
+                ),
+            ],
+          ),
+        ),
+      );
+
+  List<Widget> _cartDetailsWidgets(CartLoadedState state) => [
+        Flexible(
+          fit: FlexFit.loose,
+          child: _cartProductsList(state.cartEntity?.products),
+        ),
+        SizedBox(height: LayoutConstants.dimen_4.h),
+        const Divider(),
+        _couponPromoCodeInkWell(),
+        const Divider(),
+        BillDetailsWidget(
+          billingEntity: state.cartEntity.billingEntity,
+          showErrorMessage: state.hasOutOfStockProducts ?? false,
+          message: state.message ?? '',
+        ),
+        const Divider(),
+        OrderDeliverySelection(),
+        const Divider(),
+        PaymentTypeSelection(
+          onPaymentSelection: (typeInt) => _paymentType = typeInt,
+        ),
+        const Divider(),
+        OrderDeliveryAddressSelection(
+          onAddressSelection: (id) {
+            if (id is int) {
+              //_addressId = id;
+              // TODO(Bhushan): Check if this is needed
+            }
+          },
+        ),
+        SizedBox(height: LayoutConstants.dimen_32.h)
+      ];
+
+  List<Widget> _emptyCartIndicatorWidgets() => [
+        Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: LayoutConstants.dimen_16.w,
+            vertical: LayoutConstants.dimen_16.h,
+          ),
+          child: Text(
+            'The cart is empty. '
+            'Please add products to cart for getting cart details.',
+            style: Theme.of(context).textTheme.bodyText2.copyWith(
+                  color: AppColor.black40,
+                ),
+          ),
+        ),
+        Container(
+          height: LayoutConstants.dimen_48.h,
+          margin: EdgeInsets.symmetric(
+            horizontal: LayoutConstants.dimen_16.w,
+            vertical: LayoutConstants.dimen_16.h,
+          ),
+          child: RaisedButton(
+            color: AppColor.primaryColor,
+            shape: LayoutConstants.borderlessRoundedRectangle,
+            onPressed: () => widget.navigateToPageCallback?.call(
+              DashboardBottomNavigationItem.home,
+            ),
+            child: Text(
+              'Go to Home',
+              style: Theme.of(context).textTheme.button.copyWith(
+                    color: AppColor.white,
+                  ),
+            ),
+          ),
+        ),
+      ];
+
+  // =======================================================================
 
   Widget _cartProductsList(List<CartProductEntity> cartProducts) =>
       ListView.builder(
@@ -144,30 +236,29 @@ class _CartPageState extends State<CartPage> {
       );
 
   Future<void> _navigateToCouponPromoCodeSelection() async {
-    final code =
+    final coupon =
         await Navigator.pushNamed(context, RouteConstants.applyCouponPromoCode);
-    if (code != null && code is CouponEntity) {
-      setState(() {
-        appliedCouponPromoCode = code.code;
-      });
+    if (coupon != null && coupon is CouponEntity) {
+      if (coupon.code?.isNotEmpty == true) {
+        appliedCouponPromoCode = coupon.code;
+        BlocProvider.of<CartBloc>(context).add(
+          ApplyPromoCodeToCartEvent(promoCode: appliedCouponPromoCode),
+        );
+      }
     }
   }
 
   void _removeAppliedCouponPromoCode() {
-    setState(() {
-      appliedCouponPromoCode = '';
-    });
+    BlocProvider.of<CartBloc>(context).add(
+      RemovePromoCodeFromCartEvent(),
+    );
   }
 
-  Widget _cartBottomWidget() {
-    return BlocBuilder<CartBloc, CartState>(
-      builder: (context, state) {
-        if (state is CartLoadedState) {
-          return _buttonWithContainer();
-        }
-        return Container();
-      },
-    );
+  Widget _cartBottomWidget(CartState state) {
+    if (state is CartLoadedState) {
+      return _buttonWithContainer();
+    }
+    return Container();
   }
 
   Container _buttonWithContainer() => Container(
@@ -177,38 +268,15 @@ class _CartPageState extends State<CartPage> {
             vertical: LayoutConstants.dimen_16.h),
         child: RaisedButton(
           color: AppColor.primaryColor,
+          shape: LayoutConstants.borderlessRoundedRectangle,
           onPressed: () => BlocProvider.of<CartBloc>(context).add(
             CreateOrderCartEvent(paymentType: _paymentType),
-          ),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(LayoutConstants.dimen_12.w),
           ),
           child: Text(
             'Proceed to pay',
             style: Theme.of(context).textTheme.button.copyWith(
                   color: AppColor.white,
                 ),
-          ),
-        ),
-      );
-
-  Container _emptyCartIndicatorContainer() => Container(
-        alignment: Alignment.center,
-        child: SizedBox(
-          width: LayoutConstants.dimen_64.w,
-          height: LayoutConstants.dimen_48.h,
-          child: RaisedButton(
-            color: AppColor.primaryColor,
-            onPressed: () => {},
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(LayoutConstants.dimen_12.w),
-            ),
-            child: Text(
-              'Go to Home',
-              style: Theme.of(context).textTheme.button.copyWith(
-                    color: AppColor.white,
-                  ),
-            ),
           ),
         ),
       );

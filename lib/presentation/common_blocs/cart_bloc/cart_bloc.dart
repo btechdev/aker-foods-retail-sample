@@ -36,6 +36,10 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       yield* _processAddProductToCartEvent(event);
     } else if (event is RemoveProductFromCartEvent) {
       yield* _processRemoveProductFromCartEvent(event);
+    } else if (event is ApplyPromoCodeToCartEvent) {
+      yield* _processApplyPromoCodeToCartEvent(event);
+    } else if (event is RemovePromoCodeFromCartEvent) {
+      yield* _processRemovePromoCodeFromCartEvent();
     } else if (event is CreateOrderCartEvent) {
       yield* _processCreateOrderCartEvent(event);
     } else if (event is NotifyUserAboutProductEvent) {
@@ -80,6 +84,19 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     ));
   }
 
+  /*Stream<CartState> _cartLoadingState() async* {
+    CartLoadedState _cartLoadedState;
+    if (state is CartLoadedState) {
+      _cartLoadedState = state;
+    }
+    yield CartLoadingState(
+      cartEntity: state.cartEntity,
+      productIdCountMap: _productIdCountMap(state.cartEntity),
+      hasOutOfStockProducts: _cartLoadedState?.hasOutOfStockProducts,
+      message: _cartLoadedState?.message,
+    );
+  }*/
+
   Stream<CartState> _processLoadCartEvent(LoadCartEvent event) async* {
     final cartEntity = await cartUseCase.getCartData();
     if (cartEntity?.products?.isEmpty == true) {
@@ -95,11 +112,13 @@ class CartBloc extends Bloc<CartEvent, CartState> {
 
   Stream<CartState> _processValidateCartEvent(ValidateCartEvent event) async* {
     yield CartLoadingState(totalProductCount: state.totalProductCount);
+    //yield* _cartLoadingState();
     final CartEntity cartEntity = await cartUseCase.getCartData();
     final Map<int, int> idCountMap = _productIdCountMap(cartEntity);
     try {
       if (idCountMap.isNotEmpty) {
         yield CartLoadingState(totalProductCount: state.totalProductCount);
+        //yield* _cartLoadingState();
         cartEntity.billingEntity = await _validateCart(cartEntity);
       } else if (idCountMap.isEmpty) {
         yield CartEmptyState();
@@ -121,6 +140,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     try {
       if (event.needsCartValidation && idCountMap.isNotEmpty) {
         yield CartLoadingState(totalProductCount: state.totalProductCount);
+        //yield* _cartLoadingState();
         cartEntity.billingEntity = await _validateCart(cartEntity);
       } else if (idCountMap.isEmpty) {
         yield CartEmptyState();
@@ -142,6 +162,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     try {
       if (event.needsCartValidation && idCountMap.isNotEmpty) {
         yield CartLoadingState(totalProductCount: state.totalProductCount);
+        //yield* _cartLoadingState();
         cartEntity.billingEntity = await _validateCart(cartEntity);
       } else if (idCountMap.isEmpty) {
         yield CartEmptyState();
@@ -159,6 +180,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
   Stream<CartState> _processCreateOrderCartEvent(
       CreateOrderCartEvent event) async* {
     yield CartLoadingState(totalProductCount: state.totalProductCount);
+    //yield* _cartLoadingState();
     final cartEntity = await cartUseCase.getCartData();
     final addressEntity = await cartUseCase.getSelectedAddress();
     cartEntity.billingEntity = state.cartEntity?.billingEntity;
@@ -235,12 +257,13 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       final Map<int, int> idCountMap = _productIdCountMap(cartEntity);
       if (idCountMap.isNotEmpty) {
         yield CartLoadingState(totalProductCount: state.totalProductCount);
+        //yield* _cartLoadingState();
         cartEntity.billingEntity = await _validateCart(cartEntity);
       } else {
         yield CartEmptyState();
         return;
       }
-      yield CartProductUpdatedState(
+      yield CartLoadedState(
         cartEntity: cartEntity,
         productIdCountMap: idCountMap,
       );
@@ -252,9 +275,43 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     } else {
       snackBarBloc.add(ShowSnackBarEvent(
         type: CustomSnackBarType.error,
-        text: 'Something went wrong. We are unable to process your request',
+        text: 'We are unable to process your request, please try later',
       ));
-      yield NotifyUserAboutProductFailure();
+    }
+  }
+
+  Stream<CartState> _processApplyPromoCodeToCartEvent(
+      ApplyPromoCodeToCartEvent event) async* {
+    yield CartLoadingState(totalProductCount: state.totalProductCount);
+    CartEntity cartEntity = await cartUseCase.getCartData();
+    cartEntity.promoCode = event.promoCode;
+    final Map<int, int> idCountMap = _productIdCountMap(cartEntity);
+    try {
+      cartEntity.billingEntity = await _validateCart(cartEntity);
+      cartEntity = await cartUseCase.saveCart(cartEntity);
+      yield CartProductUpdatedState(
+        cartEntity: cartEntity,
+        productIdCountMap: idCountMap,
+      );
+    } catch (error) {
+      _processError(error, cartEntity, idCountMap);
+    }
+  }
+
+  Stream<CartState> _processRemovePromoCodeFromCartEvent() async* {
+    yield CartLoadingState(totalProductCount: state.totalProductCount);
+    CartEntity cartEntity = await cartUseCase.getCartData();
+    cartEntity.promoCode = null;
+    final Map<int, int> idCountMap = _productIdCountMap(cartEntity);
+    try {
+      cartEntity.billingEntity = await _validateCart(cartEntity);
+      cartEntity = await cartUseCase.saveCart(cartEntity);
+      yield CartProductUpdatedState(
+        cartEntity: cartEntity,
+        productIdCountMap: idCountMap,
+      );
+    } catch (error) {
+      _processError(error, cartEntity, idCountMap);
     }
   }
 }

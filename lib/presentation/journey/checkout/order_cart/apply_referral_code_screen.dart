@@ -140,10 +140,7 @@ class _ApplyCouponPromoCodeScreenState
   FlatButton _textFieldButton() => FlatButton(
         onPressed: () => Navigator.pop(
           context,
-          CouponEntity(
-            code: _codeTextController.text,
-            discount: DiscountEntity(value: 25),
-          ),
+          CouponEntity(code: _codeTextController.text),
         ),
         child: Container(
           width: LayoutConstants.dimen_56.w,
@@ -194,7 +191,7 @@ class _ApplyCouponPromoCodeScreenState
               ],
             ),
             FlatButton(
-              onPressed: () => {Navigator.pop(context, entity)},
+              onPressed: () => Navigator.pop(context, entity),
               child: Container(
                 width: LayoutConstants.dimen_80.w,
                 height: LayoutConstants.dimen_70.h,
