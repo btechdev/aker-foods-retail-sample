@@ -3,6 +3,7 @@ import 'package:aker_foods_retail/common/utils/pixel_dimension_util.dart';
 import 'package:aker_foods_retail/presentation/app/app_bloc_listeners.dart';
 import 'package:aker_foods_retail/presentation/app/route_constants.dart';
 import 'package:aker_foods_retail/presentation/app/routes.dart';
+import 'package:aker_foods_retail/presentation/widgets/loader_bloc_widget/loader_bloc_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -10,11 +11,12 @@ import 'app/app_bloc_providers.dart';
 import 'theme/app_themes.dart';
 
 class App extends StatelessWidget {
-  final GlobalKey<NavigatorState> _navigatorStateGlobalKey =
-      GlobalKey<NavigatorState>();
   final LocalPreferences localPreferences;
 
   App(this.localPreferences);
+
+  final GlobalKey<NavigatorState> _navigatorStateGlobalKey =
+      GlobalKey<NavigatorState>();
 
   @override
   Widget build(BuildContext context) => MaterialApp(
@@ -36,7 +38,10 @@ class App extends StatelessWidget {
             providers: getAppStartupBlocProviders(_navigatorStateGlobalKey),
             child: MultiBlocListener(
               listeners: getAppStartupBlocListeners(_navigatorStateGlobalKey),
-              child: widget,
+              child: LoaderBlocWidget(
+                navigator: _navigatorStateGlobalKey,
+                child: widget,
+              ),
             ),
           );
         },

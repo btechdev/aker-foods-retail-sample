@@ -46,6 +46,7 @@ import 'package:aker_foods_retail/network/api/api_client.dart';
 import 'package:aker_foods_retail/presentation/common_blocs/cart_bloc/cart_bloc.dart';
 import 'package:aker_foods_retail/presentation/common_blocs/data_connection_bloc/data_connection_bloc.dart';
 import 'package:aker_foods_retail/presentation/common_blocs/firebase_auth_bloc/firebase_auth_bloc.dart';
+import 'package:aker_foods_retail/presentation/common_blocs/loader_bloc/loader_bloc.dart';
 import 'package:aker_foods_retail/presentation/common_blocs/products_bloc/products_bloc.dart';
 import 'package:aker_foods_retail/presentation/common_blocs/snack_bar_bloc/snack_bar_bloc.dart';
 import 'package:aker_foods_retail/presentation/journey/checkout/order_cart/coupons_bloc/coupons_bloc.dart';
@@ -85,6 +86,7 @@ abstract class InjectorConfig {
   }
 
   /// ============ Register Blocs ============
+  @Register.singleton(LoaderBloc)
   @Register.singleton(SnackBarBloc)
   @Register.singleton(DataConnectionBloc)
   @Register.singleton(FirebaseAuthBloc)

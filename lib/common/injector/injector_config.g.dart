@@ -9,6 +9,7 @@ part of 'injector_config.dart';
 class _$InjectorConfig extends InjectorConfig {
   void _configureBlocs() {
     final KiwiContainer container = KiwiContainer();
+    container.registerSingleton((c) => LoaderBloc());
     container.registerSingleton((c) => SnackBarBloc());
     container.registerSingleton(
         (c) => DataConnectionBloc(dataConnectionUtil: c<DataConnectionUtil>()));

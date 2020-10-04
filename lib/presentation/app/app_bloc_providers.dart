@@ -3,6 +3,7 @@ import 'package:aker_foods_retail/presentation/common_blocs/cart_bloc/cart_bloc.
 import 'package:aker_foods_retail/presentation/common_blocs/cart_bloc/cart_event.dart';
 import 'package:aker_foods_retail/presentation/common_blocs/data_connection_bloc/data_connection_bloc.dart';
 import 'package:aker_foods_retail/presentation/common_blocs/data_connection_bloc/data_connection_event.dart';
+import 'package:aker_foods_retail/presentation/common_blocs/loader_bloc/loader_bloc.dart';
 import 'package:aker_foods_retail/presentation/common_blocs/snack_bar_bloc/snack_bar_bloc.dart';
 import 'package:aker_foods_retail/presentation/journey/dashboard/bloc/dashboard_bloc.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +13,9 @@ List<BlocProvider> getAppStartupBlocProviders(
   GlobalKey<NavigatorState> navigatorStateGlobalKey,
 ) =>
     [
+      BlocProvider<LoaderBloc>(
+        create: (BuildContext context) => Injector.resolve<LoaderBloc>(),
+      ),
       BlocProvider<SnackBarBloc>(
         create: (BuildContext context) => Injector.resolve<SnackBarBloc>(),
       ),
