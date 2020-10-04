@@ -1,19 +1,17 @@
 class BannerDataEntity {
+  int id;
+  String name;
+  String description;
+  String type;
+  List<String> ids;
   String imageUrl;
-  BannerActionEntity action;
 
   BannerDataEntity({
-    this.imageUrl,
-    this.action,
-  });
-}
-
-class BannerActionEntity {
-  String type;
-  List<int> ids;
-
-  BannerActionEntity({
+    this.id,
+    this.name,
+    this.description,
     this.type,
     this.ids,
+    this.imageUrl,
   });
 }

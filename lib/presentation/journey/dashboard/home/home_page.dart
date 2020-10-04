@@ -231,7 +231,11 @@ class HomePageState extends State<HomePage> {
         children: [
           CircleAvatar(
             radius: LayoutConstants.dimen_32.w,
-            backgroundImage: NetworkImage(url),
+            backgroundImage: url?.isNotEmpty == true
+                ? NetworkImage(url)
+                : const ExactAssetImage(
+                    'assets/images/logo_transparent_background.png',
+                  ),
             backgroundColor: AppColor.primaryColor35,
           ),
           Text(

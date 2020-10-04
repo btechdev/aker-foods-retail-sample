@@ -1,4 +1,5 @@
 import 'package:aker_foods_retail/data/models/address_model.dart';
+import 'package:aker_foods_retail/data/models/banner_data_model.dart';
 import 'package:aker_foods_retail/data/models/cash_offer_model.dart';
 import 'package:aker_foods_retail/data/models/coupon_model.dart';
 import 'package:aker_foods_retail/data/models/notification_model.dart';
@@ -12,6 +13,8 @@ import 'package:aker_foods_retail/data/models/transaction_model.dart';
 import 'api_response_parser.dart';
 
 Future<void> configureApiModels() async {
+  ApiResponseParser.addParsingFunction(
+      BannerDataModel, BannerDataModel.fromJson);
   ApiResponseParser.addParsingFunction(SocietyModel, SocietyModel.fromJson);
   ApiResponseParser.addParsingFunction(
       ProductCategoryModel, ProductCategoryModel.fromJson);

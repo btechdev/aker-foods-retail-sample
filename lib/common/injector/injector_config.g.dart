@@ -138,6 +138,7 @@ class _$InjectorConfig extends InjectorConfig {
     container.registerSingleton((c) => DataConnectionUtil());
     container.registerSingleton((c) => LocalPreferences());
     container.registerSingleton((c) => ApiClient(
+        localPreferences: c<LocalPreferences>(),
         dataConnectionBloc: c<DataConnectionBloc>(),
         dataConnectionUtil: c<DataConnectionUtil>()));
     container.registerSingleton(

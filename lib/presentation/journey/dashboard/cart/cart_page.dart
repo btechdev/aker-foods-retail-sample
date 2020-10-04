@@ -11,6 +11,8 @@ import 'package:aker_foods_retail/presentation/journey/checkout/order_cart/bill_
 import 'package:aker_foods_retail/presentation/journey/checkout/order_cart/order_delivery_address.dart';
 import 'package:aker_foods_retail/presentation/journey/checkout/order_cart/order_delivery_selection.dart';
 import 'package:aker_foods_retail/presentation/journey/checkout/order_cart/payment_type_selection.dart';
+import 'package:aker_foods_retail/presentation/journey/dashboard/bloc/dashboard_bloc.dart';
+import 'package:aker_foods_retail/presentation/journey/dashboard/bloc/dashboard_event.dart';
 import 'package:aker_foods_retail/presentation/journey/dashboard/bottom_navigation_bar_details.dart';
 import 'package:aker_foods_retail/presentation/theme/app_colors.dart';
 import 'package:aker_foods_retail/presentation/widgets/coupon_promo_code_widget.dart';
@@ -20,14 +22,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CartPage extends StatefulWidget {
-  final void Function(DashboardBottomNavigationItem navigationItem)
-      navigateToPageCallback;
-
-  CartPage({
-    Key key,
-    this.navigateToPageCallback,
-  }) : super(key: key);
-
   @override
   _CartPageState createState() => _CartPageState();
 }
@@ -183,8 +177,10 @@ class _CartPageState extends State<CartPage> {
           child: RaisedButton(
             color: AppColor.primaryColor,
             shape: LayoutConstants.borderlessRoundedRectangle,
-            onPressed: () => widget.navigateToPageCallback?.call(
-              DashboardBottomNavigationItem.home,
+            onPressed: () => BlocProvider.of<DashboardBloc>(context).add(
+              NavigateToPageEvent(
+                pageIndex: DashboardBottomNavigationItem.home.index,
+              ),
             ),
             child: Text(
               'Go to Home',

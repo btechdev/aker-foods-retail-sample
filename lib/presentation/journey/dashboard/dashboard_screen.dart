@@ -1,4 +1,3 @@
-import 'package:aker_foods_retail/common/injector/injector.dart';
 import 'package:aker_foods_retail/presentation/common_blocs/cart_bloc/cart_bloc.dart';
 import 'package:aker_foods_retail/presentation/common_blocs/cart_bloc/cart_state.dart';
 import 'package:aker_foods_retail/presentation/journey/dashboard/bottom_navigation_bar_details.dart';
@@ -28,19 +27,10 @@ class DashboardScreenState extends State<DashboardScreen> {
   @override
   void initState() {
     super.initState();
-    final pageCallback = (DashboardBottomNavigationItem navigationItem) {
-      /*
-      // TODO(Bhushan): Use this when DashboardBloc is configured at app-level
-      BlocProvider.of<DashboardBloc>(context).add(
-        NavigateToPageEvent(pageIndex: navigationItem.index),
-      );*/
-      _pageController.jumpToPage(navigationItem.index);
-    };
-
     _bottomNavigationPageWidgets = [
       HomePage(),
       SearchPage(),
-      CartPage(navigateToPageCallback: pageCallback),
+      CartPage(),
       MyAccountScreen(),
     ];
   }
@@ -54,13 +44,9 @@ class DashboardScreenState extends State<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
     _navigationBarData = DashboardBottomNavigationBarData(context);
-    return BlocProvider<DashboardBloc>(
-      lazy: false,
-      create: (context) => Injector.resolve<DashboardBloc>(),
-      child: MultiBlocListener(
-        listeners: _dashboardBlocListeners(),
-        child: _buildScaffold(),
-      ),
+    return MultiBlocListener(
+      listeners: _dashboardBlocListeners(),
+      child: _buildScaffold(),
     );
   }
 

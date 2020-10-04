@@ -26,18 +26,26 @@ class AkerBannerState extends State<AkerBanner> {
   List<Widget> _bannerPages;
 
   Widget _bannerPageWidget(BannerDataEntity bannerData) => GestureDetector(
-        onTap: () => Navigator.pushNamed(
-          context,
-          RouteConstants.bannerDetails,
-          arguments: bannerData,
-        ),
+        onTap: () {
+          if (bannerData?.type?.isNotEmpty == true) {
+            Navigator.pushNamed(
+              context,
+              RouteConstants.bannerDetails,
+              arguments: bannerData,
+            );
+          }
+        },
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: LayoutConstants.dimen_16.w),
           child: Card(
+            clipBehavior: Clip.antiAliasWithSaveLayer,
             elevation: LayoutConstants.cardDefaultElevation,
             color: AppColor.primaryColor35Opaque,
             shape: LayoutConstants.borderlessRoundedRectangle,
-            child: Image.network(bannerData.imageUrl),
+            child: Image.network(
+              bannerData.imageUrl,
+              fit: BoxFit.fill,
+            ),
           ),
         ),
       );
@@ -79,7 +87,9 @@ class AkerBannerState extends State<AkerBanner> {
               ],
             );
           } else {
-            return Container();
+            return Container(
+              height: PixelDimensionUtil().uiHeightPx * 0.30,
+            );
           }
         },
       );

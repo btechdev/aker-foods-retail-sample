@@ -1,5 +1,4 @@
 import 'package:aker_foods_retail/common/constants/app_constants.dart';
-import 'package:aker_foods_retail/domain/entities/banner_data_entity.dart';
 import 'package:aker_foods_retail/domain/entities/product_category_entity.dart';
 import 'package:aker_foods_retail/domain/entities/product_entity.dart';
 import 'package:aker_foods_retail/domain/entities/product_subcategory_entity.dart';
@@ -37,30 +36,28 @@ class BannerBloc extends Bloc<BannerEvent, BannerState> {
 
   Stream<BannerState> _handleFetchBannerProductsEvent(
       FetchBannerProductsEvent event) async* {
-    yield FetchingBannerDetailsState();
-
-    final BannerActionEntity bannerAction = event.bannerEntity?.action;
-    if (bannerAction?.ids?.isNotEmpty != true) {
+    if (event.bannerData?.ids?.isNotEmpty != true) {
       // TODO(Bhushan): Yield some state to indicate empty banner data
       return;
     }
 
-    if (bannerAction?.type == BannerActionConstants.category) {
-      yield* _yieldCategoriesAndProducts(bannerAction?.ids);
-    } else if (bannerAction?.type == BannerActionConstants.subcategory) {
-      yield* _yieldSubcategoriesAndProducts(bannerAction?.ids);
+    yield FetchingBannerDetailsState();
+    if (event.bannerData?.type == BannerActionConstants.category) {
+      yield* _yieldCategoriesAndProducts(event.bannerData?.ids);
+    } else if (event.bannerData?.type == BannerActionConstants.subcategory) {
+      yield* _yieldSubcategoriesAndProducts(event.bannerData?.ids);
     } else {
-      yield* _yieldProducts(bannerAction?.ids);
+      yield* _yieldProducts(event.bannerData?.ids);
     }
   }
 
-  Stream<BannerState> _yieldCategoriesAndProducts(List<int> ids) async* {
+  Stream<BannerState> _yieldCategoriesAndProducts(List<String> ids) async* {
     final List<ProductCategoryEntity> categories = [];
     final Map<int, List<ProductEntity>> categoryProductsMap = Map();
-    for (final id in ids) {
+    for (final idString in ids) {
       try {
         final products = await productsUseCase.getProductsForCategory(
-          categoryId: id,
+          categoryId: int.tryParse(idString),
           pageSize: AppConstants.apiDefaultPageSize,
         );
         if (products?.isNotEmpty == true) {
@@ -77,13 +74,13 @@ class BannerBloc extends Bloc<BannerEvent, BannerState> {
     );
   }
 
-  Stream<BannerState> _yieldSubcategoriesAndProducts(List<int> ids) async* {
+  Stream<BannerState> _yieldSubcategoriesAndProducts(List<String> ids) async* {
     final List<ProductSubcategoryEntity> subcategories = [];
     final Map<int, List<ProductEntity>> subcategoryProductsMap = Map();
-    for (final id in ids) {
+    for (final idString in ids) {
       try {
         final products = await productsUseCase.getProductsForSubcategory(
-          subcategoryId: id,
+          subcategoryId: int.tryParse(idString),
           pageSize: AppConstants.apiDefaultPageSize,
         );
         if (products?.isNotEmpty == true) {
@@ -100,12 +97,13 @@ class BannerBloc extends Bloc<BannerEvent, BannerState> {
     );
   }
 
-  Stream<BannerState> _yieldProducts(List<int> ids) async* {
+  Stream<BannerState> _yieldProducts(List<String> ids) async* {
     final List<ProductEntity> products = [];
-    for (final id in ids) {
+    for (final idString in ids) {
       try {
-        final ProductEntity product =
-            await productsUseCase.getProductWithId(productId: id);
+        final ProductEntity product = await productsUseCase.getProductWithId(
+          productId: int.tryParse(idString),
+        );
         products.add(product);
       } catch (_) {
         /// NOTE: Do nothing, so this particular iteration gets skipped

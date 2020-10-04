@@ -56,7 +56,7 @@ class BannerDetailsScreenState extends State<BannerDetailsScreen> {
       appBar: _getAppBar(),
       body: BlocBuilder<BannerBloc, BannerState>(
         cubit: bannerBloc
-          ..add(FetchBannerProductsEvent(bannerEntity: _bannerData)),
+          ..add(FetchBannerProductsEvent(bannerData: _bannerData)),
         builder: _buildBlocWidget,
       ),
     );
@@ -68,7 +68,7 @@ class BannerDetailsScreenState extends State<BannerDetailsScreen> {
         centerTitle: false,
         backgroundColor: AppColor.white,
         title: Text(
-          'Banner Title',
+          _bannerData?.name ?? 'Banner Title',
           style: Theme.of(context).textTheme.button,
         ),
       );

@@ -6,9 +6,9 @@ abstract class BannerEvent {}
 class FetchBannersEvent extends BannerEvent {}
 
 class FetchBannerProductsEvent extends BannerEvent {
-  final BannerDataEntity bannerEntity;
+  final BannerDataEntity bannerData;
 
   FetchBannerProductsEvent({
-    @required this.bannerEntity,
+    @required this.bannerData,
   });
 }

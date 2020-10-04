@@ -4,6 +4,7 @@ import 'package:aker_foods_retail/presentation/common_blocs/cart_bloc/cart_event
 import 'package:aker_foods_retail/presentation/common_blocs/data_connection_bloc/data_connection_bloc.dart';
 import 'package:aker_foods_retail/presentation/common_blocs/data_connection_bloc/data_connection_event.dart';
 import 'package:aker_foods_retail/presentation/common_blocs/snack_bar_bloc/snack_bar_bloc.dart';
+import 'package:aker_foods_retail/presentation/journey/dashboard/bloc/dashboard_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -14,12 +15,15 @@ List<BlocProvider> getAppStartupBlocProviders(
       BlocProvider<SnackBarBloc>(
         create: (BuildContext context) => Injector.resolve<SnackBarBloc>(),
       ),
+      BlocProvider<DataConnectionBloc>(
+        create: (BuildContext context) => Injector.resolve<DataConnectionBloc>()
+          ..add(CheckDataConnectionEvent()),
+      ),
+      BlocProvider<DashboardBloc>(
+        create: (BuildContext context) => Injector.resolve<DashboardBloc>(),
+      ),
       BlocProvider<CartBloc>(
         create: (BuildContext context) =>
             Injector.resolve<CartBloc>()..add(LoadCartEvent()),
       ),
-      BlocProvider<DataConnectionBloc>(
-        create: (BuildContext context) => Injector.resolve<DataConnectionBloc>()
-          ..add(CheckDataConnectionEvent()),
-      )
     ];

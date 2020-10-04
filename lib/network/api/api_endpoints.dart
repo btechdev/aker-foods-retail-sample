@@ -9,7 +9,7 @@ class ApiEndpoints {
   static const String coupons = 'api/v1/coupons/';
   static const String cashOffers = 'api/v1/offers/';
   static const String appUpdate = 'api/v1/app_update';
-  static const String dashboard = 'api/v1/dashboard/';
+  static const String banners = 'api/v1/dashboards/';
   static const String preCheckout = 'api/v1/pre-checkout/';
   static const String createOrder = 'api/v1/carts/';
   static const String notifications = 'api/v1/notifications';

@@ -16,6 +16,7 @@ class CashOfferModel extends CashOfferEntity {
             title: title,
             description: description);
 
+  // ignore: prefer_constructors_over_static_methods
   static CashOfferModel fromJson(Map<String, dynamic> json) => CashOfferModel(
         id: json['id'],
         amount: json['amount'],
