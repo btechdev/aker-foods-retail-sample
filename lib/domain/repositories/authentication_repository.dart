@@ -7,5 +7,5 @@ abstract class AuthenticationRepository {
 
   Future<String> getUserAuthIdToken();
 
-  Future<bool> getNewUserFlag();
+  Future<bool> getUserHasSetupProfileFlag();
 }

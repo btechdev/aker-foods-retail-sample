@@ -47,6 +47,7 @@ class UserProfileBloc extends Bloc<UserProfileEvent, UserProfileState> {
     try {
       yield UserProfileSettingUpState();
       await userProfileUseCase.setupUserProfile(event.user);
+      await userProfileUseCase.setUserHasSetupProfileFlag(true);
       yield UserProfileSetupSuccessState();
     } catch (e) {
       final message =

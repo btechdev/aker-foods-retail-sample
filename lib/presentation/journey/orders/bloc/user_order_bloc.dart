@@ -1,6 +1,6 @@
+import 'package:aker_foods_retail/data/models/order_model.dart';
 import 'package:aker_foods_retail/data/models/razorpay_payment_model.dart';
 import 'package:aker_foods_retail/domain/entities/order_payment_reinitiate_response_entity.dart';
-import 'package:aker_foods_retail/data/models/order_model.dart';
 import 'package:aker_foods_retail/domain/usecases/user_order_use_case.dart';
 import 'package:aker_foods_retail/presentation/common_blocs/snack_bar_bloc/snack_bar_bloc.dart';
 import 'package:aker_foods_retail/presentation/common_blocs/snack_bar_bloc/snack_bar_event.dart';
@@ -30,9 +30,10 @@ class UserOrderBloc extends Bloc<UserOrderEvent, UserOrderState> {
       yield* _handleFetchOrdersEvent(event);
     } else if (event is ReinitiatePaymentForOrderEvent) {
       yield* _handleReinitiatePaymentForOrderEvent(event);
-    } else if (event is VerifyOrderTransactionEvent) {
-      yield* _handleVerifyOrderTransactionEvent(event);
     }
+    /* else if (event is VerifyOrderTransactionEvent) {
+      yield* _handleVerifyOrderTransactionEvent(event);
+    }*/
   }
 
   Stream<UserOrderState> _handleFetchOrdersEvent(FetchUserOrders event) async* {
@@ -56,7 +57,7 @@ class UserOrderBloc extends Bloc<UserOrderEvent, UserOrderState> {
     }
   }
 
-  Stream<UserOrderState> _handleVerifyOrderTransactionEvent(
+  /*Stream<UserOrderState> _handleVerifyOrderTransactionEvent(
       VerifyOrderTransactionEvent event) async* {
     yield VerifyingOrderTransactionState();
     final status =
@@ -64,7 +65,7 @@ class UserOrderBloc extends Bloc<UserOrderEvent, UserOrderState> {
     yield status == true
         ? VerifyOrderTransactionStateSuccessfulState()
         : VerifyOrderTransactionStateFailedState();
-  }
+  }*/
 
   Stream<UserOrderState> _handleReinitiatePaymentForOrderEvent(
       ReinitiatePaymentForOrderEvent event) async* {

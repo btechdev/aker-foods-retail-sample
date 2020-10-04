@@ -43,9 +43,11 @@ class ApplyDeliveryAddressToCartEvent extends CartEvent {}
 
 class CreateOrderCartEvent extends CartEvent {
   final int paymentType;
+  final int selectedAddressId;
 
   CreateOrderCartEvent({
-    this.paymentType,
+    @required this.paymentType,
+    @required this.selectedAddressId,
   });
 }
 
@@ -57,9 +59,9 @@ class NotifyUserAboutProductEvent extends CartEvent {
 }
 
 class CartOrderVerifyPaymentEvent extends CartEvent {
-  final String orderId;
+  final int cartId;
 
-  CartOrderVerifyPaymentEvent({@required this.orderId}) : super();
+  CartOrderVerifyPaymentEvent({@required this.cartId}) : super();
 }
 
 class CartOrderPaymentSuccessEvent extends CartEvent {}

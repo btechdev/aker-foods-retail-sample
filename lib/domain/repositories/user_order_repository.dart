@@ -6,5 +6,5 @@ abstract class UserOrderRepository {
   Future<ApiResponse<OrderModel>> getOrders(int pageNo, int pageSize);
   Future<OrderPaymentReinitiateResponseEntity> reinitiatePaymentForOrder(
       String orderId);
-  Future<bool> verifyTransactionForOrder(String orderId);
+  Future<bool> verifyTransactionForOrder(int cartId);
 }

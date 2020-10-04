@@ -48,7 +48,7 @@ class CouponPromoCodeWidget extends StatelessWidget {
       );
 
   Text _codeAppliedSubtitleText(BuildContext context) => Text(
-        'Code applied successfully',
+        'Code applied',
         style: Theme.of(context).textTheme.caption.copyWith(
               fontSize: LayoutConstants.dimen_12.sp,
             ),

@@ -20,6 +20,4 @@ class AuthenticationUseCase {
 
   Future<String> getUserAuthIdToken() =>
       authenticationRepository.getUserAuthIdToken();
-
-  Future<bool> getNewUserFlag() => authenticationRepository.getNewUserFlag();
 }

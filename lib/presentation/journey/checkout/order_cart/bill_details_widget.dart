@@ -121,13 +121,20 @@ class BillDetailsWidgetState extends State<BillDetailsWidget> {
         ))
         ..add(SizedBox(height: LayoutConstants.dimen_8.h));
     }
+
+    final deliveryCharge =
+        (widget.billingEntity.deliveryCharges ?? 0).toDouble();
     widgets
       ..add(_billDetailsRow(
         descriptionText: 'Total amount saved',
         amountText: '${_textWithRupeePrefix(widget.billingEntity.totalSaved)}',
         textColor: AppColor.primaryColor,
       ))
-      ..add(SizedBox(height: LayoutConstants.dimen_8.h));
+      ..add(SizedBox(height: LayoutConstants.dimen_8.h))
+      ..add(_billDetailsRow(
+        descriptionText: 'Delivery charge',
+        amountText: '${_textWithRupeePrefix(deliveryCharge)}',
+      ));
     return widgets;
   }
 

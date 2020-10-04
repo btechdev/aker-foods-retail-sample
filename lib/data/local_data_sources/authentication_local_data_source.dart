@@ -35,18 +35,14 @@ class AuthenticationLocalDataSource {
         PreferencesKeys.firebaseIdToken,
       );
 
-  bool getNewUserFlag() => localPreferences.get(
-        PreferencesKeys.userIsNew,
+  bool getUserHasSetupProfileFlag() => localPreferences.get(
+        PreferencesKeys.userHasSetupProfile,
       );
 
-  Future<bool> setNewUserFlag(bool userIsNew) => localPreferences.set(
-        PreferencesKeys.userIsNew,
-        userIsNew,
-      );
+  Future<bool> setUserHasSetupProfileFlag(bool flag) =>
+      localPreferences.set(PreferencesKeys.userHasSetupProfile, flag);
 
-  Future<bool> removeNewUserFlag() => localPreferences.remove(
-        PreferencesKeys.userIsNew,
+  Future<bool> removeUserHasSetupProfileFlag() => localPreferences.remove(
+        PreferencesKeys.userHasSetupProfile,
       );
-
-  Future<bool> clearLocalPreferences() => localPreferences.clear();
 }

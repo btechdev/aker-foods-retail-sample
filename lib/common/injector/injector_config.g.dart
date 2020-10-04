@@ -82,7 +82,7 @@ class _$InjectorConfig extends InjectorConfig {
     container.registerFactory<UserProfileRepository>((c) =>
         UserProfileRepositoryImpl(
             userProfileRemoteDataSource: c<UserProfileRemoteDataSource>(),
-            authenticationLocalDataSource: c<AuthenticationLocalDataSource>()));
+            localPreferences: c<LocalPreferences>()));
     container.registerFactory<UserTransactionRepository>((c) =>
         UserTransactionRepositoryImpl(
             userTransactionRemoteDataSource:

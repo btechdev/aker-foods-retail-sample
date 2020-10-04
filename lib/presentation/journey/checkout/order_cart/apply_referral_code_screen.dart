@@ -55,6 +55,7 @@ class _ApplyCouponPromoCodeScreenState
       );
 
   Column _getBody() => Column(
+        mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           _getTextFieldWithApplyButton(context),
@@ -179,13 +180,13 @@ class _ApplyCouponPromoCodeScreenState
                     color: AppColor.yellow,
                   ),
                   child: Text(
-                    entity.code,
+                    entity.code ?? 'NA',
                     style: Theme.of(context).textTheme.subtitle1,
                   ),
                 ),
                 SizedBox(height: LayoutConstants.dimen_8.h),
                 Text(
-                  entity.description,
+                  entity.description ?? 'NA',
                   style: Theme.of(context).textTheme.subtitle1,
                 ),
               ],

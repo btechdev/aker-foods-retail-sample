@@ -3,12 +3,16 @@ import 'dart:async';
 import 'package:aker_foods_retail/common/constants/layout_constants.dart';
 import 'package:aker_foods_retail/common/constants/payment_constants.dart';
 import 'package:aker_foods_retail/common/extensions/pixel_dimension_util_extensions.dart';
+import 'package:aker_foods_retail/common/injector/injector.dart';
 import 'package:aker_foods_retail/domain/entities/cart_product_entity.dart';
 import 'package:aker_foods_retail/domain/entities/coupon_entity.dart';
+import 'package:aker_foods_retail/network/http/http_util.dart';
 import 'package:aker_foods_retail/presentation/app/route_constants.dart';
 import 'package:aker_foods_retail/presentation/common_blocs/cart_bloc/cart_bloc.dart';
 import 'package:aker_foods_retail/presentation/common_blocs/cart_bloc/cart_event.dart';
 import 'package:aker_foods_retail/presentation/common_blocs/cart_bloc/cart_state.dart';
+import 'package:aker_foods_retail/presentation/common_blocs/snack_bar_bloc/snack_bar_bloc.dart';
+import 'package:aker_foods_retail/presentation/common_blocs/snack_bar_bloc/snack_bar_event.dart';
 import 'package:aker_foods_retail/presentation/journey/checkout/order_cart/bill_details_widget.dart';
 import 'package:aker_foods_retail/presentation/journey/checkout/order_cart/order_delivery_address.dart';
 import 'package:aker_foods_retail/presentation/journey/checkout/order_cart/order_delivery_selection.dart';
@@ -18,6 +22,7 @@ import 'package:aker_foods_retail/presentation/journey/dashboard/bloc/dashboard_
 import 'package:aker_foods_retail/presentation/journey/dashboard/bottom_navigation_bar_details.dart';
 import 'package:aker_foods_retail/presentation/theme/app_colors.dart';
 import 'package:aker_foods_retail/presentation/widgets/coupon_promo_code_widget.dart';
+import 'package:aker_foods_retail/presentation/widgets/custom_snack_bar/snack_bar_constants.dart';
 import 'package:aker_foods_retail/presentation/widgets/in_stock_product_list_tile.dart';
 import 'package:aker_foods_retail/presentation/widgets/out_of_stock_product_list_tile.dart';
 import 'package:flutter/material.dart';
@@ -32,6 +37,7 @@ class _CartPageState extends State<CartPage> {
   String appliedCouponPromoCode = '';
 
   int _paymentType = PaymentTypeConstants.cashOnDelivery;
+  int _addressId;
   Timer _orderPaymentVerificationPollingTimer;
 
   void _cartBlocListener(BuildContext context, CartState state) {
@@ -147,8 +153,9 @@ class _CartPageState extends State<CartPage> {
         const Divider(),
         BillDetailsWidget(
           billingEntity: state.cartEntity.billingEntity,
-          showErrorMessage: state.hasOutOfStockProducts ?? false,
-          message: state.message ?? '',
+          showErrorMessage:
+              state.hasInvalidPromoCodeApplied || state.hasOutOfStockProducts,
+          message: state.message ?? HttpUtil.unknownError,
         ),
         const Divider(),
         OrderDeliverySelection(),
@@ -158,12 +165,7 @@ class _CartPageState extends State<CartPage> {
         ),
         const Divider(),
         OrderDeliveryAddressSelection(
-          onAddressSelection: (id) {
-            if (id is int) {
-              //_addressId = id;
-              // TODO(Bhushan): Check if this is needed
-            }
-          },
+          onAddressSelection: (id) => _addressId = id,
         ),
         SizedBox(height: LayoutConstants.dimen_32.h)
       ];
@@ -279,11 +281,24 @@ class _CartPageState extends State<CartPage> {
         child: RaisedButton(
           color: AppColor.primaryColor,
           shape: LayoutConstants.borderlessRoundedRectangle,
-          onPressed: () => BlocProvider.of<CartBloc>(context).add(
-            CreateOrderCartEvent(paymentType: _paymentType),
-          ),
+          onPressed: () {
+            if (_addressId == null) {
+              Injector.resolve<SnackBarBloc>().add(ShowSnackBarEvent(
+                type: CustomSnackBarType.error,
+                text: 'Please provide the delivery address',
+              ));
+              return;
+            }
+
+            BlocProvider.of<CartBloc>(context).add(
+              CreateOrderCartEvent(
+                paymentType: _paymentType,
+                selectedAddressId: _addressId,
+              ),
+            );
+          },
           child: Text(
-            'Proceed to pay',
+            'Place Order',
             style: Theme.of(context).textTheme.button.copyWith(
                   color: AppColor.white,
                 ),

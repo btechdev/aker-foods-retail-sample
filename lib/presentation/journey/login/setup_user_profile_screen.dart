@@ -51,9 +51,7 @@ class _SetupProfileScreen extends State<SetupUserProfileScreen> {
       );
 
   void _setupUserProfile() {
-    userProfileBloc.add(
-      SetupUserProfileEvent(user: userProfileModel),
-    );
+    userProfileBloc.add(SetupUserProfileEvent(user: userProfileModel));
   }
 
   @override

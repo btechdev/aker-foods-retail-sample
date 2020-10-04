@@ -4,5 +4,6 @@ abstract class UserProfileRepository {
   Future<void> setupUserProfile(UserProfileModel user);
   Future<void> updateUserProfile(UserProfileModel user);
   Future<UserProfileModel> fetchUserProfile();
+  Future<bool> setUserHasSetupProfileFlag(bool flag);
   Future<bool> clearLocalPreferences();
 }

@@ -1,9 +1,9 @@
 import 'dart:convert';
 
 import 'package:aker_foods_retail/common/exceptions/bad_request_exception.dart';
+import 'package:aker_foods_retail/common/exceptions/cart_data_exception.dart';
 import 'package:aker_foods_retail/common/exceptions/forbidden_exception.dart';
 import 'package:aker_foods_retail/common/exceptions/not_found_exception.dart';
-import 'package:aker_foods_retail/common/exceptions/product_out_of_stock_exception.dart';
 import 'package:aker_foods_retail/common/exceptions/server_error_exception.dart';
 import 'package:aker_foods_retail/common/exceptions/unauthorized_exception.dart';
 import 'package:aker_foods_retail/common/extensions/string_extensions.dart';
@@ -40,8 +40,6 @@ class HttpUtil {
         return _getSuccessResponse(response);
       case 201:
         return _getSuccessResponse(response);
-      case 204:
-        return null;
 
       case 302:
         return response;
@@ -64,12 +62,7 @@ class HttpUtil {
           getErrorMessage(json.decode(response.body)),
         );
       case 406:
-        throw ProductOutOfStockException(
-          //getErrorMessage(json.decode(response.body)),
-          'There is no error message from server for out of stock products',
-          outOfStockProductIds:
-              _getOutOfStockProductIds(json.decode(response.body)),
-        );
+        throw CartDataException.fromJson(json.decode(response.body));
       case 500:
       default:
         throw ServerErrorException(
@@ -96,20 +89,13 @@ class HttpUtil {
 
   static String getErrorMessage(dynamic result) {
     if (result['error'] is String) {
-      return result;
+      return result['error'];
+    } else if (result['message'] is String) {
+      return result['message'];
     } else if (result['error'] != null && result['error']['message'] != null) {
       return result['error']['message'];
     }
     return unknownError;
-  }
-
-  static Set<String> _getOutOfStockProductIds(dynamic errorBody) {
-    final Map<String, dynamic> outOfStockProductsMap =
-        errorBody['item_unstocked'];
-    if (outOfStockProductsMap != null) {
-      return outOfStockProductsMap.keys.toSet();
-    }
-    return Set();
   }
 
   static dynamic _retryRequestAfterRefreshAuthorization(

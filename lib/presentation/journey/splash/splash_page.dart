@@ -158,8 +158,9 @@ class _SplashPageState extends State<SplashPage> {
       return RouteConstants.enterPhoneNumber;
     }
 
-    final bool userIsNew = localPreferences.get(PreferencesKeys.userIsNew);
-    if (userIsNew) {
+    final bool userHasSetupProfile =
+        localPreferences.get(PreferencesKeys.userHasSetupProfile);
+    if (!userHasSetupProfile) {
       return RouteConstants.setupUserProfile;
     }
 

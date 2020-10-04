@@ -1,7 +1,8 @@
 import 'dart:async';
 
 import 'package:aker_foods_retail/common/constants/payment_constants.dart';
-import 'package:aker_foods_retail/common/exceptions/product_out_of_stock_exception.dart';
+import 'package:aker_foods_retail/common/exceptions/cart_data_exception.dart';
+import 'package:aker_foods_retail/common/exceptions/server_exception.dart';
 import 'package:aker_foods_retail/data/models/razorpay_payment_model.dart';
 import 'package:aker_foods_retail/domain/entities/billing_entity.dart';
 import 'package:aker_foods_retail/domain/entities/cart_entity.dart';
@@ -9,6 +10,7 @@ import 'package:aker_foods_retail/domain/entities/payment_details_entity.dart';
 import 'package:aker_foods_retail/domain/usecases/cart_use_case.dart';
 import 'package:aker_foods_retail/domain/usecases/products_use_case.dart';
 import 'package:aker_foods_retail/domain/usecases/user_order_use_case.dart';
+import 'package:aker_foods_retail/network/http/http_util.dart';
 import 'package:aker_foods_retail/presentation/common_blocs/cart_bloc/cart_event.dart';
 import 'package:aker_foods_retail/presentation/common_blocs/cart_bloc/cart_state.dart';
 import 'package:aker_foods_retail/presentation/common_blocs/loader_bloc/loader_bloc.dart';
@@ -28,10 +30,10 @@ class CartBloc extends Bloc<CartEvent, CartState> {
   final UserOrderUseCase userOrderUseCase;
 
   static const int _orderPaymentVerificationPollingInterval = 10;
-  int _verifyOrderPaymentPollingRemainingSeconds = 10 * 30;
-
-  /// 300 seconds
+  int _verifyOrderPaymentPollingRemainingSeconds = 10 * 30; // 300 seconds
   Timer _orderPaymentVerificationPollingTimer;
+
+  int _cartId;
 
   CartBloc({
     this.loaderBloc,
@@ -70,24 +72,24 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     }
   }
 
-  Future<void> _timerCallback(String orderId) async {
+  Future<void> _timerCallback() async {
     try {
       final paymentIsVerified =
-          await userOrderUseCase.verifyTransactionForOrder(orderId);
+          await userOrderUseCase.verifyTransactionForOrder(_cartId);
       if (paymentIsVerified) {
         _orderPaymentVerificationPollingTimer.cancel();
         loaderBloc.add(DismissLoaderEvent());
         add(CartOrderPaymentSuccessEvent());
         snackBarBloc.add(ShowSnackBarEvent(
           type: CustomSnackBarType.success,
-          text: 'Payment success: $orderId',
+          text: 'Payment successful : $_cartId',
         ));
         return;
       }
     } catch (_) {}
     _verifyOrderPaymentPollingRemainingSeconds -= 10;
     if (_verifyOrderPaymentPollingRemainingSeconds > 0) {
-      _startTimer(orderId);
+      _startTimer();
     } else {
       _orderPaymentVerificationPollingTimer.cancel();
       loaderBloc.add(DismissLoaderEvent());
@@ -100,17 +102,17 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     }
   }
 
-  void _startTimer(String orderId) {
+  void _startTimer() {
     /// NOTE: Run timer for max 300 seconds
     _orderPaymentVerificationPollingTimer = Timer(
       const Duration(seconds: _orderPaymentVerificationPollingInterval),
-      () => _timerCallback(orderId),
+      _timerCallback,
     );
   }
 
   Stream<CartState> _processCartOrderVerifyPaymentEvent(
       CartOrderVerifyPaymentEvent event) async* {
-    _startTimer(event.orderId);
+    _startTimer();
   }
 
   Stream<CartState> _processCartOrderPaymentSuccessEvent(
@@ -141,24 +143,41 @@ class CartBloc extends Bloc<CartEvent, CartState> {
 
   Stream<CartState> _processError(
       dynamic error, CartEntity cartEntity, Map<int, int> idCountMap) async* {
-    if (error is ProductOutOfStockException) {
-      for (final cartProduct in cartEntity.products) {
-        final idString = '${cartProduct?.product?.id}';
-        if (error.outOfStockProductIds.contains(idString)) {
-          cartProduct?.product?.isInStock = false;
+    if (error is CartDataException) {
+      if (error.hasOutOfStockProducts ?? false) {
+        for (final cartProduct in cartEntity.products) {
+          final idString = '${cartProduct?.product?.id}';
+          if (error.outOfStockProductIds.contains(idString)) {
+            cartProduct?.product?.isInStock = false;
+          }
         }
       }
       yield CartLoadedState(
-        hasOutOfStockProducts: true,
+        hasInvalidPromoCodeApplied: error.hasInvalidPromoCodeApplied,
+        hasOutOfStockProducts: error.hasOutOfStockProducts,
         message: error.message,
         cartEntity: cartEntity,
         productIdCountMap: idCountMap,
       );
+
+      snackBarBloc.add(ShowSnackBarEvent(
+        type: CustomSnackBarType.error,
+        text: error.message,
+      ));
       return;
     }
+
+    String message = '${HttpUtil.unknownError}: ${error.toString()}';
+    if (error is ServerException) {
+      message = error.message;
+    }
+    yield CartLoadedState(
+      cartEntity: cartEntity,
+      productIdCountMap: idCountMap,
+    );
     snackBarBloc.add(ShowSnackBarEvent(
       type: CustomSnackBarType.error,
-      text: error.toString(),
+      text: message,
     ));
   }
 
@@ -229,7 +248,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
         productIdCountMap: idCountMap,
       );
     } catch (error) {
-      _processError(error, cartEntity, idCountMap);
+      yield* _processError(error, cartEntity, idCountMap);
     }
   }
 
@@ -251,7 +270,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
         productIdCountMap: idCountMap,
       );
     } catch (error) {
-      _processError(error, cartEntity, idCountMap);
+      yield* _processError(error, cartEntity, idCountMap);
     }
   }
 
@@ -259,22 +278,35 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       CreateOrderCartEvent event) async* {
     loaderBloc.add(ShowLoaderEvent());
     final cartEntity = await cartUseCase.getCartData();
-    final addressEntity = await cartUseCase.getSelectedAddress();
-    cartEntity.billingEntity = state.cartEntity?.billingEntity;
-    final createOrderResponse = await cartUseCase.createOrder(
-      event.paymentType,
-      addressEntity.id,
-      cartEntity,
-    );
+    try {
+      cartEntity.billingEntity = state.cartEntity?.billingEntity;
+      final createOrderResponse = await cartUseCase.createOrder(
+        event.paymentType,
+        event.selectedAddressId,
+        cartEntity,
+      );
 
-    if (event.paymentType == PaymentTypeConstants.online) {
-      _initiateRazorPayTransaction(createOrderResponse.paymentDetails);
+      _cartId = createOrderResponse.id;
+      if (event.paymentType == PaymentTypeConstants.online) {
+        _initiateRazorPayTransaction(createOrderResponse.paymentDetails);
+      } else {
+        await cartUseCase.clearCart();
+        yield NavigatedToOrderListState();
+        loaderBloc.add(DismissLoaderEvent());
+        snackBarBloc.add(ShowSnackBarEvent(
+          type: CustomSnackBarType.success,
+          text: 'Order placed successfully',
+        ));
+      }
+    } catch (error) {
+      loaderBloc.add(DismissLoaderEvent());
+      yield* _processError(error, cartEntity, _productIdCountMap(cartEntity));
     }
   }
 
-  void _initiateRazorPayTransaction(PaymentDetailsEntity paymentDetailsEntity) {
+  void _initiateRazorPayTransaction(PaymentDetailsEntity paymentDetails) {
     final razorpayPaymentModel =
-        RazorpayPaymentModel.fromPaymentDetails(paymentDetailsEntity);
+        RazorpayPaymentModel.fromPaymentDetails(paymentDetails);
     try {
       Razorpay()
         ..on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess)
@@ -292,7 +324,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
 
   void _handlePaymentSuccess(PaymentSuccessResponse response) {
     debugPrint('Razorpay PaymentSuccess => ${response.orderId}');
-    add(CartOrderVerifyPaymentEvent(orderId: response.orderId));
+    add(CartOrderVerifyPaymentEvent(cartId: _cartId));
   }
 
   void _handlePaymentError(PaymentFailureResponse response) {
@@ -355,16 +387,16 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     yield CartLoadingState(totalProductCount: state.totalProductCount);
     CartEntity cartEntity = await cartUseCase.getCartData();
     cartEntity.promoCode = event.promoCode;
+    cartEntity = await cartUseCase.saveCart(cartEntity);
     final Map<int, int> idCountMap = _productIdCountMap(cartEntity);
     try {
       cartEntity.billingEntity = await _validateCart(cartEntity);
-      cartEntity = await cartUseCase.saveCart(cartEntity);
       yield CartProductUpdatedState(
         cartEntity: cartEntity,
         productIdCountMap: idCountMap,
       );
     } catch (error) {
-      _processError(error, cartEntity, idCountMap);
+      yield* _processError(error, cartEntity, idCountMap);
     }
   }
 
@@ -372,16 +404,16 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     yield CartLoadingState(totalProductCount: state.totalProductCount);
     CartEntity cartEntity = await cartUseCase.getCartData();
     cartEntity.promoCode = null;
+    cartEntity = await cartUseCase.saveCart(cartEntity);
     final Map<int, int> idCountMap = _productIdCountMap(cartEntity);
     try {
       cartEntity.billingEntity = await _validateCart(cartEntity);
-      cartEntity = await cartUseCase.saveCart(cartEntity);
       yield CartProductUpdatedState(
         cartEntity: cartEntity,
         productIdCountMap: idCountMap,
       );
     } catch (error) {
-      _processError(error, cartEntity, idCountMap);
+      yield* _processError(error, cartEntity, idCountMap);
     }
   }
 }

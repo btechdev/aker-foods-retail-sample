@@ -16,6 +16,6 @@ class UserOrderUseCase {
           String orderId) async =>
       userOrderRepository.reinitiatePaymentForOrder(orderId);
 
-  Future<bool> verifyTransactionForOrder(String orderId) async =>
-      userOrderRepository.verifyTransactionForOrder(orderId);
+  Future<bool> verifyTransactionForOrder(int cartId) async =>
+      userOrderRepository.verifyTransactionForOrder(cartId);
 }

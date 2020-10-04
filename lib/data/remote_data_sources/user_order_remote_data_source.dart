@@ -9,8 +9,7 @@ class UserOrderRemoteDataSource {
 
   UserOrderRemoteDataSource({this.apiClient});
 
-  Future<ApiResponse<OrderModel>> getOrders(
-      int pageNo, int pageSize) async {
+  Future<ApiResponse<OrderModel>> getOrders(int pageNo, int pageSize) async {
     final jsonMap = await apiClient
         .get('${ApiEndpoints.orderHistory}?page=$pageNo&page_size=$pageSize');
     return ApiResponse<OrderModel>.fromJsonMap(jsonMap);
@@ -23,9 +22,9 @@ class UserOrderRemoteDataSource {
     return OrderPaymentReinitiateResponseModel.fromJson(response);
   }
 
-  Future<bool> verifyTransactionForOrder(String orderId) async {
+  Future<bool> verifyTransactionForOrder(int cartId) async {
     final response = await apiClient
-        .get('${ApiEndpoints.createOrder}$orderId/verify-transaction/');
+        .get('${ApiEndpoints.createOrder}$cartId/verify-transaction/');
     return response['message'] == 'successfull';
   }
 }

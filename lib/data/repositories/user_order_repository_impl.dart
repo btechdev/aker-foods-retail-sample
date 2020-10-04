@@ -19,6 +19,6 @@ class UserOrderRepositoryImpl implements UserOrderRepository {
       userOrderRemoteDataSource.reinitiatePaymentForOrder(orderId);
 
   @override
-  Future<bool> verifyTransactionForOrder(String orderId) async =>
-      userOrderRemoteDataSource.verifyTransactionForOrder(orderId);
+  Future<bool> verifyTransactionForOrder(int cartId) async =>
+      userOrderRemoteDataSource.verifyTransactionForOrder(cartId);
 }

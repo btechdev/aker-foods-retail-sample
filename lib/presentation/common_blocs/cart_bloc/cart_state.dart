@@ -39,12 +39,14 @@ class CartEmptyState extends CartState {
 
 class CartLoadedState extends CartState {
   final Map<int, int> productIdCountMap;
+  final bool hasInvalidPromoCodeApplied;
   final bool hasOutOfStockProducts;
   final String message;
 
   CartLoadedState({
     @required CartEntity cartEntity,
     @required this.productIdCountMap,
+    this.hasInvalidPromoCodeApplied = false,
     this.hasOutOfStockProducts = false,
     this.message,
   }) : super(

@@ -6,11 +6,12 @@ import 'package:aker_foods_retail/presentation/journey/user/address/change_addre
 import 'package:aker_foods_retail/presentation/journey/user/address/change_address/bloc/change_address_event.dart';
 import 'package:aker_foods_retail/presentation/journey/user/address/change_address/bloc/change_address_state.dart';
 import 'package:aker_foods_retail/presentation/journey/user/address/change_address_mode_selection_bottom_sheet.dart';
+import 'package:aker_foods_retail/presentation/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class OrderDeliveryAddressSelection extends StatefulWidget {
-  final Function onAddressSelection;
+  final void Function(int) onAddressSelection;
 
   OrderDeliveryAddressSelection({Key key, this.onAddressSelection})
       : super(key: key);
@@ -44,36 +45,22 @@ class _OrderDeliveryAddressSelectionState
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 _getHeaderText(context),
-                GestureDetector(
+                _chooseAddressButton(context),
+                /*GestureDetector(
                   onTap: () => _getLocationSelectionBottomSheet(context),
                   child: Text(
                     'Choose Address',
                     style: Theme.of(context).textTheme.subtitle1,
                   ),
-                )
+                )*/
               ],
             ),
-            SizedBox(
-              height: LayoutConstants.dimen_8.h,
-            ),
-            BlocBuilder<ChangeAddressBloc, ChangeAddressState>(
-              builder: (context, state) {
-                if (state is FetchSelectedAddressSuccessState) {
-                  _selectedAddress = state.addressModel;
-                  widget.onAddressSelection(_selectedAddress.id);
-                  return Text(
-                      '${_selectedAddress.address1}'
-                          ' ${_selectedAddress.address2}',
-                      style: Theme.of(context).textTheme.bodyText1);
-                } else {
-                  return Text('', style: Theme.of(context).textTheme.bodyText1);
-                }
-              },
-            )
+            SizedBox(height: LayoutConstants.dimen_8.h),
+            _selectedAddressTextBuilder(),
           ],
         ),
       ),
@@ -81,11 +68,42 @@ class _OrderDeliveryAddressSelectionState
   }
 
   Text _getHeaderText(BuildContext context) => Text(
-        'Select Delivery Type',
+        'Delivery Address',
         style: Theme.of(context).textTheme.headline6,
       );
 
-  Future<void> _getLocationSelectionBottomSheet(BuildContext context) async {
+  FlatButton _chooseAddressButton(BuildContext context) => FlatButton(
+        onPressed: _getLocationSelectionBottomSheet,
+        padding: EdgeInsets.symmetric(horizontal: LayoutConstants.dimen_8.w),
+        child: Text(
+          'Choose Address',
+          textAlign: TextAlign.center,
+          style: Theme.of(context).textTheme.subtitle2.copyWith(
+                color: AppColor.black54,
+              ),
+        ),
+      );
+
+  Widget _selectedAddressTextBuilder() =>
+      BlocBuilder<ChangeAddressBloc, ChangeAddressState>(
+        builder: (context, state) {
+          if (state is FetchSelectedAddressSuccessState) {
+            _selectedAddress = state.addressModel;
+            widget.onAddressSelection(_selectedAddress.id);
+            return Text(
+              '${_selectedAddress.address1}'
+              ' ${_selectedAddress.address2}',
+              style: Theme.of(context).textTheme.subtitle1.copyWith(
+                    color: AppColor.primaryColor,
+                  ),
+            );
+          } else {
+            return const Text('');
+          }
+        },
+      );
+
+  Future<void> _getLocationSelectionBottomSheet() async {
     final _ = await showModalBottomSheet(
       context: context,
       isScrollControlled: true,
