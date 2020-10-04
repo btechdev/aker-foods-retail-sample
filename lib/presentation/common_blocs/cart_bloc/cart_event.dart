@@ -1,5 +1,6 @@
 import 'package:aker_foods_retail/domain/entities/cart_product_entity.dart';
 import 'package:aker_foods_retail/domain/entities/product_entity.dart';
+import 'package:flutter/foundation.dart';
 
 abstract class CartEvent {}
 
@@ -54,3 +55,13 @@ class NotifyUserAboutProductEvent extends CartEvent {
 
   NotifyUserAboutProductEvent({this.cartProduct, this.productEntity});
 }
+
+class CartOrderVerifyPaymentEvent extends CartEvent {
+  final String orderId;
+
+  CartOrderVerifyPaymentEvent({@required this.orderId}) : super();
+}
+
+class CartOrderPaymentSuccessEvent extends CartEvent {}
+
+class CartOrderPaymentFailedEvent extends CartEvent {}

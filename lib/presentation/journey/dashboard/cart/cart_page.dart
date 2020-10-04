@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:aker_foods_retail/common/constants/layout_constants.dart';
 import 'package:aker_foods_retail/common/constants/payment_constants.dart';
 import 'package:aker_foods_retail/common/extensions/pixel_dimension_util_extensions.dart';
@@ -28,10 +30,22 @@ class CartPage extends StatefulWidget {
 
 class _CartPageState extends State<CartPage> {
   String appliedCouponPromoCode = '';
+
   int _paymentType = PaymentTypeConstants.cashOnDelivery;
+  Timer _orderPaymentVerificationPollingTimer;
 
   void _cartBlocListener(BuildContext context, CartState state) {
     debugPrint('CartBloc => Listener: $state');
+    if (state is NavigatedToOrderListState) {
+      _orderPaymentVerificationPollingTimer = state.timer;
+      Navigator.pushNamed(context, RouteConstants.myOrders, arguments: true);
+    }
+  }
+
+  @override
+  void dispose() {
+    _orderPaymentVerificationPollingTimer?.cancel();
+    super.dispose();
   }
 
   @override

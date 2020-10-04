@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:aker_foods_retail/domain/entities/cart_entity.dart';
 import 'package:flutter/foundation.dart';
 
@@ -83,4 +85,12 @@ class CartPromoCodeUpdatedState extends CartLoadedState {
           cartEntity: cartEntity,
           productIdCountMap: productIdCountMap,
         );
+}
+
+class NavigatedToOrderListState extends CartState {
+  final Timer timer;
+
+  NavigatedToOrderListState({
+    this.timer,
+  }) : super(totalProductCount: 0);
 }

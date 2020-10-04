@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:aker_foods_retail/common/constants/payment_constants.dart';
 import 'package:aker_foods_retail/common/exceptions/product_out_of_stock_exception.dart';
 import 'package:aker_foods_retail/data/models/razorpay_payment_model.dart';
@@ -6,8 +8,11 @@ import 'package:aker_foods_retail/domain/entities/cart_entity.dart';
 import 'package:aker_foods_retail/domain/entities/payment_details_entity.dart';
 import 'package:aker_foods_retail/domain/usecases/cart_use_case.dart';
 import 'package:aker_foods_retail/domain/usecases/products_use_case.dart';
+import 'package:aker_foods_retail/domain/usecases/user_order_use_case.dart';
 import 'package:aker_foods_retail/presentation/common_blocs/cart_bloc/cart_event.dart';
 import 'package:aker_foods_retail/presentation/common_blocs/cart_bloc/cart_state.dart';
+import 'package:aker_foods_retail/presentation/common_blocs/loader_bloc/loader_bloc.dart';
+import 'package:aker_foods_retail/presentation/common_blocs/loader_bloc/loader_event.dart';
 import 'package:aker_foods_retail/presentation/common_blocs/snack_bar_bloc/snack_bar_bloc.dart';
 import 'package:aker_foods_retail/presentation/common_blocs/snack_bar_bloc/snack_bar_event.dart';
 import 'package:aker_foods_retail/presentation/widgets/custom_snack_bar/snack_bar_constants.dart';
@@ -16,14 +21,24 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 
 class CartBloc extends Bloc<CartEvent, CartState> {
+  final LoaderBloc loaderBloc;
   final SnackBarBloc snackBarBloc;
   final CartUseCase cartUseCase;
   final ProductsUseCase productsUseCase;
+  final UserOrderUseCase userOrderUseCase;
+
+  static const int _orderPaymentVerificationPollingInterval = 10;
+  int _verifyOrderPaymentPollingRemainingSeconds = 10 * 30;
+
+  /// 300 seconds
+  Timer _orderPaymentVerificationPollingTimer;
 
   CartBloc({
+    this.loaderBloc,
     this.snackBarBloc,
     this.cartUseCase,
     this.productsUseCase,
+    this.userOrderUseCase,
   }) : super(CartInitialState());
 
   @override
@@ -45,6 +60,69 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     } else if (event is NotifyUserAboutProductEvent) {
       yield* _handleNotifyUserAboutProductEvent(event);
     }
+
+    if (event is CartOrderVerifyPaymentEvent) {
+      yield* _processCartOrderVerifyPaymentEvent(event);
+    } else if (event is CartOrderPaymentSuccessEvent) {
+      yield* _processCartOrderPaymentSuccessEvent(event);
+    } else if (event is CartOrderPaymentFailedEvent) {
+      yield* _processCartOrderPaymentFailedEvent(event);
+    }
+  }
+
+  Future<void> _timerCallback(String orderId) async {
+    try {
+      final paymentIsVerified =
+          await userOrderUseCase.verifyTransactionForOrder(orderId);
+      if (paymentIsVerified) {
+        _orderPaymentVerificationPollingTimer.cancel();
+        loaderBloc.add(DismissLoaderEvent());
+        add(CartOrderPaymentSuccessEvent());
+        snackBarBloc.add(ShowSnackBarEvent(
+          type: CustomSnackBarType.success,
+          text: 'Payment success: $orderId',
+        ));
+        return;
+      }
+    } catch (_) {}
+    _verifyOrderPaymentPollingRemainingSeconds -= 10;
+    if (_verifyOrderPaymentPollingRemainingSeconds > 0) {
+      _startTimer(orderId);
+    } else {
+      _orderPaymentVerificationPollingTimer.cancel();
+      loaderBloc.add(DismissLoaderEvent());
+      add(CartOrderPaymentFailedEvent());
+      snackBarBloc.add(ShowSnackBarEvent(
+        type: CustomSnackBarType.error,
+        text: 'Failed to verify the order payment. '
+            'Please visit order details for more information.',
+      ));
+    }
+  }
+
+  void _startTimer(String orderId) {
+    /// NOTE: Run timer for max 300 seconds
+    _orderPaymentVerificationPollingTimer = Timer(
+      const Duration(seconds: _orderPaymentVerificationPollingInterval),
+      () => _timerCallback(orderId),
+    );
+  }
+
+  Stream<CartState> _processCartOrderVerifyPaymentEvent(
+      CartOrderVerifyPaymentEvent event) async* {
+    _startTimer(event.orderId);
+  }
+
+  Stream<CartState> _processCartOrderPaymentSuccessEvent(
+      CartOrderPaymentSuccessEvent event) async* {
+    await cartUseCase.clearCart();
+    yield NavigatedToOrderListState();
+  }
+
+  Stream<CartState> _processCartOrderPaymentFailedEvent(
+      CartOrderPaymentFailedEvent event) async* {
+    await cartUseCase.clearCart();
+    yield NavigatedToOrderListState();
   }
 
   Map<int, int> _productIdCountMap(CartEntity cartEntity) {
@@ -179,12 +257,10 @@ class CartBloc extends Bloc<CartEvent, CartState> {
 
   Stream<CartState> _processCreateOrderCartEvent(
       CreateOrderCartEvent event) async* {
-    yield CartLoadingState(totalProductCount: state.totalProductCount);
-    //yield* _cartLoadingState();
+    loaderBloc.add(ShowLoaderEvent());
     final cartEntity = await cartUseCase.getCartData();
     final addressEntity = await cartUseCase.getSelectedAddress();
     cartEntity.billingEntity = state.cartEntity?.billingEntity;
-    final Map<int, int> idCountMap = _productIdCountMap(cartEntity);
     final createOrderResponse = await cartUseCase.createOrder(
       event.paymentType,
       addressEntity.id,
@@ -194,12 +270,6 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     if (event.paymentType == PaymentTypeConstants.online) {
       _initiateRazorPayTransaction(createOrderResponse.paymentDetails);
     }
-
-    // TODO(Bhushan): Process order creation API response
-    yield CartProductUpdatedState(
-      cartEntity: cartEntity,
-      productIdCountMap: idCountMap,
-    );
   }
 
   void _initiateRazorPayTransaction(PaymentDetailsEntity paymentDetailsEntity) {
@@ -221,15 +291,14 @@ class CartBloc extends Bloc<CartEvent, CartState> {
   }
 
   void _handlePaymentSuccess(PaymentSuccessResponse response) {
-    debugPrint('${response.orderId}');
-    snackBarBloc.add(ShowSnackBarEvent(
-      type: CustomSnackBarType.success,
-      text: 'Payment success: ${response.orderId}',
-    ));
+    debugPrint('Razorpay PaymentSuccess => ${response.orderId}');
+    add(CartOrderVerifyPaymentEvent(orderId: response.orderId));
   }
 
   void _handlePaymentError(PaymentFailureResponse response) {
     debugPrint('${response.message}');
+    loaderBloc.add(DismissLoaderEvent());
+    add(CartOrderPaymentFailedEvent());
     snackBarBloc.add(ShowSnackBarEvent(
       type: CustomSnackBarType.error,
       text: 'Payment error: ${response.message}',
@@ -237,10 +306,11 @@ class CartBloc extends Bloc<CartEvent, CartState> {
   }
 
   void _handleExternalWallet(ExternalWalletResponse response) {
-    debugPrint('success');
+    debugPrint('Wallet payment callback');
+    loaderBloc.add(DismissLoaderEvent());
     snackBarBloc.add(ShowSnackBarEvent(
       type: CustomSnackBarType.error,
-      text: 'Balance added to wallet: ${response.walletName}',
+      text: 'Currently wallet payments are not supported',
     ));
   }
 

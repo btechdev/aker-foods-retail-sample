@@ -1,10 +1,10 @@
 import 'package:aker_foods_retail/common/constants/app_constants.dart';
 import 'package:aker_foods_retail/common/constants/layout_constants.dart';
+import 'package:aker_foods_retail/common/extensions/pixel_dimension_util_extensions.dart';
 import 'package:aker_foods_retail/common/injector/injector.dart';
 import 'package:aker_foods_retail/common/utils/date_utils.dart';
 import 'package:aker_foods_retail/common/utils/pixel_dimension_util.dart';
 import 'package:aker_foods_retail/domain/entities/transaction_entity.dart';
-import 'package:aker_foods_retail/presentation/app/route_constants.dart';
 import 'package:aker_foods_retail/presentation/journey/wallet/bloc/user_transaction_bloc.dart';
 import 'package:aker_foods_retail/presentation/journey/wallet/bloc/user_transaction_event.dart';
 import 'package:aker_foods_retail/presentation/journey/wallet/bloc/user_transaction_state.dart';
@@ -12,8 +12,6 @@ import 'package:aker_foods_retail/presentation/theme/app_colors.dart';
 import 'package:aker_foods_retail/presentation/widgets/circular_loader_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../../../common/extensions/pixel_dimension_util_extensions.dart';
 
 class WalletTransactionsScreen extends StatefulWidget {
   final double currentWalletBalance;
@@ -39,7 +37,6 @@ class _WalletTransactionsScreenState extends State<WalletTransactionsScreen> {
     }
   }
 
-
   @override
   void initState() {
     super.initState();
@@ -59,13 +56,13 @@ class _WalletTransactionsScreenState extends State<WalletTransactionsScreen> {
     return Scaffold(
       appBar: _getAppBar(),
       body: _getBody(),
-      bottomNavigationBar: _buttonWithContainer(),
+      //bottomNavigationBar: _buttonWithContainer(),
     );
   }
 
   AppBar _getAppBar() => AppBar(
         title: Text(
-          'My Transactions',
+          'My Wallet',
           style: Theme.of(context).textTheme.headline6,
         ),
         centerTitle: false,
@@ -73,7 +70,7 @@ class _WalletTransactionsScreenState extends State<WalletTransactionsScreen> {
         backgroundColor: AppColor.white,
       );
 
-  Container _buttonWithContainer() => Container(
+  /*Container _buttonWithContainer() => Container(
         height: LayoutConstants.dimen_48.h,
         margin: EdgeInsets.symmetric(
             horizontal: LayoutConstants.dimen_16.w,
@@ -93,7 +90,7 @@ class _WalletTransactionsScreenState extends State<WalletTransactionsScreen> {
                 ),
           ),
         ),
-      );
+      );*/
 
   BlocProvider _getBody() => BlocProvider<UserTransactionBloc>(
         create: (context) => userTransactionBloc,
@@ -176,12 +173,12 @@ class _WalletTransactionsScreenState extends State<WalletTransactionsScreen> {
           ],
         ),
       );
-  
+
   Widget _getListViewContainer(UserTransactionState state) {
     if (state is TransactionFetchingState) {
       return const CircularLoaderWidget();
     }
-    
+
     _isLoading = false;
     if (state is TransactionFetchSuccessfulState ||
         state is TransactionPaginationFailedState) {
@@ -192,17 +189,17 @@ class _WalletTransactionsScreenState extends State<WalletTransactionsScreen> {
   }
 
   ListView _getListView(UserTransactionState state) => ListView.builder(
-      controller: _scrollController,
-      itemCount: state.transactions.length,
-      shrinkWrap: true,
-      itemBuilder: (context, index) => Container(
-        height: LayoutConstants.dimen_130.h,
-        padding: EdgeInsets.symmetric(
-          vertical: LayoutConstants.dimen_12.h,
+        controller: _scrollController,
+        itemCount: state.transactions.length,
+        shrinkWrap: true,
+        itemBuilder: (context, index) => Container(
+          height: LayoutConstants.dimen_130.h,
+          padding: EdgeInsets.symmetric(
+            vertical: LayoutConstants.dimen_12.h,
+          ),
+          child: _getDetailsContainer(state.transactions[index]),
         ),
-        child: _getDetailsContainer(state.transactions[index]),
-      ),
-    );
+      );
 
   Container _getDetailsContainer(TransactionEntity item) => Container(
         padding: EdgeInsets.all(LayoutConstants.dimen_16.w),

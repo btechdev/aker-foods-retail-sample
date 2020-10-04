@@ -17,9 +17,11 @@ class _$InjectorConfig extends InjectorConfig {
         (c) => FirebaseAuthBloc(authUseCase: c<AuthenticationUseCase>()));
     container.registerSingleton((c) => DashboardBloc());
     container.registerSingleton((c) => CartBloc(
+        loaderBloc: c<LoaderBloc>(),
         snackBarBloc: c<SnackBarBloc>(),
         cartUseCase: c<CartUseCase>(),
-        productsUseCase: c<ProductsUseCase>()));
+        productsUseCase: c<ProductsUseCase>(),
+        userOrderUseCase: c<UserOrderUseCase>()));
     container.registerFactory(
         (c) => SelectSocietyBloc(userAddressUseCase: c<UserAddressUseCase>()));
     container.registerFactory((c) => UserProfileBloc(

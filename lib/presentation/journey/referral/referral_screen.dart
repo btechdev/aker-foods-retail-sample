@@ -30,7 +30,7 @@ class _ReferralScreenState extends State<ReferralScreen> {
 
   AppBar _getAppBar() => AppBar(
         title: Text(
-          'Refer A Friend',
+          'Refer Friends',
           style: Theme.of(context).textTheme.headline6,
         ),
         centerTitle: false,
