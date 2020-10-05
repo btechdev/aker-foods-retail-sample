@@ -16,7 +16,8 @@ import 'package:aker_foods_retail/presentation/common_blocs/snack_bar_bloc/snack
 import 'package:aker_foods_retail/presentation/journey/checkout/order_cart/bill_details_widget.dart';
 import 'package:aker_foods_retail/presentation/journey/checkout/order_cart/order_delivery_address.dart';
 import 'package:aker_foods_retail/presentation/journey/checkout/order_cart/order_delivery_selection.dart';
-import 'package:aker_foods_retail/presentation/journey/checkout/order_cart/payment_type_selection.dart';
+import 'package:aker_foods_retail/presentation/journey/checkout/order_cart/payment_mode_selection.dart';
+import 'package:aker_foods_retail/presentation/journey/checkout/payment_mode.dart';
 import 'package:aker_foods_retail/presentation/journey/dashboard/bloc/dashboard_bloc.dart';
 import 'package:aker_foods_retail/presentation/journey/dashboard/bloc/dashboard_event.dart';
 import 'package:aker_foods_retail/presentation/journey/dashboard/bottom_navigation_bar_details.dart';
@@ -36,7 +37,7 @@ class CartPage extends StatefulWidget {
 class _CartPageState extends State<CartPage> {
   String appliedCouponPromoCode = '';
 
-  int _paymentType = PaymentTypeConstants.cashOnDelivery;
+  PaymentMode _paymentMode;
   int _addressId;
   Timer _orderPaymentVerificationPollingTimer;
 
@@ -160,8 +161,16 @@ class _CartPageState extends State<CartPage> {
         const Divider(),
         OrderDeliverySelection(),
         const Divider(),
-        PaymentTypeSelection(
-          onPaymentSelection: (typeInt) => _paymentType = typeInt,
+        PaymentModeSelection(
+          selectedPaymentMode: PaymentModeExtension.fromInt(
+            state.cartEntity.paymentMode ?? PaymentModeConstants.cashOnDelivery,
+          ),
+          onPaymentSelection: (mode) {
+            _paymentMode = mode;
+            BlocProvider.of<CartBloc>(context).add(
+              ChangePaymentModeEvent(selectedModeInt: mode.toInt()),
+            );
+          },
         ),
         const Divider(),
         OrderDeliveryAddressSelection(
@@ -292,7 +301,7 @@ class _CartPageState extends State<CartPage> {
 
             BlocProvider.of<CartBloc>(context).add(
               CreateOrderCartEvent(
-                paymentType: _paymentType,
+                paymentModeInt: _paymentMode.toInt(),
                 selectedAddressId: _addressId,
               ),
             );

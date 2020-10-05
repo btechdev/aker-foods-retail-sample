@@ -57,6 +57,8 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       yield* _processApplyPromoCodeToCartEvent(event);
     } else if (event is RemovePromoCodeFromCartEvent) {
       yield* _processRemovePromoCodeFromCartEvent();
+    } else if (event is ChangePaymentModeEvent) {
+      yield* _processChangePaymentModeEvent(event);
     } else if (event is CreateOrderCartEvent) {
       yield* _processCreateOrderCartEvent(event);
     } else if (event is NotifyUserAboutProductEvent) {
@@ -281,13 +283,13 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     try {
       cartEntity.billingEntity = state.cartEntity?.billingEntity;
       final createOrderResponse = await cartUseCase.createOrder(
-        event.paymentType,
+        event.paymentModeInt,
         event.selectedAddressId,
         cartEntity,
       );
 
       _cartId = createOrderResponse.id;
-      if (event.paymentType == PaymentTypeConstants.online) {
+      if (event.paymentModeInt == PaymentModeConstants.online) {
         _initiateRazorPayTransaction(createOrderResponse.paymentDetails);
       } else {
         await cartUseCase.clearCart();
@@ -391,7 +393,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     final Map<int, int> idCountMap = _productIdCountMap(cartEntity);
     try {
       cartEntity.billingEntity = await _validateCart(cartEntity);
-      yield CartProductUpdatedState(
+      yield CartLoadedState(
         cartEntity: cartEntity,
         productIdCountMap: idCountMap,
       );
@@ -408,12 +410,27 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     final Map<int, int> idCountMap = _productIdCountMap(cartEntity);
     try {
       cartEntity.billingEntity = await _validateCart(cartEntity);
-      yield CartProductUpdatedState(
+      yield CartLoadedState(
         cartEntity: cartEntity,
         productIdCountMap: idCountMap,
       );
     } catch (error) {
       yield* _processError(error, cartEntity, idCountMap);
     }
+  }
+
+  Stream<CartState> _processChangePaymentModeEvent(
+      ChangePaymentModeEvent event) async* {
+    loaderBloc.add(ShowLoaderEvent());
+    final CartEntity cartEntity = await cartUseCase.getCartData();
+    cartEntity.paymentMode = event.selectedModeInt;
+    await cartUseCase.saveCart(cartEntity);
+    final Map<int, int> idCountMap = _productIdCountMap(cartEntity);
+    cartEntity.billingEntity = state?.cartEntity?.billingEntity;
+    yield CartLoadedState(
+      cartEntity: cartEntity,
+      productIdCountMap: idCountMap,
+    );
+    loaderBloc.add(DismissLoaderEvent());
   }
 }

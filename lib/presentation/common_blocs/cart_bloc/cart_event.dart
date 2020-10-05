@@ -42,11 +42,11 @@ class RemovePromoCodeFromCartEvent extends CartEvent {}
 class ApplyDeliveryAddressToCartEvent extends CartEvent {}
 
 class CreateOrderCartEvent extends CartEvent {
-  final int paymentType;
+  final int paymentModeInt;
   final int selectedAddressId;
 
   CreateOrderCartEvent({
-    @required this.paymentType,
+    @required this.paymentModeInt,
     @required this.selectedAddressId,
   });
 }
@@ -67,3 +67,9 @@ class CartOrderVerifyPaymentEvent extends CartEvent {
 class CartOrderPaymentSuccessEvent extends CartEvent {}
 
 class CartOrderPaymentFailedEvent extends CartEvent {}
+
+class ChangePaymentModeEvent extends CartEvent {
+  final int selectedModeInt;
+
+  ChangePaymentModeEvent({this.selectedModeInt});
+}
