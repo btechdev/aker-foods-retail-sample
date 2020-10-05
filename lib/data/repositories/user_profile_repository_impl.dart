@@ -30,4 +30,8 @@ class UserProfileRepositoryImpl implements UserProfileRepository {
 
   @override
   Future<bool> clearLocalPreferences() => localPreferences.clear();
+
+  @override
+  Future<void> registerUserDevice(String deviceId) async =>
+      userProfileRemoteDataSource.registerUserDevice(deviceId);
 }

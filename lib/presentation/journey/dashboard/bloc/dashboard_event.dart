@@ -13,3 +13,7 @@ class NavigateToPageEvent extends DashboardEvent {
 class FetchCurrentLocationEvent extends DashboardEvent {
   FetchCurrentLocationEvent() : super(0);
 }
+
+class RegisterUserDeviceEvent extends DashboardEvent {
+  RegisterUserDeviceEvent() : super(0);
+}

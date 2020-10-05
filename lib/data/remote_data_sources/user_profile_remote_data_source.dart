@@ -32,4 +32,10 @@ class UserProfileRemoteDataSource {
     final response = await apiClient.get(ApiEndpoints.userProfile);
     return UserProfileModel.fromJson(response);
   }
+
+  Future<void> registerUserDevice(String deviceId) async {
+    final body = {'player_id': deviceId};
+    await apiClient.post(ApiEndpoints.registerUserDevice, body);
+    return;
+  }
 }

@@ -13,4 +13,5 @@ class ApiEndpoints {
   static const String preCheckout = 'api/v1/pre-checkout/';
   static const String createOrder = 'api/v1/carts/';
   static const String notifications = 'api/v1/notifications';
+  static const String registerUserDevice = 'api/v1/user_devices/';
 }

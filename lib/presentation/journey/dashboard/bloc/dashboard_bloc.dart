@@ -1,27 +1,42 @@
 import 'package:aker_foods_retail/domain/entities/address_entity.dart';
 import 'package:aker_foods_retail/domain/usecases/user_address_use_case.dart';
+import 'package:aker_foods_retail/domain/usecases/user_profile_user_case.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 
 import 'dashboard_event.dart';
 import 'dashboard_state.dart';
 
 class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
+  UserProfileUseCase userProfileUseCase;
   UserAddressUseCase userAddressUseCase;
   AddressEntity _currentAddress;
 
-  DashboardBloc({this.userAddressUseCase})
-      : super(PageLoadedState(pageIndex: 0));
+  DashboardBloc({
+    this.userProfileUseCase,
+    this.userAddressUseCase,
+  }) : super(PageLoadedState(pageIndex: 0));
 
   @override
   Stream<DashboardState> mapEventToState(DashboardEvent event) async* {
-    if (event is NavigateToPageEvent) {
+    if (event is RegisterUserDeviceEvent) {
+      await _handleRegisterUserDeviceEvent();
+    } else if (event is NavigateToPageEvent) {
       yield PageLoadedState(pageIndex: event.pageIndex);
     } else if (event is FetchCurrentLocationEvent) {
       yield* _handleFetchCurrentLocationEvent(event);
     }
+  }
+
+  Future<void> _handleRegisterUserDeviceEvent() async {
+    try {
+      final status = await OneSignal.shared.getPermissionSubscriptionState();
+      final playerId = status.subscriptionStatus.userId;
+      await userProfileUseCase.registerUserDevice(playerId);
+    } catch (_) {}
   }
 
   Stream<DashboardState> _handleFetchCurrentLocationEvent(
