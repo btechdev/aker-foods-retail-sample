@@ -30,7 +30,9 @@ class _EnterOTPScreen extends State<EnterOtpScreen>
   bool _firstTime = true;
   FirebaseAuthBloc _authBloc;
   AnimationController _controller;
+  Animation<int> _animation;
   String _smsCode = '';
+  bool showTimer = true;
 
   @override
   void initState() {
@@ -38,8 +40,30 @@ class _EnterOTPScreen extends State<EnterOtpScreen>
     _authBloc = Injector.resolve<FirebaseAuthBloc>();
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(minutes: 5),
-    )..forward();
+      duration: const Duration(seconds: 180),
+    );
+
+    _animation = StepTween(
+      begin: 60,
+      end: 0,
+    ).animate(_controller)
+      ..addStatusListener((AnimationStatus status) {
+        if (status == AnimationStatus.completed) {
+          setState(() {
+            showTimer = false;
+          });
+        }
+      });
+    _controller.forward();
+  }
+
+  void resetAnimation() {
+    _controller.reset();
+    _animation = StepTween(
+      begin: 60,
+      end: 0,
+    ).animate(_controller);
+    _controller.forward();
   }
 
   @override
@@ -212,12 +236,21 @@ class _EnterOTPScreen extends State<EnterOtpScreen>
               children: [
                 Text(
                   'Have not received your OTP yet?',
-                  style: Theme.of(context).textTheme.caption,
+                  style: Theme.of(context).textTheme.subtitle1,
                 ),
-                CountdownTimerText(
-                  animation:
-                      StepTween(begin: 2 * 60, end: 0).animate(_controller),
-                ),
+                showTimer
+                    ? CountdownTimerText(animation: _animation)
+                    : IconButton(
+                        onPressed: () {
+                          _authBloc.add(
+                              VerifyPhoneNumberEvent(phoneNumber: phoneNumber));
+                          resetAnimation();
+                          setState(() {
+                            showTimer = true;
+                          });
+                        },
+                        icon: const Icon(Icons.refresh),
+                      ),
               ],
             ),
             SizedBox(height: LayoutConstants.dimen_24.h),
