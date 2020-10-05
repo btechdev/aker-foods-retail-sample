@@ -24,7 +24,7 @@ class ProductsRemoteDataSource {
     int pageSize,
   }) async {
     final urlPath = '${ApiEndpoints.products}'
-        '?category_id=$categoryId&page_size=$pageSize';
+        '?category__id=$categoryId&page_size=$pageSize';
     final jsonMap = await apiClient.get(urlPath);
     return ApiResponse.fromJson<ProductModel>(jsonMap).data;
   }
@@ -34,7 +34,7 @@ class ProductsRemoteDataSource {
     int pageSize,
   }) async {
     final urlPath = '${ApiEndpoints.products}'
-        '?subcategory_id=$subcategoryId&page_size=$pageSize';
+        '?subcategory__id=$subcategoryId&page_size=$pageSize';
     final jsonMap = await apiClient.get(urlPath);
     return ApiResponse.fromJson<ProductModel>(jsonMap).data;
   }
