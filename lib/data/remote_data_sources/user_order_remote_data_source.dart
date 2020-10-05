@@ -1,8 +1,10 @@
+import 'package:aker_foods_retail/common/constants/json_keys_constants.dart';
 import 'package:aker_foods_retail/data/models/order_model.dart';
 import 'package:aker_foods_retail/data/models/order_payment_reinitiate_response_model.dart';
 import 'package:aker_foods_retail/network/api/api_client.dart';
 import 'package:aker_foods_retail/network/api/api_endpoints.dart';
 import 'package:aker_foods_retail/network/api/api_response.dart';
+import 'package:aker_foods_retail/network/http/http_constants.dart';
 
 class UserOrderRemoteDataSource {
   final ApiClient apiClient;
@@ -25,6 +27,7 @@ class UserOrderRemoteDataSource {
   Future<bool> verifyTransactionForOrder(int cartId) async {
     final response = await apiClient
         .get('${ApiEndpoints.createOrder}$cartId/verify-transaction/');
-    return response['message'] == 'successfull';
+    return response[JsonKeysConstants.responseStatusCode] ==
+        HttpConstants.success;
   }
 }
