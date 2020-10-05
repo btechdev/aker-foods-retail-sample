@@ -62,10 +62,8 @@ Future<void> main() async {
 
 Future<void> _initialiseOneSignal() async {
   await OneSignal.shared.setLogLevel(OSLogLevel.verbose, OSLogLevel.none);
-
   // Keep this parameter to `true` if you want to adhere to GDPR privacy consent
   await OneSignal.shared.setRequiresUserPrivacyConsent(false);
-  await OneSignal.shared.getPermissionSubscriptionState();
 
   final iOSSettings = {
     OSiOSSettings.autoPrompt: false,
@@ -77,6 +75,7 @@ Future<void> _initialiseOneSignal() async {
     iOSSettings: iOSSettings,
   );
 
+  await OneSignal.shared.getPermissionSubscriptionState();
   await OneSignal.shared
       .setInFocusDisplayType(OSNotificationDisplayType.notification);
 
