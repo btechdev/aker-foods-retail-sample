@@ -16,10 +16,11 @@ class UserAddressLocalDataSource {
     try {
       final selectedAddress =
           localPreferences.get(PreferencesKeys.selectedAddress);
-      return AddressModel.fromJson(json.decode(selectedAddress));
-    } catch (error) {
-      rethrow;
-    }
+      return selectedAddress == null
+          ? null
+          : AddressModel.fromJson(json.decode(selectedAddress));
+    } catch (_) {}
+    return null;
   }
 
   Future<bool> setSelectedAddress(AddressModel userAddressModel) {

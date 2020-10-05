@@ -9,3 +9,7 @@ class NavigateToPageEvent extends DashboardEvent {
 
   NavigateToPageEvent({this.pageIndex}) : super(pageIndex ?? 0);
 }
+
+class FetchCurrentLocationEvent extends DashboardEvent {
+  FetchCurrentLocationEvent() : super(0);
+}

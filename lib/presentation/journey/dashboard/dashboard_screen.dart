@@ -27,6 +27,8 @@ class DashboardScreenState extends State<DashboardScreen> {
   @override
   void initState() {
     super.initState();
+    BlocProvider.of<DashboardBloc>(context)
+        .add(FetchCurrentLocationEvent());
     _bottomNavigationPageWidgets = [
       HomePage(),
       SearchPage(),
@@ -51,10 +53,11 @@ class DashboardScreenState extends State<DashboardScreen> {
   }
 
   List<BlocListener> _dashboardBlocListeners() => [
-        BlocListener<DashboardBloc, DashboardState>(
-          listener: (context, state) =>
-              _pageController.jumpToPage(state.pageIndex),
-        ),
+        BlocListener<DashboardBloc, DashboardState>(listener: (context, state) {
+          if (state is PageLoadedState) {
+            _pageController.jumpToPage(state.pageIndex);
+          }
+        }),
         BlocListener<CartBloc, CartState>(
           listener: _cartBlocStateListener,
         ),
@@ -74,6 +77,7 @@ class DashboardScreenState extends State<DashboardScreen> {
       BlocBuilder<CartBloc, CartState>(
         builder: (_, cartState) {
           return BlocBuilder<DashboardBloc, DashboardState>(
+            buildWhen: (_, currentState) => currentState is PageLoadedState,
             builder: (context, dashboardState) {
               return _buildBottomNavigationBar(
                   context, cartState, dashboardState);
