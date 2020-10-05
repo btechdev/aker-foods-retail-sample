@@ -22,10 +22,10 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
 
   @override
   Stream<DashboardState> mapEventToState(DashboardEvent event) async* {
-    if (event is RegisterUserDeviceEvent) {
-      await _handleRegisterUserDeviceEvent();
-    } else if (event is NavigateToPageEvent) {
+    if (event is NavigateToPageEvent) {
       yield PageLoadedState(pageIndex: event.pageIndex);
+    } else if (event is RegisterUserDeviceEvent) {
+      await _handleRegisterUserDeviceEvent();
     } else if (event is FetchCurrentLocationEvent) {
       yield* _handleFetchCurrentLocationEvent(event);
     }
@@ -68,31 +68,35 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   }
 
   Future<AddressEntity> _getCurrentLocation() async {
-    final currentLocation =
+    final currentPosition =
         await getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-    final address = await _getPlaceForLatLng(
-        currentLocation.latitude, currentLocation.longitude);
-    return AddressEntity(
-      label: 'DEFAULT',
-      address1: address.addressLine,
-      address2: '${address.subLocality}, ${address.locality}, '
-          '${address.subAdminArea}, ${address.adminArea}',
-      zipCode: address.postalCode,
-      city: address.locality,
-      country: address.countryName,
-      latitude: address.coordinates.latitude,
-      longitude: address.coordinates.longitude,
-    );
+    final geocoderAddress =
+        await _getGeocoderAddressFromPosition(currentPosition);
+    return geocoderAddress == null ? null : _getAddress(geocoderAddress);
   }
 
-  Future<Address> _getPlaceForLatLng(double latitude, double longitude) async {
+  Future<Address> _getGeocoderAddressFromPosition(Position position) async {
     try {
-      final places = await Geocoder.local
-          .findAddressesFromCoordinates(Coordinates(latitude, longitude));
+      final places = await Geocoder.local.findAddressesFromCoordinates(
+        Coordinates(position.latitude, position.longitude),
+      );
       return places.first;
     } catch (error) {
-      debugPrint('err: $error');
+      debugPrint('Error in getting geocoder address: ${error?.toString()}');
       return null;
     }
   }
+
+  AddressEntity _getAddress(Address geocoderAddress) => AddressEntity(
+        label: 'DEFAULT',
+        address1: geocoderAddress.addressLine,
+        address2:
+            '${geocoderAddress.subLocality}, ${geocoderAddress.locality}, '
+            '${geocoderAddress.subAdminArea}, ${geocoderAddress.adminArea}',
+        zipCode: geocoderAddress.postalCode,
+        city: geocoderAddress.locality,
+        country: geocoderAddress.countryName,
+        latitude: geocoderAddress.coordinates.latitude,
+        longitude: geocoderAddress.coordinates.longitude,
+      );
 }

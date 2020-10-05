@@ -27,9 +27,10 @@ class DashboardScreenState extends State<DashboardScreen> {
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<DashboardBloc>(context)
+    BlocProvider.of<DashboardBloc>(context).add(RegisterUserDeviceEvent());
+    /*BlocProvider.of<DashboardBloc>(context)
       ..add(RegisterUserDeviceEvent())
-      ..add(FetchCurrentLocationEvent());
+      ..add(FetchCurrentLocationEvent());*/
     _bottomNavigationPageWidgets = [
       HomePage(),
       SearchPage(),
