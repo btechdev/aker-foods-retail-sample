@@ -1,6 +1,7 @@
 import 'package:aker_foods_retail/common/constants/layout_constants.dart';
 import 'package:aker_foods_retail/common/extensions/pixel_dimension_util_extensions.dart';
 import 'package:aker_foods_retail/domain/entities/order_item_tile_entity.dart';
+import 'package:aker_foods_retail/domain/entities/product_detail_entity.dart';
 import 'package:aker_foods_retail/domain/entities/product_entity.dart';
 import 'package:aker_foods_retail/presentation/journey/checkout/order_cart/order_item_counter.dart';
 import 'package:aker_foods_retail/presentation/widgets/product_info_price_widget.dart';
@@ -8,7 +9,7 @@ import 'package:flutter/material.dart';
 
 class OrderItemTile extends StatelessWidget {
   final int id;
-  final OrderItemTileEntity item;
+  final ProductDetailEntity product;
   final Function onItemIncreased;
   final Function onItemDecreased;
   final bool isForDetail;
@@ -16,7 +17,7 @@ class OrderItemTile extends StatelessWidget {
   OrderItemTile({
     Key key,
     this.id,
-    this.item,
+    this.product,
     this.onItemIncreased,
     this.onItemDecreased,
     this.isForDetail = false,
@@ -66,7 +67,7 @@ class OrderItemTile extends StatelessWidget {
       );
 
   Image _productImage() => Image.network(
-        item.imageUrl ?? 'https://picsum.photos/id/1080/100/100',
+        product.image,
         width: LayoutConstants.dimen_100.w,
         height: LayoutConstants.dimen_100.h,
         fit: BoxFit.cover,
@@ -77,8 +78,13 @@ class OrderItemTile extends StatelessWidget {
         padding: EdgeInsets.only(left: LayoutConstants.dimen_12.w),
         child: ProductInfoPrice(
           product: ProductEntity(
-            name: item.itemName,
-            amount: item.price,
+            name: product.name,
+            amount: product.amount,
+            salesUnit: product.salesUnit,
+            id: product.id,
+            imageUrl: product.image,
+            baseQuantity: product.baseQuantity,
+            discountedAmount: product.discountedAmount,
           ),
         ),
       );

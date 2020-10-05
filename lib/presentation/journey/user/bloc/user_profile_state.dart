@@ -1,4 +1,5 @@
 import 'package:aker_foods_retail/data/models/user_profile_model.dart';
+import 'package:aker_foods_retail/domain/entities/address_entity.dart';
 import 'package:meta/meta.dart';
 
 abstract class UserProfileState {}
@@ -42,3 +43,11 @@ class UserProfileFetchFailedState extends UserProfileState {
 class UserLoggingOutState extends UserProfileState {}
 
 class UserLoggedOutState extends UserProfileState {}
+
+class UserAddressFetchSuccessState extends UserProfileState {
+  final AddressEntity address;
+
+  UserAddressFetchSuccessState({this.address});
+}
+
+class UserAddressFetchFailedState extends UserProfileState {}

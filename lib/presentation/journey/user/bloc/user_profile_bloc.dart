@@ -1,6 +1,7 @@
 import 'package:aker_foods_retail/common/constants/app_constants.dart';
 import 'package:aker_foods_retail/common/exceptions/server_exception.dart';
 import 'package:aker_foods_retail/domain/usecases/cart_use_case.dart';
+import 'package:aker_foods_retail/domain/usecases/user_address_use_case.dart';
 import 'package:aker_foods_retail/domain/usecases/user_profile_user_case.dart';
 import 'package:aker_foods_retail/presentation/journey/user/bloc/user_profile_event.dart';
 import 'package:aker_foods_retail/presentation/journey/user/bloc/user_profile_state.dart';
@@ -11,10 +12,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class UserProfileBloc extends Bloc<UserProfileEvent, UserProfileState> {
   final UserProfileUseCase userProfileUseCase;
   final CartUseCase cartUseCase;
+  final UserAddressUseCase userAddressUseCase;
 
   UserProfileBloc({
     this.userProfileUseCase,
     this.cartUseCase,
+    this.userAddressUseCase,
   }) : super(EmptyState());
 
   @override
@@ -27,6 +30,8 @@ class UserProfileBloc extends Bloc<UserProfileEvent, UserProfileState> {
       yield* _handleUpdateUserProfileEvent(event);
     } else if (event is LogoutUserEvent) {
       yield* _handleLogoutUserEvent();
+    } else if (event is UserAddressFetchEvent) {
+      yield* _handleUserAddressFetchEvent(event);
     }
   }
 
@@ -85,5 +90,11 @@ class UserProfileBloc extends Bloc<UserProfileEvent, UserProfileState> {
 
     debugPrint('Yielding UserLoggedOutState');
     yield UserLoggedOutState();
+  }
+
+  Stream<UserProfileState> _handleUserAddressFetchEvent(
+      UserProfileEvent event) async* {
+    final address = await userAddressUseCase.getSelectedAddress();
+    yield UserAddressFetchSuccessState(address: address);
   }
 }

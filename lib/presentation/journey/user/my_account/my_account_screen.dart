@@ -3,6 +3,7 @@ import 'package:aker_foods_retail/common/constants/layout_constants.dart';
 import 'package:aker_foods_retail/common/extensions/pixel_dimension_util_extensions.dart';
 import 'package:aker_foods_retail/common/injector/injector.dart';
 import 'package:aker_foods_retail/data/models/address_model.dart';
+import 'package:aker_foods_retail/domain/entities/address_entity.dart';
 import 'package:aker_foods_retail/domain/entities/my_account_option_data_entity.dart';
 import 'package:aker_foods_retail/domain/entities/referral_entity.dart';
 import 'package:aker_foods_retail/presentation/app/route_constants.dart';
@@ -57,7 +58,8 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
   void initState() {
     super.initState();
     userProfileBloc = Injector.resolve<UserProfileBloc>()
-      ..add(FetchUserProfileEvent());
+      ..add(FetchUserProfileEvent())
+      ..add(UserAddressFetchEvent());
   }
 
   void _userProfileBlocListener(BuildContext context, UserProfileState state) {
@@ -93,6 +95,8 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
 
   Widget _bodyWrappedWithBloc() =>
       BlocBuilder<UserProfileBloc, UserProfileState>(
+        buildWhen: (_, currentState) =>
+            !(currentState is UserAddressFetchSuccessState),
         builder: (context, state) {
           if (state is UserLoggingOutState) {
             return const CircularLoaderWidget();
@@ -168,47 +172,57 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
         ),
       );
 
-  Container _getAddressContainer(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: 8.w,
-      ),
-      decoration: BoxDecoration(
-        color: AppColor.white,
-        borderRadius: BorderRadius.circular(10.w),
-      ),
-      height: LayoutConstants.dimen_52.h,
-      child: Row(
-        children: [
-          Icon(
-            Icons.edit_location,
-            size: 30.h,
-            color: AppColor.primaryColor,
-          ),
-          SizedBox(width: 4.w),
-          Expanded(
-            flex: 2,
-            child: Text(
-              'Address',
-              style: Theme.of(context).textTheme.bodyText2,
+  BlocBuilder _getAddressContainer(BuildContext context) {
+    return BlocBuilder<UserProfileBloc, UserProfileState>(
+        buildWhen: (_, currentState) =>
+            currentState is UserAddressFetchSuccessState,
+        builder: (context, state) {
+          AddressEntity _address;
+          if (state is UserAddressFetchSuccessState) {
+            _address = state.address;
+          }
+          return Container(
+            padding: EdgeInsets.symmetric(
+              horizontal: 8.w,
             ),
-          ),
-          Expanded(
-            child: FlatButton(
-              onPressed: () => {
-                _getLocationSelectionBottomSheet(context),
-              },
-              child: Text(
-                'Change',
-                style: Theme.of(context).textTheme.caption.apply(
-                      color: AppColor.primaryColor,
+            decoration: BoxDecoration(
+              color: AppColor.white,
+              borderRadius: BorderRadius.circular(10.w),
+            ),
+            height: LayoutConstants.dimen_52.h,
+            child: Row(
+              children: [
+                Icon(
+                  Icons.edit_location,
+                  size: 30.h,
+                  color: AppColor.primaryColor,
+                ),
+                SizedBox(width: 4.w),
+                Expanded(
+                  flex: 2,
+                  child: Text(
+                    _address == null ? 'Address' : _address.address1,
+                    style: Theme.of(context).textTheme.bodyText2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                Expanded(
+                  child: FlatButton(
+                    onPressed: () => {
+                      _getLocationSelectionBottomSheet(context),
+                    },
+                    child: Text(
+                      'Change',
+                      style: Theme.of(context).textTheme.caption.apply(
+                            color: AppColor.primaryColor,
+                          ),
                     ),
-              ),
+                  ),
+                ),
+              ],
             ),
-          ),
-        ],
-      ),
-    );
+          );
+        });
   }
 
   Future _getLocationSelectionBottomSheet(BuildContext context) {
@@ -221,6 +235,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
       ),
       builder: (BuildContext context) => ChangeAddressModeSelectionBottomSheet(
         onAddressChange: (address) {
+          userProfileBloc.add(UserAddressFetchEvent());
           Navigator.pop(context);
         },
       ),

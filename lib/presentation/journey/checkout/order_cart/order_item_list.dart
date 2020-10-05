@@ -31,8 +31,6 @@ class _OrderItemListState extends State<OrderItemList> {
                 id: index,
                 onItemIncreased: widget.onIncreased,
                 onItemDecreased: widget.onDecreased,
-                item: OrderItemTileEntity(
-                    price: 100.0, orderQuantity: '20', itemName: 'Strawbberry'),
               ),
         itemCount: widget.items.length,
         shrinkWrap: true,

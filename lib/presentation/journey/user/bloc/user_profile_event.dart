@@ -17,3 +17,5 @@ class SetupUserProfileEvent extends UserProfileEvent {
 }
 
 class LogoutUserEvent extends UserProfileEvent {}
+
+class UserAddressFetchEvent extends UserProfileEvent {}

@@ -27,7 +27,8 @@ class _$InjectorConfig extends InjectorConfig {
         (c) => SelectSocietyBloc(userAddressUseCase: c<UserAddressUseCase>()));
     container.registerFactory((c) => UserProfileBloc(
         userProfileUseCase: c<UserProfileUseCase>(),
-        cartUseCase: c<CartUseCase>()));
+        cartUseCase: c<CartUseCase>(),
+        userAddressUseCase: c<UserAddressUseCase>()));
     container.registerFactory((c) =>
         EnterNewAddressBloc(userAddressUseCase: c<UserAddressUseCase>()));
     container.registerFactory(

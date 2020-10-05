@@ -25,14 +25,7 @@ class _OrderDetailsItemListState extends State<OrderDetailsItemList> {
       child: ListView.builder(
         itemBuilder: (_, index) => OrderItemTile(
           id: index,
-          item: OrderItemTileEntity(
-            itemName: widget.items[index].productDetail.name,
-            orderQuantity: '${widget.items[index].quantity} x '
-                '${widget.items[index].productDetail.baseQuantity}'
-                ' ${widget.items[index].productDetail.salesUnit} ',
-            price: widget.items[index].totalPrice,
-            imageUrl: widget.items[index].productDetail.image,
-          ),
+          product: widget.items[index].productDetail,
           isForDetail: true,
         ),
         itemCount: widget.items.length,
