@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:aker_foods_retail/common/constants/json_keys_constants.dart';
 import 'package:aker_foods_retail/common/exceptions/bad_request_exception.dart';
 import 'package:aker_foods_retail/common/exceptions/cart_data_exception.dart';
 import 'package:aker_foods_retail/common/exceptions/forbidden_exception.dart';
@@ -36,34 +37,35 @@ class HttpUtil {
     );
 
     switch (response.statusCode) {
-      case 200:
-        return _getSuccessResponse(response);
-      case 201:
+      case HttpConstants.success:
+      case HttpConstants.createSuccess:
         return _getSuccessResponse(response);
 
-      case 302:
+      case HttpConstants.redirect:
         return response;
 
-      case 400:
+      case HttpConstants.badRequest:
         throw BadRequestException(
           getErrorMessage(json.decode(response.body)),
         );
 
-      case 401:
+      case HttpConstants.unauthorized:
         return _retryRequestAfterRefreshAuthorization(response);
 
-      case 403:
+      case HttpConstants.forbidden:
         throw ForbiddenException(
           getErrorMessage(json.decode(response.body)),
         );
 
-      case 404:
+      case HttpConstants.notFound:
         throw NotFoundException(
           getErrorMessage(json.decode(response.body)),
         );
-      case 406:
+
+      case HttpConstants.cartDataException:
         throw CartDataException.fromJson(json.decode(response.body));
-      case 500:
+
+      case HttpConstants.serverError:
       default:
         throw ServerErrorException(
           getErrorMessage(json.decode(response.body)),
@@ -73,10 +75,10 @@ class HttpUtil {
 
   static dynamic getFileResponse(Response response) {
     switch (response.statusCode) {
-      case 201:
+      case HttpConstants.success:
+      case HttpConstants.createSuccess:
         return response;
-      case 200:
-        return response;
+
       default:
         getResponse(response);
     }
@@ -84,6 +86,7 @@ class HttpUtil {
 
   static dynamic _getSuccessResponse(Response response) {
     final Map<String, dynamic> _responseJson = json.decode(response.body);
+    _responseJson[JsonKeysConstants.responseStatusCode] = response.statusCode;
     return _responseJson;
   }
 
