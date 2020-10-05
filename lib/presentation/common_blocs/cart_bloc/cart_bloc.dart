@@ -425,12 +425,6 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     final CartEntity cartEntity = await cartUseCase.getCartData();
     cartEntity.paymentMode = event.selectedModeInt;
     await cartUseCase.saveCart(cartEntity);
-    final Map<int, int> idCountMap = _productIdCountMap(cartEntity);
-    cartEntity.billingEntity = state?.cartEntity?.billingEntity;
-    yield CartLoadedState(
-      cartEntity: cartEntity,
-      productIdCountMap: idCountMap,
-    );
     loaderBloc.add(DismissLoaderEvent());
   }
 }

@@ -18,20 +18,23 @@ class CartTableAdapter extends TypeAdapter<CartTable> {
     };
     return CartTable(
       promoCode: fields[0] as String,
-      deliveryAddress: fields[1] as String,
-      products: (fields[2] as List)?.cast<CartProductTable>(),
+      paymentMode: fields[1] as int,
+      deliveryAddress: fields[2] as String,
+      products: (fields[3] as List)?.cast<CartProductTable>(),
     );
   }
 
   @override
   void write(BinaryWriter writer, CartTable obj) {
     writer
-      ..writeByte(3)
+      ..writeByte(4)
       ..writeByte(0)
       ..write(obj.promoCode)
       ..writeByte(1)
-      ..write(obj.deliveryAddress)
+      ..write(obj.paymentMode)
       ..writeByte(2)
+      ..write(obj.deliveryAddress)
+      ..writeByte(3)
       ..write(obj.products);
   }
 

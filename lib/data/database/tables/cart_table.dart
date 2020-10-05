@@ -12,19 +12,24 @@ class CartTable extends HiveObject {
   final String promoCode;
 
   @HiveField(1)
-  final String deliveryAddress;
+  final int paymentMode;
 
   @HiveField(2)
+  final String deliveryAddress;
+
+  @HiveField(3)
   final List<CartProductTable> products;
 
   CartTable({
     this.promoCode,
+    this.paymentMode,
     this.deliveryAddress,
     this.products = const [],
   });
 
   factory CartTable.fromModel(CartModel model) => CartTable(
         promoCode: model.promoCode,
+        paymentMode: model.paymentMode,
         deliveryAddress: model.deliveryAddress,
         products: model.products
             .map((cartProductModel) =>
@@ -34,6 +39,7 @@ class CartTable extends HiveObject {
 
   CartModel toModel() => CartModel(
         promoCode: promoCode,
+        paymentMode: paymentMode,
         deliveryAddress: deliveryAddress,
         products: products
             .map((cartProductTable) => cartProductTable.toModel())
