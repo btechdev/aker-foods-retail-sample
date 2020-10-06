@@ -10,7 +10,9 @@ class LayoutConstants {
 
   static const appBarDefaultElevation = dimen_8;
   static const cardDefaultElevation = dimen_4;
-  static const productsGridItemHeight = dimen_272;
+
+  static double productsImageSize = dimen_80.h;
+  static double productsGridTileHeight = dimen_260.h;
 
   static double get primaryButtonHeight => dimen_48.h;
 
@@ -77,12 +79,12 @@ class LayoutConstants {
   static const dimen_180 = 180.0;
   static const dimen_190 = 190.0;
   static const dimen_200 = 200.0;
-  static const dimen_272 = 272.0;
+  static const dimen_260 = 260.0;
 
   static double get productsGridChildAspectRatio {
     final double childWidthDp = (PixelDimensionUtil.screenWidthDp /
             AppConstants.productsGridCrossAxisCount) -
         LayoutConstants.dimen_20;
-    return childWidthDp / productsGridItemHeight;
+    return childWidthDp / productsGridTileHeight;
   }
 }

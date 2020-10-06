@@ -14,31 +14,39 @@ class ProductInfoPrice extends StatelessWidget {
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Container(
-          height: LayoutConstants.dimen_52.h,
-          child: Text(
+  Widget build(BuildContext context) => Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _getProductNameText(context),
+          SizedBox(height: LayoutConstants.dimen_8.h),
+          Text(
+            '${product.baseQuantity} ${product.salesUnit}',
+            style: Theme.of(context).textTheme.subtitle2.copyWith(
+                  color: AppColor.black54,
+                ),
+          ),
+          SizedBox(height: LayoutConstants.dimen_4.h),
+          _getProductPriceRow(context),
+        ],
+      );
+
+  Widget _getProductNameText(BuildContext context) => Stack(
+        children: [
+          Text(
+            '.\n.',
+            style: Theme.of(context).textTheme.bodyText2.copyWith(
+                  color: AppColor.transparent,
+                ),
+          ),
+          Text(
             product.name,
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
             style: Theme.of(context).textTheme.bodyText2,
           ),
-        ),
-        Text(
-          '${product.baseQuantity} ${product.salesUnit}',
-          style: Theme.of(context).textTheme.subtitle1.copyWith(
-                color: AppColor.black40,
-              ),
-        ),
-        SizedBox(height: LayoutConstants.dimen_8.h),
-        _getProductPriceRow(context),
-      ],
-    );
-  }
+        ],
+      );
 
   Row _getProductPriceRow(BuildContext context) {
     final double productMrp = product.amount ?? 0;

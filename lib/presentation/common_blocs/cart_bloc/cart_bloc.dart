@@ -350,28 +350,30 @@ class CartBloc extends Bloc<CartEvent, CartState> {
 
   Stream<CartState> _handleNotifyUserAboutProductEvent(
       NotifyUserAboutProductEvent event) async* {
+    loaderBloc.add(ShowLoaderEvent());
     final productId = event.productEntity.id;
     final status = await productsUseCase.notifyUserForProduct(productId);
     if (status) {
-      final cartEntity = await cartUseCase.getCartData();
-      cartEntity.products.removeWhere(
-        (cartProduct) => cartProduct?.product?.id == productId,
-      );
-      await cartUseCase.saveCart(cartEntity);
-      final Map<int, int> idCountMap = _productIdCountMap(cartEntity);
-      if (idCountMap.isNotEmpty) {
-        yield CartLoadingState(totalProductCount: state.totalProductCount);
-        //yield* _cartLoadingState();
-        cartEntity.billingEntity = await _validateCart(cartEntity);
-      } else {
-        yield CartEmptyState();
-        return;
+      if (event.needsCartValidation ?? false) {
+        final cartEntity = await cartUseCase.getCartData();
+        cartEntity.products.removeWhere(
+          (cartProduct) => cartProduct?.product?.id == productId,
+        );
+        await cartUseCase.saveCart(cartEntity);
+        final Map<int, int> idCountMap = _productIdCountMap(cartEntity);
+        if (idCountMap.isNotEmpty) {
+          yield CartLoadingState(totalProductCount: state.totalProductCount);
+          //yield* _cartLoadingState();
+          cartEntity.billingEntity = await _validateCart(cartEntity);
+        } else {
+          yield CartEmptyState();
+          return;
+        }
+        yield CartLoadedState(
+          cartEntity: cartEntity,
+          productIdCountMap: idCountMap,
+        );
       }
-      yield CartLoadedState(
-        cartEntity: cartEntity,
-        productIdCountMap: idCountMap,
-      );
-
       snackBarBloc.add(ShowSnackBarEvent(
         type: CustomSnackBarType.success,
         text: 'You will be notified when the product is back in stock',
@@ -382,6 +384,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
         text: 'We are unable to process your request, please try later',
       ));
     }
+    loaderBloc.add(DismissLoaderEvent());
   }
 
   Stream<CartState> _processApplyPromoCodeToCartEvent(

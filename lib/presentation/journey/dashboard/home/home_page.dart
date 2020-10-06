@@ -6,6 +6,7 @@ import 'package:aker_foods_retail/common/utils/widget_util.dart';
 import 'package:aker_foods_retail/domain/entities/product_entity.dart';
 import 'package:aker_foods_retail/presentation/app/route_constants.dart';
 import 'package:aker_foods_retail/presentation/common_blocs/cart_bloc/cart_bloc.dart';
+import 'package:aker_foods_retail/presentation/common_blocs/cart_bloc/cart_event.dart';
 import 'package:aker_foods_retail/presentation/common_blocs/cart_bloc/cart_state.dart';
 import 'package:aker_foods_retail/presentation/common_blocs/products_bloc/products_bloc.dart';
 import 'package:aker_foods_retail/presentation/common_blocs/products_bloc/products_event.dart';
@@ -127,25 +128,54 @@ class HomePageState extends State<HomePage> {
     return BlocBuilder<ProductsBloc, ProductsState>(
       builder: (context, state) {
         _initialiseProductIdCountMap();
-        return _getHomePageContent(state);
+        return _getContent(state);
       },
     );
   }
 
-  Widget _getHomePageContent(ProductsState state) => CustomScrollView(
+  Widget _getContent(ProductsState state) => SingleChildScrollView(
         primary: true,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            SizedBox(height: LayoutConstants.dimen_12.h),
+            AkerBanner(),
+            _categoriesCard(state),
+            SizedBox(height: LayoutConstants.dimen_12.h),
+            ..._getProductsWithCategory(state),
+          ],
+        ),
+      );
+
+  List<Widget> _getProductsWithCategory(ProductsState state) {
+    final slivers = <Widget>[];
+    if (state is CategoryWiseProductsFetchSuccessState) {
+      for (final category in state.categories) {
+        slivers.add(ProductsCategoryHeader(title: category.name));
+        final products = state.categoryProductsMap[category.id];
+        slivers.add(_productsStaggeredGridView(products));
+      }
+    }
+    return slivers;
+  }
+
+  StaggeredGridView _productsStaggeredGridView(List<ProductEntity> products) =>
+      StaggeredGridView.countBuilder(
         shrinkWrap: true,
-        slivers: [
-          SliverList(
-            delegate: SliverChildListDelegate([
-              SizedBox(height: LayoutConstants.dimen_12.h),
-              AkerBanner(),
-              _categoriesCard(state),
-              SizedBox(height: LayoutConstants.dimen_12.h),
-            ]),
-          ),
-          ..._getProductsWithCategorySliversList(state),
-        ],
+        physics: const NeverScrollableScrollPhysics(),
+        padding: EdgeInsets.only(
+          left: LayoutConstants.dimen_12.w,
+          right: LayoutConstants.dimen_12.w,
+          bottom: LayoutConstants.dimen_12.h,
+        ),
+        crossAxisCount: AppConstants.productsGridCrossAxisCount,
+        mainAxisSpacing: LayoutConstants.dimen_8.h,
+        crossAxisSpacing: LayoutConstants.dimen_8.w,
+        staggeredTileBuilder: (index) =>
+            StaggeredTile.extent(1, LayoutConstants.productsGridTileHeight),
+        itemBuilder: (context, index) => _productGridTile(products[index]),
+        itemCount: products.length,
       );
 
   Card _categoriesCard(ProductsState state) => Card(
@@ -247,63 +277,6 @@ class HomePageState extends State<HomePage> {
         ],
       );
 
-  List<Widget> _getProductsWithCategorySliversList(ProductsState state) {
-    final slivers = <Widget>[];
-    if (state is CategoryWiseProductsFetchSuccessState) {
-      for (final category in state.categories) {
-        slivers
-          ..add(_productsCategoryHeader(category.name))
-          ..add(_productsSliverGridWithPadding(
-              state.categoryProductsMap[category.id]));
-      }
-    }
-    return slivers;
-  }
-
-  SliverToBoxAdapter _productsCategoryHeader(String title) =>
-      SliverToBoxAdapter(
-        child: ProductsCategoryHeader(title: title),
-      );
-
-  /*
-  SliverPadding _productsSliverGridWithPadding(List<ProductEntity> products) =>
-      SliverPadding(
-        padding: EdgeInsets.only(
-          left: LayoutConstants.dimen_12.w,
-          right: LayoutConstants.dimen_12.w,
-          bottom: LayoutConstants.dimen_12.h,
-        ),
-        sliver: SliverGrid(
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: AppConstants.productsGridCrossAxisCount,
-            childAspectRatio: LayoutConstants.productsGridChildAspectRatio,
-            mainAxisSpacing: LayoutConstants.dimen_8.h,
-            crossAxisSpacing: LayoutConstants.dimen_8.w,
-          ),
-          delegate: SliverChildBuilderDelegate(
-            (context, index) => _productGridTile(products[index]),
-            childCount: products.length,
-          ),
-        ),
-      );*/
-
-  SliverPadding _productsSliverGridWithPadding(List<ProductEntity> products) =>
-      SliverPadding(
-        padding: EdgeInsets.only(
-          left: LayoutConstants.dimen_12.w,
-          right: LayoutConstants.dimen_12.w,
-          bottom: LayoutConstants.dimen_12.h,
-        ),
-        sliver: SliverStaggeredGrid.countBuilder(
-          crossAxisCount: AppConstants.productsGridCrossAxisCount,
-          mainAxisSpacing: LayoutConstants.dimen_8.h,
-          crossAxisSpacing: LayoutConstants.dimen_8.w,
-          staggeredTileBuilder: (index) => const StaggeredTile.fit(1),
-          itemBuilder: (context, index) => _productGridTile(products[index]),
-          itemCount: products.length,
-        ),
-      );
-
   Widget _productGridTile(ProductEntity product) => product?.isInStock == true
       ? InStockProductGridTile(
           product: product,
@@ -311,6 +284,8 @@ class HomePageState extends State<HomePage> {
         )
       : OutOfStockProductGridTile(
           product: product,
-          onPressedNotify: () => {},
+          onPressedNotify: () => BlocProvider.of<CartBloc>(context).add(
+            NotifyUserAboutProductEvent(productEntity: product),
+          ),
         );
 }
