@@ -10,6 +10,9 @@ import 'package:aker_foods_retail/presentation/common_blocs/cart_bloc/cart_state
 import 'package:aker_foods_retail/presentation/common_blocs/products_bloc/products_bloc.dart';
 import 'package:aker_foods_retail/presentation/common_blocs/products_bloc/products_event.dart';
 import 'package:aker_foods_retail/presentation/common_blocs/products_bloc/products_state.dart';
+import 'package:aker_foods_retail/presentation/journey/dashboard/bloc/dashboard_bloc.dart';
+import 'package:aker_foods_retail/presentation/journey/dashboard/bloc/dashboard_event.dart';
+import 'package:aker_foods_retail/presentation/journey/dashboard/bottom_navigation_bar_details.dart';
 import 'package:aker_foods_retail/presentation/journey/dashboard/home/banner/aker_banner_widget.dart';
 import 'package:aker_foods_retail/presentation/journey/user/address/change_address_mode_selection_bottom_sheet.dart';
 import 'package:aker_foods_retail/presentation/theme/app_colors.dart';
@@ -181,7 +184,11 @@ class HomePageState extends State<HomePage> {
             ),
           ),
           FlatButton(
-            onPressed: () => {},
+            onPressed: () => BlocProvider.of<DashboardBloc>(context).add(
+              NavigateToPageEvent(
+                pageIndex: DashboardBottomNavigationItem.search.index,
+              ),
+            ),
             child: Text(
               'Show All',
               style: Theme.of(context).textTheme.subtitle2.copyWith(
