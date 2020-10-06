@@ -58,8 +58,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
   void initState() {
     super.initState();
     userProfileBloc = Injector.resolve<UserProfileBloc>()
-      ..add(FetchUserProfileEvent())
-      ..add(UserAddressFetchEvent());
+      ..add(FetchUserProfileEvent());
   }
 
   void _userProfileBlocListener(BuildContext context, UserProfileState state) {
@@ -95,8 +94,6 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
 
   Widget _bodyWrappedWithBloc() =>
       BlocBuilder<UserProfileBloc, UserProfileState>(
-        buildWhen: (_, currentState) =>
-            !(currentState is UserAddressFetchSuccessState),
         builder: (context, state) {
           if (state is UserLoggingOutState) {
             return const CircularLoaderWidget();
@@ -142,7 +139,9 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
         children: [
           _getUserInfoWidget(state),
           SizedBox(height: LayoutConstants.dimen_8.h),
-          _getAddressContainer(context)
+          state is UserProfileFetchSuccessState
+              ? _getAddressContainer(context, state.address)
+              : _getAddressContainer(context, null)
         ],
       ),
     );
@@ -172,58 +171,46 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
         ),
       );
 
-  BlocBuilder _getAddressContainer(BuildContext context) {
-    return BlocBuilder<UserProfileBloc, UserProfileState>(
-        buildWhen: (_, currentState) =>
-            currentState is UserAddressFetchSuccessState,
-        builder: (context, state) {
-          AddressEntity _address;
-          if (state is UserAddressFetchSuccessState) {
-            _address = state.address;
-          }
-          return Container(
-            padding: EdgeInsets.symmetric(
-              horizontal: 8.w,
+  Container _getAddressContainer(BuildContext context, AddressEntity address) =>
+      Container(
+        padding: EdgeInsets.symmetric(
+          horizontal: LayoutConstants.dimen_8.w,
+        ),
+        decoration: BoxDecoration(
+          color: AppColor.white,
+          borderRadius: BorderRadius.circular(LayoutConstants.dimen_10.w),
+        ),
+        height: LayoutConstants.dimen_52.h,
+        child: Row(
+          children: [
+            Icon(
+              Icons.edit_location,
+              size: LayoutConstants.dimen_32.h,
+              color: AppColor.primaryColor,
             ),
-            decoration: BoxDecoration(
-              color: AppColor.white,
-              borderRadius: BorderRadius.circular(10.w),
+            SizedBox(width: LayoutConstants.dimen_4.w),
+            Expanded(
+              flex: 2,
+              child: Text(
+                address == null ? 'Address' : address.address1,
+                style: Theme.of(context).textTheme.bodyText2,
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
-            height: LayoutConstants.dimen_52.h,
-            child: Row(
-              children: [
-                Icon(
-                  Icons.edit_location,
-                  size: 30.h,
-                  color: AppColor.primaryColor,
+            Expanded(
+              child: FlatButton(
+                onPressed: () => _getLocationSelectionBottomSheet(context),
+                child: Text(
+                  'Change',
+                  style: Theme.of(context).textTheme.caption.apply(
+                        color: AppColor.primaryColor,
+                      ),
                 ),
-                SizedBox(width: 4.w),
-                Expanded(
-                  flex: 2,
-                  child: Text(
-                    _address == null ? 'Address' : _address.address1,
-                    style: Theme.of(context).textTheme.bodyText2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-                Expanded(
-                  child: FlatButton(
-                    onPressed: () => {
-                      _getLocationSelectionBottomSheet(context),
-                    },
-                    child: Text(
-                      'Change',
-                      style: Theme.of(context).textTheme.caption.apply(
-                            color: AppColor.primaryColor,
-                          ),
-                    ),
-                  ),
-                ),
-              ],
+              ),
             ),
-          );
-        });
-  }
+          ],
+        ),
+      );
 
   Future _getLocationSelectionBottomSheet(BuildContext context) {
     return showModalBottomSheet(

@@ -30,8 +30,9 @@ class UserProfileFetchingState extends UserProfileState {}
 
 class UserProfileFetchSuccessState extends UserProfileState {
   final UserProfileModel user;
+  final AddressEntity address;
 
-  UserProfileFetchSuccessState({this.user});
+  UserProfileFetchSuccessState({this.user, this.address});
 }
 
 class UserProfileFetchFailedState extends UserProfileState {
