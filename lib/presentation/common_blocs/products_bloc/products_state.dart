@@ -92,9 +92,24 @@ class CategoryWiseProductsFetchSuccessState extends ProductsState {
   final List<ProductCategoryEntity> categories;
   final Map<int, List<ProductEntity>> categoryProductsMap;
 
-  CategoryWiseProductsFetchSuccessState(
-      {this.categoryProductsMap, this.categories});
+  CategoryWiseProductsFetchSuccessState({
+    this.categoryProductsMap,
+    this.categories,
+  });
 
   @override
-  ProductsState clone() => CategoryWiseProductsFetchSuccessState();
+  ProductsState clone() => CategoryWiseProductsFetchSuccessState(
+        categoryProductsMap: categoryProductsMap,
+        categories: categories,
+      );
+}
+
+class CategoryProductsFetchSuccessState extends ProductsState {
+  final List<ProductEntity> products;
+
+  CategoryProductsFetchSuccessState({this.products});
+
+  @override
+  ProductsState clone() =>
+      CategoryProductsFetchSuccessState(products: products);
 }

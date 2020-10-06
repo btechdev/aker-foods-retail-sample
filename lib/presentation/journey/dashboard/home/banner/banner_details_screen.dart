@@ -128,7 +128,7 @@ class BannerDetailsScreenState extends State<BannerDetailsScreen> {
     final List<Widget> slivers = [];
     for (final category in categories) {
       slivers
-        ..add(_productsCategoryHeader(category.name))
+        ..add(_productsCategoryHeader(category))
         ..add(_productsSliverGridWithPadding(categoryProductsMap[category.id]));
     }
     return slivers;
@@ -153,9 +153,9 @@ class BannerDetailsScreenState extends State<BannerDetailsScreen> {
 
   // ======================================================================
 
-  SliverToBoxAdapter _productsCategoryHeader(String title) =>
+  SliverToBoxAdapter _productsCategoryHeader(ProductCategoryEntity category) =>
       SliverToBoxAdapter(
-        child: ProductsCategoryHeader(title: title),
+        child: ProductsCategoryHeader(category: category),
       );
 
   SliverToBoxAdapter _productsSubcategoryHeader(String title) =>

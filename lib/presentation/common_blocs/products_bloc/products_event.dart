@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+
 abstract class ProductsEvent {}
 
 class FetchHomePageProductsEvent extends ProductsEvent {}
@@ -17,3 +19,9 @@ class CancelProductsSearchEvent extends ProductsEvent {}
 class FetchProductCategoriesEvent extends ProductsEvent {}
 
 class FetchProductForCategoriesEvent extends ProductsEvent {}
+
+class FetchCategoryProductsEvent extends ProductsEvent {
+  final int categoryId;
+
+  FetchCategoryProductsEvent({@required this.categoryId}) : super();
+}

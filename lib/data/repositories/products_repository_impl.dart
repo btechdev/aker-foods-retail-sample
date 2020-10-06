@@ -2,6 +2,7 @@ import 'package:aker_foods_retail/data/models/product_category_model.dart';
 import 'package:aker_foods_retail/data/models/product_model.dart';
 import 'package:aker_foods_retail/data/remote_data_sources/products_remote_data_source.dart';
 import 'package:aker_foods_retail/domain/repositories/products_repository.dart';
+import 'package:aker_foods_retail/network/api/api_response.dart';
 
 class ProductsRepositoryImpl implements ProductsRepository {
   final ProductsRemoteDataSource productsRemoteDataSource;
@@ -22,10 +23,10 @@ class ProductsRepositoryImpl implements ProductsRepository {
   }
 
   @override
-  Future<List<ProductModel>> getProductsForCategory(
-          int categoryId, int pageSize) async =>
+  Future<ApiResponse<ProductModel>> getProductsForCategory(
+          int categoryId, int pageNumber, int pageSize) async =>
       productsRemoteDataSource.getProductsForCategory(
-          categoryId: categoryId, pageSize: pageSize);
+          categoryId: categoryId, pageNumber: pageNumber, pageSize: pageSize);
 
   @override
   Future<List<ProductModel>> getProductsForSubcategory(

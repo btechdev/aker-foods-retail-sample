@@ -1,6 +1,7 @@
 import 'package:aker_foods_retail/domain/entities/product_category_entity.dart';
 import 'package:aker_foods_retail/domain/entities/product_entity.dart';
 import 'package:aker_foods_retail/domain/repositories/products_repository.dart';
+import 'package:aker_foods_retail/network/api/api_response.dart';
 import 'package:flutter/foundation.dart';
 
 class ProductsUseCase {
@@ -17,17 +18,16 @@ class ProductsUseCase {
   Future<List<ProductEntity>> searchProducts(String searchText) async =>
       productsRepository.searchProducts(searchText);
 
-  Future<List<ProductEntity>> getProductsForCategory({
-    @required int categoryId,
-    int pageSize,
-  }) async =>
-      productsRepository.getProductsForCategory(categoryId, pageSize);
+  Future<ApiResponse<ProductEntity>> getProductsForCategory(
+          {@required int categoryId, int pageNumber, int pageSize}) async =>
+      productsRepository.getProductsForCategory(
+          categoryId, pageNumber, pageSize);
 
   Future<List<ProductEntity>> getProductsForSubcategory({
     @required int subcategoryId,
     int pageSize,
   }) async =>
-      productsRepository.getProductsForCategory(subcategoryId, pageSize);
+      productsRepository.getProductsForSubcategory(subcategoryId, pageSize);
 
   Future<ProductEntity> getProductWithId({@required int productId}) async =>
       productsRepository.getProductWithId(productId);

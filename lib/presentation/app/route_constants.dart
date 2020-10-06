@@ -23,4 +23,6 @@ class RouteConstants {
 
   static const bannerDetails = '/banner-details';
   static const splash = '/splash';
+
+  static const categoryProducts = '/category-products';
 }

@@ -192,15 +192,15 @@ class SearchPageState extends State<SearchPage> {
           .where((product) => category.id == product.categoryId)
           .toList();
       slivers
-        ..add(_productsCategoryHeader(category.name))
+        ..add(_productsCategoryHeader(category))
         ..add(_productsSliverGridWithPadding(categoryProducts));
     }
     return slivers;
   }
 
-  SliverToBoxAdapter _productsCategoryHeader(String title) =>
+  SliverToBoxAdapter _productsCategoryHeader(ProductCategoryEntity category) =>
       SliverToBoxAdapter(
-        child: ProductsCategoryHeader(title: title),
+        child: ProductsCategoryHeader(category: category),
       );
 
   /*SliverPadding _productsSliverGridWithPadding(
@@ -251,8 +251,19 @@ class SearchPageState extends State<SearchPage> {
         ),
       );
 
-  Widget _productsCountTextContainer() => ProductsCategoryHeader(
-        title: _getProductsResultString(),
+  Widget _productsCountTextContainer() => Container(
+        color: AppColor.primaryColor35,
+        height: LayoutConstants.dimen_48.w,
+        alignment: Alignment.centerLeft,
+        padding: EdgeInsets.symmetric(
+          horizontal: LayoutConstants.dimen_16.w,
+        ),
+        child: Text(
+          _getProductsResultString(),
+          style: Theme.of(context).textTheme.bodyText1.copyWith(
+                color: AppColor.black,
+              ),
+        ),
       );
 
   String _getProductsResultString() {

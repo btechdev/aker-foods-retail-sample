@@ -1,3 +1,4 @@
+import 'package:aker_foods_retail/common/constants/app_constants.dart';
 import 'package:aker_foods_retail/domain/entities/product_category_entity.dart';
 import 'package:aker_foods_retail/domain/entities/product_entity.dart';
 import 'package:aker_foods_retail/domain/usecases/products_use_case.dart';
@@ -9,6 +10,11 @@ import 'products_state.dart';
 class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
   final ProductsUseCase productsUseCase;
   List<ProductCategoryEntity> _categories = [];
+
+  int _categoryProductsPage = 1;
+  bool _isLastPageFetched = false;
+  String _categoryProductsNextUrl;
+  final List<ProductEntity> _categoryProducts = [];
 
   ProductsBloc({this.productsUseCase}) : super(EmptyState());
 
@@ -28,6 +34,8 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
       yield* _handleFetchCategoriesEvent();
     } else if (event is FetchProductForCategoriesEvent) {
       yield* _handleProductForCategoriesEvent();
+    } else if (event is FetchCategoryProductsEvent) {
+      yield* _handleFetchCategoryProductsEvent(event);
     }
   }
 
@@ -37,15 +45,17 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
     yield ProductCategoriesFetchSuccessState(categories: _categories);
   }
 
+  Future<List<ProductEntity>> _getCategoryProductsFirstPage(
+      ProductCategoryEntity category) async {
+    final apiResponse = await productsUseCase.getProductsForCategory(
+        categoryId: category.id, pageNumber: 1, pageSize: 4);
+    return apiResponse.data;
+  }
+
   Stream<ProductsState> _handleProductForCategoriesEvent() async* {
     final Map<int, List<ProductEntity>> productsMap = {};
     final list = await Future.wait(
-      _categories.map(
-        (category) => productsUseCase.getProductsForCategory(
-          categoryId: category.id,
-          pageSize: 4,
-        ),
-      ),
+      _categories.map(_getCategoryProductsFirstPage),
     );
 
     for (var i = 0; i < _categories.length; i++) {
@@ -113,5 +123,31 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
       categories: categories,
       products: products,
     );
+  }
+
+  Stream<ProductsState> _handleFetchCategoryProductsEvent(
+      FetchCategoryProductsEvent event) async* {
+    if (_isLastPageFetched) {
+      return;
+    }
+
+    if (_categoryProductsNextUrl == null) {
+      yield FetchingProductsState();
+    }
+
+    try {
+      final apiResponse = await productsUseCase.getProductsForCategory(
+        categoryId: event.categoryId,
+        pageNumber: _categoryProductsPage,
+        pageSize: AppConstants.apiDefaultPageSize,
+      );
+      _categoryProductsNextUrl = apiResponse.next;
+      _isLastPageFetched = _categoryProductsNextUrl == null;
+      if (!_isLastPageFetched) {
+        _categoryProductsPage++;
+      }
+      _categoryProducts.addAll(apiResponse.data);
+      yield CategoryProductsFetchSuccessState(products: _categoryProducts);
+    } catch (_) {}
   }
 }

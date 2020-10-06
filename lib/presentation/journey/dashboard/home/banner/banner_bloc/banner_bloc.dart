@@ -56,10 +56,12 @@ class BannerBloc extends Bloc<BannerEvent, BannerState> {
     final Map<int, List<ProductEntity>> categoryProductsMap = Map();
     for (final idString in ids) {
       try {
-        final products = await productsUseCase.getProductsForCategory(
+        final apiResponse = await productsUseCase.getProductsForCategory(
           categoryId: int.tryParse(idString),
+          pageNumber: 1,
           pageSize: AppConstants.apiDefaultPageSize,
         );
+        final List<ProductEntity> products = apiResponse.data;
         if (products?.isNotEmpty == true) {
           categories.add(products[0].category);
           categoryProductsMap[products[0].categoryId] = products;

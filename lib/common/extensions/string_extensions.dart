@@ -22,7 +22,7 @@ extension StringExtensions on String {
 
   String splitLongStringForLogging() {
     return splitMapJoin(
-      RegExp('.{1000}'),
+      RegExp('.{200}'),
       onMatch: (match) => '${match.group(0)}',
       onNonMatch: (last) => '\n$last',
     );

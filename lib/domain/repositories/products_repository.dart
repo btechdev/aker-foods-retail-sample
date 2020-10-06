@@ -1,5 +1,6 @@
 import 'package:aker_foods_retail/domain/entities/product_category_entity.dart';
 import 'package:aker_foods_retail/domain/entities/product_entity.dart';
+import 'package:aker_foods_retail/network/api/api_response.dart';
 
 abstract class ProductsRepository {
   Future<List<ProductCategoryEntity>> getCategories();
@@ -8,8 +9,8 @@ abstract class ProductsRepository {
 
   Future<List<ProductEntity>> searchProducts(String searchText);
 
-  Future<List<ProductEntity>> getProductsForCategory(
-      int categoryId, int pageSize);
+  Future<ApiResponse<ProductEntity>> getProductsForCategory(
+      int categoryId, int pageNumber, int pageSize);
 
   Future<List<ProductEntity>> getProductsForSubcategory(
       int subcategoryId, int pageSize);

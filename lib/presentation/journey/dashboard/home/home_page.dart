@@ -155,7 +155,9 @@ class HomePageState extends State<HomePage> {
     final slivers = <Widget>[];
     if (state is CategoryWiseProductsFetchSuccessState) {
       for (final category in state.categories) {
-        slivers.add(ProductsCategoryHeader(title: category.name));
+        slivers.add(
+          ProductsCategoryHeader(hasViewAllOption: true, category: category),
+        );
         final products = state.categoryProductsMap[category.id];
         slivers.add(_productsStaggeredGridView(products));
       }
