@@ -1,5 +1,6 @@
 import 'package:aker_foods_retail/common/constants/app_constants.dart';
 import 'package:aker_foods_retail/common/exceptions/server_exception.dart';
+import 'package:aker_foods_retail/data/models/user_profile_model.dart';
 import 'package:aker_foods_retail/domain/usecases/cart_use_case.dart';
 import 'package:aker_foods_retail/domain/usecases/user_address_use_case.dart';
 import 'package:aker_foods_retail/domain/usecases/user_profile_user_case.dart';
@@ -13,6 +14,8 @@ class UserProfileBloc extends Bloc<UserProfileEvent, UserProfileState> {
   final UserProfileUseCase userProfileUseCase;
   final CartUseCase cartUseCase;
   final UserAddressUseCase userAddressUseCase;
+
+  UserProfileModel _userProfile;
 
   UserProfileBloc({
     this.userProfileUseCase,
@@ -38,8 +41,12 @@ class UserProfileBloc extends Bloc<UserProfileEvent, UserProfileState> {
   Stream<UserProfileState> _handleFetchUserProfileEvent() async* {
     try {
       yield UserProfileFetchingState();
-      final user = await userProfileUseCase.fetchUserProfile();
-      yield UserProfileFetchSuccessState(user: user);
+      _userProfile = await userProfileUseCase.fetchUserProfile();
+      final address = await userAddressUseCase.getSelectedAddress();
+      yield UserProfileFetchSuccessState(
+        user: _userProfile,
+        address: address,
+      );
     } catch (e) {
       final message =
           e is ServerException ? e.message : AppConstants.unknownError;
@@ -95,6 +102,9 @@ class UserProfileBloc extends Bloc<UserProfileEvent, UserProfileState> {
   Stream<UserProfileState> _handleUserAddressFetchEvent(
       UserProfileEvent event) async* {
     final address = await userAddressUseCase.getSelectedAddress();
-    yield UserAddressFetchSuccessState(address: address);
+    yield UserProfileFetchSuccessState(
+      user: _userProfile,
+      address: address,
+    );
   }
 }

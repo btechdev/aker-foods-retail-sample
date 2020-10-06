@@ -21,5 +21,6 @@ class UserProfileUseCase {
   Future<bool> clearLocalPreferences() async =>
       userProfileRepository.clearLocalPreferences();
 
-  Future<void> registerUserDevice(String deviceId) async => userProfileRepository.registerUserDevice(deviceId);
+  Future<void> registerUserDevice(String deviceId) async =>
+      userProfileRepository.registerUserDevice(deviceId);
 }

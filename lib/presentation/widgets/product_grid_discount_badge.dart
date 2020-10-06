@@ -18,13 +18,16 @@ class ProductGridDiscountBadge extends StatelessWidget {
         product.amount - (product.discountedAmount ?? 0);
     if (discountValue > 0) {
       final double discountApplied = (discountValue / product.amount) * 100;
-      return _appliedDiscountValueTextContainer(context, discountApplied);
+      return _appliedDiscountValueTextContainer(
+        context,
+        discountApplied.toInt(),
+      );
     }
     return Container();
   }
 
   Widget _appliedDiscountValueTextContainer(
-          BuildContext context, double discountApplied) =>
+          BuildContext context, int discountApplied) =>
       Container(
         padding: EdgeInsets.symmetric(
           horizontal: LayoutConstants.dimen_8.w,

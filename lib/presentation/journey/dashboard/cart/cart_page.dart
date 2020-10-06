@@ -236,8 +236,11 @@ class _CartPageState extends State<CartPage> {
           return OutOfStockProductListTile(
             cartProduct: cartProduct,
             onNotify: () => BlocProvider.of<CartBloc>(context).add(
-                NotifyUserAboutProductEvent(
-                    productEntity: cartProduct.product)),
+              NotifyUserAboutProductEvent(
+                needsCartValidation: true,
+                productEntity: cartProduct.product,
+              ),
+            ),
             onDelete: () => BlocProvider.of<CartBloc>(context).add(
               RemoveProductFromCartEvent(
                 productEntity: cartProduct.product,

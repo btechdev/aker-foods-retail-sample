@@ -1,4 +1,3 @@
-import 'package:aker_foods_retail/domain/entities/cart_product_entity.dart';
 import 'package:aker_foods_retail/domain/entities/product_entity.dart';
 import 'package:flutter/foundation.dart';
 
@@ -52,10 +51,13 @@ class CreateOrderCartEvent extends CartEvent {
 }
 
 class NotifyUserAboutProductEvent extends CartEvent {
-  final CartProductEntity cartProduct;
-  ProductEntity productEntity;
+  final bool needsCartValidation;
+  final ProductEntity productEntity;
 
-  NotifyUserAboutProductEvent({this.cartProduct, this.productEntity});
+  NotifyUserAboutProductEvent({
+    this.needsCartValidation = false,
+    this.productEntity,
+  });
 }
 
 class CartOrderVerifyPaymentEvent extends CartEvent {
