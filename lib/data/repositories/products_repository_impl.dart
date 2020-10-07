@@ -18,9 +18,8 @@ class ProductsRepositoryImpl implements ProductsRepository {
       productsRemoteDataSource.getProducts();
 
   @override
-  Future<List<ProductModel>> searchProducts(String searchText) async {
-    throw UnimplementedError('SearchProducts API is not yet integrated');
-  }
+  Future<List<ProductModel>> searchProducts(String searchText) async =>
+      productsRemoteDataSource.searchProducts(searchText);
 
   @override
   Future<ApiResponse<ProductModel>> getProductsForCategory(

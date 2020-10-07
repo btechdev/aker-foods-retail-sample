@@ -3,6 +3,7 @@ import 'package:aker_foods_retail/common/constants/layout_constants.dart';
 import 'package:aker_foods_retail/common/extensions/pixel_dimension_util_extensions.dart';
 import 'package:aker_foods_retail/common/injector/injector.dart';
 import 'package:aker_foods_retail/common/utils/widget_util.dart';
+import 'package:aker_foods_retail/domain/entities/product_category_entity.dart';
 import 'package:aker_foods_retail/domain/entities/product_entity.dart';
 import 'package:aker_foods_retail/presentation/app/route_constants.dart';
 import 'package:aker_foods_retail/presentation/common_blocs/cart_bloc/cart_bloc.dart';
@@ -246,6 +247,7 @@ class HomePageState extends State<HomePage> {
       int i;
       for (i = 0; i < categoriesToDisplayCount; i++) {
         rowChildren.add(_categoryItemInExpandedContainer(
+          category: categories[i],
           title: categories[i].name,
           url: categories[i].imageUrl,
         ));
@@ -258,11 +260,18 @@ class HomePageState extends State<HomePage> {
     }
   }
 
-  Expanded _categoryItemInExpandedContainer({String title, String url}) =>
+  Expanded _categoryItemInExpandedContainer(
+          {ProductCategoryEntity category, String title, String url}) =>
       Expanded(
         flex: 1,
-        child: Container(
-          child: _categoryItem(title: title, url: url),
+        child: GestureDetector(
+          onTap: () => Navigator.of(context).pushNamed(
+            RouteConstants.categoryProducts,
+            arguments: category,
+          ),
+          child: Container(
+            child: _categoryItem(title: title, url: url),
+          ),
         ),
       );
 

@@ -91,6 +91,7 @@ class SearchPageState extends State<SearchPage> {
   }
 
   Widget _loaderWithScaffold() => Scaffold(
+        appBar: _getAppBar(),
         body: Container(
           alignment: Alignment.center,
           child: const CircularProgressIndicator(),

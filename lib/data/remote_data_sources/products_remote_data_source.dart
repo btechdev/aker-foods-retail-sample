@@ -19,6 +19,12 @@ class ProductsRemoteDataSource {
     return ApiResponse.fromJson<ProductModel>(jsonMap).data;
   }
 
+  Future<List<ProductModel>> searchProducts(String searchText) async {
+    final jsonMap =
+        await apiClient.get('${ApiEndpoints.products}?search=$searchText');
+    return ApiResponse.fromJson<ProductModel>(jsonMap).data;
+  }
+
   Future<ApiResponse<ProductModel>> getProductsForCategory({
     int categoryId,
     int pageNumber,
