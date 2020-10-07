@@ -2,6 +2,7 @@ import 'package:aker_foods_retail/common/constants/app_constants.dart';
 import 'package:aker_foods_retail/common/constants/layout_constants.dart';
 import 'package:aker_foods_retail/common/extensions/pixel_dimension_util_extensions.dart';
 import 'package:aker_foods_retail/common/injector/injector.dart';
+import 'package:aker_foods_retail/common/utils/analytics_utils.dart';
 import 'package:aker_foods_retail/domain/entities/product_category_entity.dart';
 import 'package:aker_foods_retail/domain/entities/product_entity.dart';
 import 'package:aker_foods_retail/presentation/common_blocs/cart_bloc/cart_bloc.dart';
@@ -42,6 +43,7 @@ class SearchPageState extends State<SearchPage> {
   @override
   void initState() {
     super.initState();
+    AnalyticsUtil.trackScreen(screenName: 'Search Page');
     _searchingProducts = false;
     _searchFieldFocusNode = FocusNode();
     _searchFieldController = TextEditingController();
@@ -91,7 +93,7 @@ class SearchPageState extends State<SearchPage> {
   }
 
   Widget _loaderWithScaffold() => Scaffold(
-        appBar: _getAppBar(),
+//        appBar: _getAppBar(),
         body: Container(
           alignment: Alignment.center,
           child: const CircularProgressIndicator(),

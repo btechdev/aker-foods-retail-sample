@@ -1,6 +1,7 @@
 import 'package:aker_foods_retail/common/constants/app_constants.dart';
 import 'package:aker_foods_retail/common/constants/layout_constants.dart';
 import 'package:aker_foods_retail/common/injector/injector.dart';
+import 'package:aker_foods_retail/common/utils/analytics_utils.dart';
 import 'package:aker_foods_retail/presentation/app/route_constants.dart';
 import 'package:aker_foods_retail/presentation/common_blocs/snack_bar_bloc/snack_bar_bloc.dart';
 import 'package:aker_foods_retail/presentation/common_blocs/snack_bar_bloc/snack_bar_event.dart';
@@ -175,7 +176,7 @@ class _EnterPhoneNumberScreen extends State<EnterPhoneNumberScreen> {
       );
 
   void _validateAndVerifyPhoneNumber() {
-    Segment.track(eventName: 'Get OTP button clicked');
+    AnalyticsUtil.trackEvent(eventName: 'verify phone number event');
     final phoneNumber = _textEditingController.text;
     if (phoneNumber.isNotNullAndEmpty &&
         phoneNumber.length == AppConstants.phoneNumberLength) {

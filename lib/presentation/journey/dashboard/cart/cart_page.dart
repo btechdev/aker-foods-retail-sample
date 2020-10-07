@@ -4,6 +4,7 @@ import 'package:aker_foods_retail/common/constants/layout_constants.dart';
 import 'package:aker_foods_retail/common/constants/payment_constants.dart';
 import 'package:aker_foods_retail/common/extensions/pixel_dimension_util_extensions.dart';
 import 'package:aker_foods_retail/common/injector/injector.dart';
+import 'package:aker_foods_retail/common/utils/analytics_utils.dart';
 import 'package:aker_foods_retail/domain/entities/cart_product_entity.dart';
 import 'package:aker_foods_retail/domain/entities/coupon_entity.dart';
 import 'package:aker_foods_retail/network/http/http_util.dart';
@@ -47,6 +48,12 @@ class _CartPageState extends State<CartPage> {
       _orderPaymentVerificationPollingTimer = state.timer;
       Navigator.pushNamed(context, RouteConstants.myOrders, arguments: true);
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    AnalyticsUtil.trackScreen(screenName: 'Cart Page');
   }
 
   @override
@@ -295,6 +302,7 @@ class _CartPageState extends State<CartPage> {
           shape: LayoutConstants.borderlessRoundedRectangle,
           onPressed: () {
             if (_addressId == null) {
+              AnalyticsUtil.trackEvent(eventName: 'place order click event');
               Injector.resolve<SnackBarBloc>().add(ShowSnackBarEvent(
                 type: CustomSnackBarType.error,
                 text: 'Please provide the delivery address',
