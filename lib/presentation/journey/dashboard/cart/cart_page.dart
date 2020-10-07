@@ -73,7 +73,7 @@ class _CartPageState extends State<CartPage> {
       );
 
   Widget _cartBlocBuilderWidget(BuildContext context, CartState state) {
-    if (state is CartLoadingState && state.totalProductCount == 0) {
+    if (state is CartLoadingState) {
       return _loaderWithScaffold();
     }
     /*if (state is CartLoadingState && state.totalProductCount > 0) {
