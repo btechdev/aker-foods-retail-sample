@@ -4,6 +4,7 @@ import 'package:aker_foods_retail/common/extensions/pixel_dimension_util_extensi
 import 'package:aker_foods_retail/common/injector/injector.dart';
 import 'package:aker_foods_retail/common/utils/analytics_utils.dart';
 import 'package:aker_foods_retail/domain/entities/product_entity.dart';
+import 'package:aker_foods_retail/presentation/app/route_constants.dart';
 import 'package:aker_foods_retail/presentation/common_blocs/cart_bloc/cart_bloc.dart';
 import 'package:aker_foods_retail/presentation/common_blocs/cart_bloc/cart_event.dart';
 import 'package:aker_foods_retail/presentation/common_blocs/cart_bloc/cart_state.dart';
@@ -111,7 +112,7 @@ class ProductsSearchPageState extends State<ProductsSearchPage> {
 
   // ======================================================================
 
-  AppBar _getAppBar() => AppBar(
+  /*AppBar _getAppBar() => AppBar(
         elevation: 8,
         titleSpacing: 0,
         centerTitle: false,
@@ -126,6 +127,26 @@ class ProductsSearchPageState extends State<ProductsSearchPage> {
             onPressed: _searchingProducts
                 ? _clearSearchTextField
                 : _focusSearchTextField,
+          ),
+        ],
+      );*/
+
+  AppBar _getAppBar() => AppBar(
+        centerTitle: false,
+        elevation: LayoutConstants.dimen_1,
+        backgroundColor: AppColor.white,
+        title: Text(
+          'Products',
+          style: Theme.of(context).textTheme.headline6,
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(
+              Icons.search,
+              color: AppColor.primaryColor,
+            ),
+            onPressed: () =>
+                Navigator.of(context).pushNamed(RouteConstants.searchProducts),
           ),
         ],
       );

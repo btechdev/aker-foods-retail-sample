@@ -25,4 +25,5 @@ class RouteConstants {
   static const splash = '/splash';
 
   static const categoryProducts = '/category-products';
+  static const searchProducts = '/search-products';
 }

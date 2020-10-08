@@ -1,5 +1,6 @@
 import 'package:aker_foods_retail/presentation/app/route_constants.dart';
 import 'package:aker_foods_retail/presentation/journey/products/category_products_screen.dart';
+import 'package:aker_foods_retail/presentation/journey/products/search_products_screen.dart';
 import 'package:flutter/material.dart';
 
 import 'dashboard_screen.dart';
@@ -15,5 +16,6 @@ class DashboardJourneyRoutes {
             NotificationsListScreen(),
         RouteConstants.bannerDetails: (context) => BannerDetailsScreen(),
         RouteConstants.categoryProducts: (context) => CategoryProductsScreen(),
+        RouteConstants.searchProducts: (context) => SearchProductsScreen(),
       };
 }

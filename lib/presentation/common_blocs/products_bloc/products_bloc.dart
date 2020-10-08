@@ -88,7 +88,8 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
 
   Stream<ProductsState> _handleSearchProductsEvent(
       SearchProductsEvent event) async* {
-    yield FetchingProductsState();
+    //yield FetchingProductsState();
+    yield SearchingProductsState();
     final products = await productsUseCase.searchProducts(event.searchText);
     yield ProductsSearchSuccessState(products: products);
   }
@@ -116,13 +117,14 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
   }
 
   Stream<ProductsState> _handleCancelProductsSearchEvent() async* {
-    yield FetchingProductsState();
+    /*yield FetchingProductsState();
     final categories = await productsUseCase.getCategories();
     final products = await productsUseCase.getProducts();
     yield SearchPageProductsLoadedState(
       categories: categories,
       products: products,
-    );
+    );*/
+    yield EmptyState();
   }
 
   Stream<ProductsState> _handleFetchCategoryProductsEvent(
