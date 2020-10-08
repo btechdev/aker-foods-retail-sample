@@ -1,4 +1,5 @@
 import 'package:aker_foods_retail/common/injector/injector.dart';
+import 'package:aker_foods_retail/common/utils/analytics_utils.dart';
 import 'package:aker_foods_retail/data/models/address_model.dart';
 import 'package:aker_foods_retail/presentation/journey/user/address/change_address/bloc/change_address_bloc.dart';
 import 'package:aker_foods_retail/presentation/journey/user/address/change_address/bloc/change_address_event.dart';
@@ -26,6 +27,7 @@ class ChangeAddressModeSelectionBottomSheetState
   @override
   void initState() {
     super.initState();
+    AnalyticsUtil.trackScreen(screenName: 'Change address bottom sheet');
     savedAddresses = [];
     changeAddressBloc = Injector.resolve<ChangeAddressBloc>()
       ..add(FetchAddressesEvent());

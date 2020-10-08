@@ -1,6 +1,7 @@
 import 'package:aker_foods_retail/common/constants/layout_constants.dart';
 import 'package:aker_foods_retail/common/extensions/pixel_dimension_util_extensions.dart';
 import 'package:aker_foods_retail/common/injector/injector.dart';
+import 'package:aker_foods_retail/common/utils/analytics_utils.dart';
 import 'package:aker_foods_retail/common/utils/widget_util.dart';
 import 'package:aker_foods_retail/domain/entities/notification_entity.dart';
 import 'package:aker_foods_retail/presentation/theme/app_colors.dart';
@@ -22,6 +23,7 @@ class NotificationsListScreenState extends State<NotificationsListScreen> {
   @override
   void initState() {
     super.initState();
+    AnalyticsUtil.trackScreen(screenName: 'Notification screen');
     notificationBloc = Injector.resolve<NotificationBloc>()
       ..add(FetchNotificationsEvent());
   }

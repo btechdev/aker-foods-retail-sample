@@ -1,3 +1,4 @@
+import 'package:aker_foods_retail/common/utils/analytics_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_google_places/flutter_google_places.dart';
 import 'package:geocoder/geocoder.dart';
@@ -31,6 +32,7 @@ class ChooseYourLocationScreenState extends State<ChooseYourLocationScreen> {
   final _iconSize = LayoutConstants.dimen_40.w;
 
   Future<void> _onSearch() async {
+    AnalyticsUtil.trackScreen(screenName: 'Search location screen');
     final result = await PlacesAutocomplete.show(
       context: context,
       apiKey: AppConstants.kGoogleApiKey,
@@ -50,6 +52,7 @@ class ChooseYourLocationScreenState extends State<ChooseYourLocationScreen> {
   @override
   void initState() {
     super.initState();
+    AnalyticsUtil.trackScreen(screenName: 'Google Map screen');
     _places = GoogleMapsPlaces(apiKey: AppConstants.kGoogleApiKey);
     getCurrentLocation();
     if (widget.isFromSearch ?? false) {
@@ -287,7 +290,8 @@ class ChooseYourLocationScreenState extends State<ChooseYourLocationScreen> {
       );
 
   Future<void> _showEnterAddressDetailsBottomSheet() async {
-   final _ = await showModalBottomSheet(
+    AnalyticsUtil.trackEvent(eventName: 'Enter address Proceed button clicked');
+    final _ = await showModalBottomSheet(
       context: context,
       enableDrag: true,
       isDismissible: true,

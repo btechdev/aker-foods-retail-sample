@@ -1,5 +1,6 @@
 import 'package:aker_foods_retail/common/constants/layout_constants.dart';
 import 'package:aker_foods_retail/common/injector/injector.dart';
+import 'package:aker_foods_retail/common/utils/analytics_utils.dart';
 import 'package:aker_foods_retail/common/utils/date_utils.dart';
 import 'package:aker_foods_retail/domain/entities/order_entity.dart';
 import 'package:aker_foods_retail/presentation/journey/orders/bloc/user_order_bloc.dart';
@@ -24,6 +25,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
   @override
   void initState() {
     super.initState();
+    AnalyticsUtil.trackScreen(screenName: 'order detail screen');
     userOrderBloc = Injector.resolve<UserOrderBloc>();
   }
 
@@ -34,6 +36,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
   }
 
   void _handleCompletePayment() {
+    AnalyticsUtil.trackEvent(eventName: 'reinitiate payment event');
     userOrderBloc
         .add(ReinitiatePaymentForOrderEvent(orderId: widget.order.orderId));
   }

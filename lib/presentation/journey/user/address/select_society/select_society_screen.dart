@@ -1,4 +1,5 @@
 import 'package:aker_foods_retail/common/injector/injector.dart';
+import 'package:aker_foods_retail/common/utils/analytics_utils.dart';
 import 'package:aker_foods_retail/data/models/society_model.dart';
 import 'package:aker_foods_retail/domain/entities/society_entity.dart';
 import 'package:aker_foods_retail/presentation/journey/user/address/select_society/bloc/select_society_bloc.dart';
@@ -31,6 +32,8 @@ class SelectSocietyScreenState extends State<SelectSocietyScreen> {
   @override
   void initState() {
     super.initState();
+    AnalyticsUtil.trackScreen(screenName: 'select society screen');
+
     selectSocietyBloc = Injector.resolve<SelectSocietyBloc>()
       ..add(FetchSocietiesFirstPageEvent());
 

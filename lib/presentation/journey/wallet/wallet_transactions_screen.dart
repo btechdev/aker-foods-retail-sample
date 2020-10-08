@@ -2,6 +2,7 @@ import 'package:aker_foods_retail/common/constants/app_constants.dart';
 import 'package:aker_foods_retail/common/constants/layout_constants.dart';
 import 'package:aker_foods_retail/common/extensions/pixel_dimension_util_extensions.dart';
 import 'package:aker_foods_retail/common/injector/injector.dart';
+import 'package:aker_foods_retail/common/utils/analytics_utils.dart';
 import 'package:aker_foods_retail/common/utils/date_utils.dart';
 import 'package:aker_foods_retail/common/utils/pixel_dimension_util.dart';
 import 'package:aker_foods_retail/domain/entities/transaction_entity.dart';
@@ -40,6 +41,7 @@ class _WalletTransactionsScreenState extends State<WalletTransactionsScreen> {
   @override
   void initState() {
     super.initState();
+    AnalyticsUtil.trackScreen(screenName: 'My Wallet screen');
     _scrollController.addListener(_scrollControllerListener);
     userTransactionBloc = Injector.resolve<UserTransactionBloc>()
       ..add(FetchUserTransactionsEvent());
