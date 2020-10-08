@@ -28,7 +28,9 @@ class DashboardScreenState extends State<DashboardScreen> {
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<DashboardBloc>(context).add(RegisterUserDeviceEvent());
+    BlocProvider.of<DashboardBloc>(context)
+      ..add(RegisterUserDeviceEvent())
+      ..add(FetchCurrentLocationEvent());
     /*BlocProvider.of<DashboardBloc>(context)
       ..add(RegisterUserDeviceEvent())
       ..add(FetchCurrentLocationEvent());*/
@@ -111,8 +113,15 @@ class DashboardScreenState extends State<DashboardScreen> {
         type: BottomNavigationBarType.fixed,
         items: _navigationBarData
             .getBottomNavigationBarItemList(cartState.totalProductCount),
-        onTap: (index) => BlocProvider.of<DashboardBloc>(context).add(
-          NavigateToPageEvent(pageIndex: index ?? 0),
-        ),
+        onTap: (index) {
+          BlocProvider.of<DashboardBloc>(context).add(
+            NavigateToPageEvent(pageIndex: index ?? 0),
+          );
+          if (index == 0) {
+            BlocProvider.of<DashboardBloc>(context).add(
+              FetchCurrentLocationEvent(),
+            );
+          }
+        },
       );
 }

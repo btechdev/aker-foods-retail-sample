@@ -42,9 +42,16 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   Stream<DashboardState> _handleFetchCurrentLocationEvent(
       DashboardEvent event) async* {
     yield FetchingCurrentLocationState(pageIndex: state.pageIndex);
-    final permission = await requestPermission();
-    debugPrint('------Permission: $permission ---------');
-    switch (permission) {
+    LocationPermission locationPermission;
+    final currentPermission = await checkPermission();
+    if (currentPermission == LocationPermission.denied ||
+        currentPermission == LocationPermission.deniedForever) {
+      locationPermission = await requestPermission();
+    } else {
+      locationPermission = currentPermission;
+    }
+    debugPrint('------Permission: $locationPermission ---------');
+    switch (locationPermission) {
       case LocationPermission.denied:
       case LocationPermission.deniedForever:
         _currentAddress = await userAddressUseCase.getSelectedAddress();

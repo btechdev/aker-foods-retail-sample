@@ -15,6 +15,7 @@ import 'package:aker_foods_retail/presentation/common_blocs/products_bloc/produc
 import 'package:aker_foods_retail/presentation/common_blocs/products_bloc/products_state.dart';
 import 'package:aker_foods_retail/presentation/journey/dashboard/bloc/dashboard_bloc.dart';
 import 'package:aker_foods_retail/presentation/journey/dashboard/bloc/dashboard_event.dart';
+import 'package:aker_foods_retail/presentation/journey/dashboard/bloc/dashboard_state.dart';
 import 'package:aker_foods_retail/presentation/journey/dashboard/bottom_navigation_bar_details.dart';
 import 'package:aker_foods_retail/presentation/journey/dashboard/home/banner/aker_banner_widget.dart';
 import 'package:aker_foods_retail/presentation/journey/user/address/change_address_mode_selection_bottom_sheet.dart';
@@ -35,6 +36,7 @@ class HomePageState extends State<HomePage> {
   // ignore: close_sinks
   ProductsBloc productsBloc;
   Map<int, int> productIdCountMap;
+  String _address = 'Location unavailable';
 
   Widget _categoriesSection;
 
@@ -50,6 +52,11 @@ class HomePageState extends State<HomePage> {
     AnalyticsUtil.trackScreen(screenName: 'Home Page');
     productsBloc = Injector.resolve<ProductsBloc>()
       ..add(FetchProductCategoriesEvent());
+    Injector.resolve<DashboardBloc>().listen((state) {
+      if (state is FetchCurrentLocationSuccessState) {
+        _address = state.address?.address1 ?? 'Location unavailable';
+      }
+    });
   }
 
   @override
@@ -107,11 +114,16 @@ class HomePageState extends State<HomePage> {
         ),
       );
 
-  Expanded _addressWidgetExpandedText() => Expanded(
-        child: Text(
-          'Splendid County, Lohegaon, Dhanori',
-          overflow: TextOverflow.ellipsis,
-          style: Theme.of(context).textTheme.bodyText1,
+  BlocBuilder _addressWidgetExpandedText() =>
+      BlocBuilder<DashboardBloc, DashboardState>(
+        buildWhen: (_, currentState) =>
+            currentState is FetchCurrentLocationSuccessState,
+        builder: (context, state) => Expanded(
+          child: Text(
+            _address,
+            overflow: TextOverflow.ellipsis,
+            style: Theme.of(context).textTheme.bodyText1,
+          ),
         ),
       );
 
