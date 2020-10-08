@@ -1,6 +1,7 @@
 import 'package:aker_foods_retail/common/constants/layout_constants.dart';
 import 'package:aker_foods_retail/common/extensions/pixel_dimension_util_extensions.dart';
 import 'package:aker_foods_retail/common/injector/injector.dart';
+import 'package:aker_foods_retail/common/utils/analytics_utils.dart';
 import 'package:aker_foods_retail/data/models/user_profile_model.dart';
 import 'package:aker_foods_retail/presentation/common_blocs/snack_bar_bloc/snack_bar_bloc.dart';
 import 'package:aker_foods_retail/presentation/common_blocs/snack_bar_bloc/snack_bar_event.dart';
@@ -78,6 +79,7 @@ class _UserProfileScreen extends State<EditProfileScreen> {
 
   @override
   void initState() {
+    AnalyticsUtil.trackScreen(screenName: 'Edit profile screen');
     _firstNameController = TextEditingController(text: widget.user.firstName);
     _lastNameController = TextEditingController(text: widget.user.lastName);
     _emailController = TextEditingController(text: widget.user.email);
@@ -177,8 +179,10 @@ class _UserProfileScreen extends State<EditProfileScreen> {
               child: RaisedButton(
                 color: AppColor.primaryColor,
                 disabledColor: Colors.lightGreen,
-                onPressed: () =>
-                    _validateInputFields() ? _setupUserProfile() : null,
+                onPressed: () {
+                  AnalyticsUtil.trackEvent(eventName: 'Save profile button clicked');
+                  _validateInputFields() ? _setupUserProfile() : null;
+                },
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12.w),
                 ),

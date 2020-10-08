@@ -315,6 +315,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
             ),
             FlatButton(
               onPressed: () {
+                AnalyticsUtil.trackEvent(eventName: 'Logout button clicked');
                 Navigator.pop(context);
                 userProfileBloc.add(LogoutUserEvent());
               },

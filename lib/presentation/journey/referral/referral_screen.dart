@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:aker_foods_retail/common/constants/app_constants.dart';
 import 'package:aker_foods_retail/common/constants/layout_constants.dart';
 import 'package:aker_foods_retail/common/extensions/pixel_dimension_util_extensions.dart';
+import 'package:aker_foods_retail/common/utils/analytics_utils.dart';
 import 'package:aker_foods_retail/common/utils/pixel_dimension_util.dart';
 import 'package:aker_foods_retail/domain/entities/referral_entity.dart';
 import 'package:aker_foods_retail/presentation/theme/app_colors.dart';
@@ -18,6 +19,11 @@ class ReferralScreen extends StatefulWidget {
 class _ReferralScreenState extends State<ReferralScreen> {
   ReferralEntity referralEntity;
 
+  @override
+  void initState() {
+    super.initState();
+    AnalyticsUtil.trackScreen(screenName: 'Referral screen');
+  }
   @override
   Widget build(BuildContext context) {
     referralEntity = ModalRoute.of(context).settings.arguments;
@@ -97,6 +103,8 @@ class _ReferralScreenState extends State<ReferralScreen> {
 
   Future<void> _onShare(BuildContext context) async {
     // TODO(soham): Handle the network call to download image properly
+
+    AnalyticsUtil.trackEvent(eventName: 'Share button clicked');
     final request =
         await HttpClient().getUrl(Uri.parse(referralEntity.imageUrl));
     final response = await request.close();

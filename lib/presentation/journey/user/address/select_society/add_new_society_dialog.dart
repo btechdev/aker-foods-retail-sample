@@ -1,5 +1,6 @@
 import 'package:aker_foods_retail/common/constants/layout_constants.dart';
 import 'package:aker_foods_retail/common/extensions/pixel_dimension_util_extensions.dart';
+import 'package:aker_foods_retail/common/utils/analytics_utils.dart';
 import 'package:aker_foods_retail/presentation/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:keyboard_avoider/keyboard_avoider.dart';
@@ -16,6 +17,11 @@ class AddNewSocietyDialog extends StatefulWidget {
 class _AddNewSocietyDialogState extends State<AddNewSocietyDialog> {
   final _societyNameTextController = TextEditingController();
 
+  @override
+  void initState() {
+    super.initState();
+    AnalyticsUtil.trackScreen(screenName: 'Add new society screen');
+  }
   @override
   Widget build(BuildContext context) => Scaffold(
         backgroundColor: AppColor.black25,
@@ -105,9 +111,10 @@ class _AddNewSocietyDialogState extends State<AddNewSocietyDialog> {
             LayoutConstants.dimen_12.w,
           ),
         ),
-        onPressed: () => {
-          Navigator.pop(context),
-          widget.onAdd(_societyNameTextController.text),
+        onPressed: ()  {
+          AnalyticsUtil.trackEvent(eventName: 'Add new society button clicked');
+          Navigator.pop(context);
+          widget.onAdd(_societyNameTextController.text);
         },
         child: Text(
           'Add',

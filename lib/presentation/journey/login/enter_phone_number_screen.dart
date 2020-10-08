@@ -30,7 +30,7 @@ class _EnterPhoneNumberScreen extends State<EnterPhoneNumberScreen> {
   @override
   void initState() {
     super.initState();
-    Segment.screen(screenName: 'EnterPhoneNumberScreen');
+    AnalyticsUtil.trackScreen(screenName: 'EnterPhoneNumber Screen');
   }
 
   @override

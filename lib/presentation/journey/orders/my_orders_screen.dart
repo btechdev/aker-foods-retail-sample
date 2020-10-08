@@ -1,5 +1,6 @@
 import 'package:aker_foods_retail/common/constants/layout_constants.dart';
 import 'package:aker_foods_retail/common/injector/injector.dart';
+import 'package:aker_foods_retail/common/utils/analytics_utils.dart';
 import 'package:aker_foods_retail/common/utils/pixel_dimension_util.dart';
 import 'package:aker_foods_retail/data/models/order_model.dart';
 import 'package:aker_foods_retail/presentation/app/route_constants.dart';
@@ -41,6 +42,8 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
   @override
   void initState() {
     super.initState();
+    AnalyticsUtil.trackScreen(screenName: 'My order screen');
+
     _scrollController.addListener(_scrollControllerListener);
     userOrderBloc = Injector.resolve<UserOrderBloc>()..add(FetchUserOrders());
   }
