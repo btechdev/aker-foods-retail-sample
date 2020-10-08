@@ -53,6 +53,7 @@ import 'package:aker_foods_retail/presentation/journey/checkout/order_cart/coupo
 import 'package:aker_foods_retail/presentation/journey/dashboard/bloc/dashboard_bloc.dart';
 import 'package:aker_foods_retail/presentation/journey/dashboard/home/banner/banner_bloc/banner_bloc.dart';
 import 'package:aker_foods_retail/presentation/journey/dashboard/home/notification/bloc/notification_bloc.dart';
+import 'package:aker_foods_retail/presentation/journey/dashboard/search/bloc/search_page_bloc.dart';
 import 'package:aker_foods_retail/presentation/journey/orders/bloc/user_order_bloc.dart';
 import 'package:aker_foods_retail/presentation/journey/user/address/change_address/bloc/change_address_bloc.dart';
 import 'package:aker_foods_retail/presentation/journey/user/address/enter_new_address/bloc/enter_new_address_bloc.dart';
@@ -102,6 +103,7 @@ abstract class InjectorConfig {
   @Register.factory(CouponsBloc)
   @Register.factory(BannerBloc)
   @Register.factory(NotificationBloc)
+  @Register.factory(SearchPageBloc)
   void _configureBlocs();
 
   /// ============ Register UseCases ============

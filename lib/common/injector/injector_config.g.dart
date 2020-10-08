@@ -48,6 +48,8 @@ class _$InjectorConfig extends InjectorConfig {
         productsUseCase: c<ProductsUseCase>()));
     container.registerFactory(
         (c) => NotificationBloc(notificationUseCase: c<NotificationUseCase>()));
+    container.registerFactory(
+        (c) => SearchPageBloc(productsUseCase: c<ProductsUseCase>()));
   }
 
   void _configureUseCases() {
