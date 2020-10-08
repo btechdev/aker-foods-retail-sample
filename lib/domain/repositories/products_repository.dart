@@ -18,4 +18,11 @@ abstract class ProductsRepository {
   Future<ProductEntity> getProductWithId(int productId);
 
   Future<bool> notifyUserForProduct(int productId);
+
+  Future<ApiResponse<ProductEntity>> getProductsForCategorySubcategory(
+    int categoryId,
+    int subcategoryId,
+    int pageNumber,
+    int pageSize,
+  );
 }

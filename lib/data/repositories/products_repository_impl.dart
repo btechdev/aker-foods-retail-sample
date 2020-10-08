@@ -40,4 +40,18 @@ class ProductsRepositoryImpl implements ProductsRepository {
   @override
   Future<bool> notifyUserForProduct(int productId) async =>
       productsRemoteDataSource.postNotifyUserAboutProduct(productId);
+
+  @override
+  Future<ApiResponse<ProductModel>> getProductsForCategorySubcategory(
+    int categoryId,
+    int subcategoryId,
+    int pageNumber,
+    int pageSize,
+  ) async =>
+      productsRemoteDataSource.getProductsForCategorySubcategory(
+        categoryId: categoryId,
+        subcategoryId: subcategoryId,
+        pageNumber: pageNumber,
+        pageSize: pageSize,
+      );
 }

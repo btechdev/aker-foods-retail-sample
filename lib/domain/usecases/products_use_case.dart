@@ -34,4 +34,17 @@ class ProductsUseCase {
 
   Future<bool> notifyUserForProduct(int productId) async =>
       productsRepository.notifyUserForProduct(productId);
+
+  Future<ApiResponse<ProductEntity>> getProductsForCategorySubcategory({
+    @required int categoryId,
+    @required int subcategoryId,
+    @required int pageNumber,
+    @required int pageSize,
+  }) async =>
+      productsRepository.getProductsForCategorySubcategory(
+        categoryId,
+        subcategoryId,
+        pageNumber,
+        pageSize,
+      );
 }
