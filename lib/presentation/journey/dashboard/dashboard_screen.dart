@@ -12,6 +12,7 @@ import 'bloc/dashboard_bloc.dart';
 import 'bloc/dashboard_event.dart';
 import 'bloc/dashboard_state.dart';
 import 'home/home_page.dart';
+import 'search/products_search_page.dart';
 
 class DashboardScreen extends StatefulWidget {
   @override
@@ -33,7 +34,7 @@ class DashboardScreenState extends State<DashboardScreen> {
       ..add(FetchCurrentLocationEvent());*/
     _bottomNavigationPageWidgets = [
       HomePage(),
-      SearchPage(),
+      ProductsSearchPage(),
       CartPage(),
       MyAccountScreen(),
     ];
