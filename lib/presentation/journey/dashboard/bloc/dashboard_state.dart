@@ -19,8 +19,10 @@ class FetchingCurrentLocationState extends DashboardState {
 class FetchCurrentLocationSuccessState extends DashboardState {
   AddressEntity address;
 
-  FetchCurrentLocationSuccessState({this.address, int pageIndex})
-      : super(pageIndex: pageIndex);
+  FetchCurrentLocationSuccessState({
+    int pageIndex,
+    this.address,
+  }) : super(pageIndex: pageIndex);
 }
 
 class FetchCurrentLocationFailedState extends DashboardState {

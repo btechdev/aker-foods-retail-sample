@@ -12,7 +12,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class ChangeAddressModeSelectionBottomSheet extends StatefulWidget {
   final Function onAddressChange;
 
-  ChangeAddressModeSelectionBottomSheet({this.onAddressChange});
+  ChangeAddressModeSelectionBottomSheet({
+    @required this.onAddressChange,
+  });
 
   @override
   State<StatefulWidget> createState() =>
@@ -38,7 +40,8 @@ class ChangeAddressModeSelectionBottomSheetState
         create: (context) => changeAddressBloc,
         child: DraggableScrollableSheet(
             expand: false,
-            maxChildSize: savedAddresses?.isNotEmpty == true ? 1.0 : 0.45,
+            //maxChildSize: savedAddresses?.isNotEmpty == true ? 1.0 : 0.45,
+            maxChildSize: 0.75,
             initialChildSize: 0.45,
             builder: (context, controller) {
               controller.addListener(() {

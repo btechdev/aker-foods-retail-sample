@@ -36,7 +36,7 @@ class HomePageState extends State<HomePage> {
   // ignore: close_sinks
   ProductsBloc productsBloc;
   Map<int, int> productIdCountMap;
-  String _address = 'Location unavailable';
+  String _addressString = 'Location unavailable';
 
   Widget _categoriesSection;
 
@@ -52,21 +52,19 @@ class HomePageState extends State<HomePage> {
     AnalyticsUtil.trackScreen(screenName: 'Home Page');
     productsBloc = Injector.resolve<ProductsBloc>()
       ..add(FetchProductCategoriesEvent());
-    Injector.resolve<DashboardBloc>().listen((state) {
-      if (state is FetchCurrentLocationSuccessState) {
-        _address = state.address?.address1 ?? 'Location unavailable';
-      }
-    });
   }
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-        appBar: _getAppBar(),
-        body: BlocProvider<ProductsBloc>(
-          create: (context) => productsBloc,
-          child: _wrapWithBlocBuilder(),
-        ),
-      );
+  Widget build(BuildContext context) {
+    _populateAddressLocation(context);
+    return Scaffold(
+      appBar: _getAppBar(),
+      body: BlocProvider<ProductsBloc>(
+        create: (context) => productsBloc,
+        child: _wrapWithBlocBuilder(),
+      ),
+    );
+  }
 
   AppBar _getAppBar() => AppBar(
         elevation: 8,
@@ -86,7 +84,18 @@ class HomePageState extends State<HomePage> {
         ],
       );
 
-  Widget _addressWidget() => wrapWithMaterialInkWell(
+  Widget _addressWidget() => Container(
+    alignment: Alignment.center,
+    height: LayoutConstants.dimen_56.h,
+    child: Row(
+      children: [
+        _addressWidgetIconContainer(),
+        _addressWidgetExpandedText(),
+      ],
+    ),
+  );
+
+  /*Widget _addressWidget() => wrapWithMaterialInkWell(
         context: context,
         backgroundColor: AppColor.transparent,
         borderRadius: BorderRadius.circular(LayoutConstants.dimen_8.w),
@@ -101,7 +110,7 @@ class HomePageState extends State<HomePage> {
             ],
           ),
         ),
-      );
+      );*/
 
   Container _addressWidgetIconContainer() => Container(
         alignment: Alignment.center,
@@ -120,7 +129,7 @@ class HomePageState extends State<HomePage> {
             currentState is FetchCurrentLocationSuccessState,
         builder: (context, state) => Expanded(
           child: Text(
-            _address,
+            _addressString,
             overflow: TextOverflow.ellipsis,
             style: Theme.of(context).textTheme.bodyText1,
           ),
@@ -136,7 +145,7 @@ class HomePageState extends State<HomePage> {
         borderRadius: BorderRadius.circular(LayoutConstants.dimen_12.w),
       ),
       builder: (BuildContext context) =>
-          ChangeAddressModeSelectionBottomSheet(),
+          ChangeAddressModeSelectionBottomSheet(onAddressChange: () => {}),
     );
   }
 
@@ -320,4 +329,18 @@ class HomePageState extends State<HomePage> {
             NotifyUserAboutProductEvent(productEntity: product),
           ),
         );
+
+  void _populateAddressLocation(BuildContext context) {
+    BlocProvider.of<DashboardBloc>(context).listen((state) {
+      if (state is FetchCurrentLocationSuccessState) {
+        //_address = state.address?.address1 ?? 'Location unavailable';
+        final _address = state.address;
+        if (_address?.zipCode != null && _address?.address1 != null) {
+          _addressString = '${_address?.zipCode}, ${_address?.address1}';
+        } else {
+          _addressString = 'Location unavailable';
+        }
+      }
+    });
+  }
 }

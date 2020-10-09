@@ -1,6 +1,9 @@
 import 'package:aker_foods_retail/domain/entities/address_entity.dart';
 import 'package:aker_foods_retail/domain/usecases/user_address_use_case.dart';
 import 'package:aker_foods_retail/domain/usecases/user_profile_user_case.dart';
+import 'package:aker_foods_retail/presentation/common_blocs/snack_bar_bloc/snack_bar_bloc.dart';
+import 'package:aker_foods_retail/presentation/common_blocs/snack_bar_bloc/snack_bar_event.dart';
+import 'package:aker_foods_retail/presentation/widgets/custom_snack_bar/snack_bar_constants.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geocoder/geocoder.dart';
@@ -11,11 +14,15 @@ import 'dashboard_event.dart';
 import 'dashboard_state.dart';
 
 class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
+  SnackBarBloc snackBarBloc;
   UserProfileUseCase userProfileUseCase;
   UserAddressUseCase userAddressUseCase;
   AddressEntity _currentAddress;
 
+  Set<String> serviceablePinCodes = Set();
+
   DashboardBloc({
+    this.snackBarBloc,
     this.userProfileUseCase,
     this.userAddressUseCase,
   }) : super(PageLoadedState(pageIndex: 0));
@@ -41,7 +48,11 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
 
   Stream<DashboardState> _handleFetchCurrentLocationEvent(
       DashboardEvent event) async* {
-    yield FetchingCurrentLocationState(pageIndex: state.pageIndex);
+    //yield FetchingCurrentLocationState(pageIndex: state.pageIndex);
+    if (serviceablePinCodes.isEmpty) {
+      await _fetchServiceablePinCodes();
+    }
+
     LocationPermission locationPermission;
     final currentPermission = await checkPermission();
     if (currentPermission == LocationPermission.denied ||
@@ -56,22 +67,51 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
       case LocationPermission.deniedForever:
         _currentAddress = await userAddressUseCase.getSelectedAddress();
         debugPrint('--------Location: ${_currentAddress.address1}---------');
-        yield _currentAddress == null
-            ? FetchCurrentLocationFailedState(pageIndex: state.pageIndex)
-            : FetchCurrentLocationSuccessState(
-                address: _currentAddress, pageIndex: state.pageIndex);
+        yield* _getStateToYield();
         break;
+
       case LocationPermission.always:
       case LocationPermission.whileInUse:
         _currentAddress = await _getCurrentLocation();
         debugPrint('--------Location: ${_currentAddress.address1}---------');
-        yield _currentAddress == null
-            ? FetchCurrentLocationFailedState(pageIndex: state.pageIndex)
-            : FetchCurrentLocationSuccessState(
-                address: _currentAddress, pageIndex: state.pageIndex);
+        yield* _getStateToYield();
         break;
+
       default:
     }
+  }
+
+  Future<void> _fetchServiceablePinCodes() async {
+    try {
+      final _serviceablePinCodes =
+          await userAddressUseCase.getServiceablePinCodes();
+      serviceablePinCodes.clear();
+      for (final code in _serviceablePinCodes) {
+        serviceablePinCodes.add('$code');
+      }
+    } catch (e) {
+      debugPrint('serviceablePinCodes ==> ${e.toString()}');
+    }
+  }
+
+  Stream<DashboardState> _getStateToYield() async* {
+    if (_currentAddress == null) {
+      yield FetchCurrentLocationFailedState(pageIndex: state.pageIndex);
+    }
+
+    if (serviceablePinCodes.isNotEmpty &&
+        _currentAddress.zipCode?.isNotEmpty == true) {
+      if (!serviceablePinCodes.contains(_currentAddress.zipCode)) {
+        snackBarBloc.add(ShowSnackBarEvent(
+          type: CustomSnackBarType.error,
+          text: 'Currently unable to provide service at your location',
+        ));
+      }
+    }
+    yield FetchCurrentLocationSuccessState(
+      address: _currentAddress,
+      pageIndex: state.pageIndex,
+    );
   }
 
   Future<AddressEntity> _getCurrentLocation() async {

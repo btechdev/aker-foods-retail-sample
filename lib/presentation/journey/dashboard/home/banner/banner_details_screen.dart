@@ -77,33 +77,82 @@ class BannerDetailsScreenState extends State<BannerDetailsScreen> {
     if (state is FetchingBannerDetailsState) {
       return _loaderContainer();
     } else if (state is FetchBannerCategoryProductsSuccessState) {
-      return _wrapWithCustomScrollView(
-        _getProductsWithCategorySliversList(
-          state.categories,
-          state.categoryProductsMap,
-        ),
-      );
+      if (_hasProducts(state.categoryProductsMap)) {
+        return _wrapWithCustomScrollView(
+          _getProductsWithCategorySliversList(
+            state.categories,
+            state.categoryProductsMap,
+          ),
+        );
+      }
     } else if (state is FetchBannerSubcategoryProductsSuccessState) {
-      return _wrapWithCustomScrollView(
-        _getProductsWithSubcategorySliversList(
-          state.subcategories,
-          state.subcategoryProductsMap,
-        ),
-      );
+      if (_hasProducts(state.subcategoryProductsMap)) {
+        return _wrapWithCustomScrollView(
+          _getProductsWithSubcategorySliversList(
+            state.subcategories,
+            state.subcategoryProductsMap,
+          ),
+        );
+      }
     } else if (state is FetchBannerProductsSuccessState) {
-      return _wrapWithCustomScrollView([
-        _productsSliverGridWithPadding(state.products),
-      ]);
+      if (state?.products?.isNotEmpty == true) {
+        return _wrapWithCustomScrollView([
+          _productsSliverGridWithPadding(state.products),
+        ]);
+      }
     } else if (state is FetchBannerDetailsFailedState) {
-      return Container(
-        alignment: Alignment.center,
-        width: double.infinity,
-        height: double.infinity,
-        child: Text('$state', textAlign: TextAlign.center),
+      return _noDataIndicatorWidgets(
+        message: 'Failed to get the data for banner.',
       );
     }
-    return Container();
+    return _noDataIndicatorWidgets();
   }
+
+  bool _hasProducts(Map<int, List<ProductEntity>> productsMap) {
+    if (productsMap == null) {
+      return false;
+    }
+    int totalCount = 0;
+    for (final key in productsMap.keys) {
+      totalCount = totalCount + (productsMap[key]?.length ?? 0);
+    }
+    return totalCount > 0;
+  }
+
+  Widget _noDataIndicatorWidgets({
+    String message = 'No data available\nfor banner details.',
+  }) =>
+      Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text(
+            message,
+            textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.bodyText2.copyWith(
+                  color: AppColor.black40,
+                ),
+          ),
+          Container(
+            height: LayoutConstants.dimen_48.h,
+            margin: EdgeInsets.symmetric(
+              horizontal: LayoutConstants.dimen_16.w,
+              vertical: LayoutConstants.dimen_16.h,
+            ),
+            child: RaisedButton(
+              color: AppColor.primaryColor,
+              shape: LayoutConstants.borderlessRoundedRectangle,
+              onPressed: () => Navigator.pop(context),
+              child: Text(
+                'Go to Home',
+                style: Theme.of(context).textTheme.button.copyWith(
+                      color: AppColor.white,
+                    ),
+              ),
+            ),
+          ),
+        ],
+      );
 
   Widget _loaderContainer() => Container(
         alignment: Alignment.center,

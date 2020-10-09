@@ -140,6 +140,19 @@ class CartBloc extends Bloc<CartEvent, CartState> {
   Future<BillingEntity> _validateCart(CartEntity cartEntity) async {
     final billingEntity = await cartUseCase.validateCartPreCheckout(cartEntity);
     debugPrint('ValidateCartPreCheckout => ${billingEntity.toString()}');
+    final updatedProducts = billingEntity?.updatedProducts;
+    if (updatedProducts?.isNotEmpty == true) {
+      for (final product in updatedProducts) {
+        innerLoop:
+        for (final cartProduct in cartEntity.products) {
+          if (cartProduct.product.id == product.id) {
+            cartProduct.product = product;
+            break innerLoop;
+          }
+        }
+      }
+    }
+    await cartUseCase.saveCart(cartEntity);
     return billingEntity;
   }
 

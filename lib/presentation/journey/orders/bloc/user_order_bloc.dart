@@ -63,11 +63,12 @@ class UserOrderBloc extends Bloc<UserOrderEvent, UserOrderState> {
       _orders.addAll(response.data);
       _next = response.next;
       _currentPage++;
-      _isLastPageFetched = _next == null;
       yield UserOrderFetchSuccessfulState(orders: _orders);
     } catch (e) {
+      _next = null;
       yield UserOrderPaginationFailedState(orders: _orders);
     }
+    _isLastPageFetched = _next == null;
   }
 
   Stream<UserOrderState> _handleVerifyOrderTransactionEvent(

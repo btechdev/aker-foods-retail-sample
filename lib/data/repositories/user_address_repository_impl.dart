@@ -1,6 +1,6 @@
 import 'package:aker_foods_retail/data/local_data_sources/user_address_local_data_source.dart';
-import 'package:aker_foods_retail/data/models/society_model.dart';
 import 'package:aker_foods_retail/data/models/address_model.dart';
+import 'package:aker_foods_retail/data/models/society_model.dart';
 import 'package:aker_foods_retail/data/remote_data_sources/user_address_remote_data_source.dart';
 import 'package:aker_foods_retail/domain/repositories/user_address_repository.dart';
 import 'package:aker_foods_retail/network/api/api_response.dart';
@@ -33,4 +33,8 @@ class UserAddressRepositoryImpl implements UserAddressRepository {
   Future<ApiResponse<AddressModel>> getAddresses(
           int pageNo, int pageSize) async =>
       userAddressRemoteDataSource.getUserAddresses(pageNo, pageSize);
+
+  @override
+  Future<List<int>> getServiceablePinCodes() async =>
+      userAddressRemoteDataSource.getServiceablePinCodes();
 }

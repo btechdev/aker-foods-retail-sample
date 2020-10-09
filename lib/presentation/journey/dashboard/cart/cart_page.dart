@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:aker_foods_retail/common/constants/layout_constants.dart';
-import 'package:aker_foods_retail/common/constants/payment_constants.dart';
 import 'package:aker_foods_retail/common/extensions/pixel_dimension_util_extensions.dart';
 import 'package:aker_foods_retail/common/injector/injector.dart';
 import 'package:aker_foods_retail/common/utils/analytics_utils.dart';
@@ -169,9 +168,10 @@ class _CartPageState extends State<CartPage> {
         OrderDeliverySelection(),
         const Divider(),
         PaymentModeSelection(
-          selectedPaymentMode: PaymentModeExtension.fromInt(
+          /*selectedPaymentMode: PaymentModeExtension.fromInt(
             state.cartEntity.paymentMode ?? PaymentModeConstants.cashOnDelivery,
-          ),
+          ),*/
+          selectedPaymentMode: _paymentMode ?? PaymentMode.cashOnDelivery,
           onPaymentSelection: (mode) {
             _paymentMode = mode;
             BlocProvider.of<CartBloc>(context).add(
@@ -193,7 +193,7 @@ class _CartPageState extends State<CartPage> {
             vertical: LayoutConstants.dimen_16.h,
           ),
           child: Text(
-            'The cart is empty. '
+            'The cart is empty.\n'
             'Please add products to cart for getting cart details.',
             style: Theme.of(context).textTheme.bodyText2.copyWith(
                   color: AppColor.black40,

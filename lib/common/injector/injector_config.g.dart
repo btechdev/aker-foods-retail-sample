@@ -16,6 +16,7 @@ class _$InjectorConfig extends InjectorConfig {
     container.registerSingleton(
         (c) => FirebaseAuthBloc(authUseCase: c<AuthenticationUseCase>()));
     container.registerSingleton((c) => DashboardBloc(
+        snackBarBloc: c<SnackBarBloc>(),
         userProfileUseCase: c<UserProfileUseCase>(),
         userAddressUseCase: c<UserAddressUseCase>()));
     container.registerSingleton((c) => CartBloc(
@@ -49,8 +50,8 @@ class _$InjectorConfig extends InjectorConfig {
         productsUseCase: c<ProductsUseCase>()));
     container.registerFactory(
         (c) => NotificationBloc(notificationUseCase: c<NotificationUseCase>()));
-    container.registerFactory(
-        (c) => SearchPageBloc(productsUseCase: c<ProductsUseCase>()));
+    container.registerFactory((c) => SearchPageBloc(
+        loaderBloc: c<LoaderBloc>(), productsUseCase: c<ProductsUseCase>()));
   }
 
   void _configureUseCases() {

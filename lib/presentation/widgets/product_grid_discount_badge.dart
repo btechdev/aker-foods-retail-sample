@@ -34,19 +34,19 @@ class ProductGridDiscountBadge extends StatelessWidget {
           vertical: LayoutConstants.dimen_4.h,
         ),
         decoration: BoxDecoration(
-          color: AppColor.primaryColorDark,
+          color: AppColor.yellowLight,
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(LayoutConstants.dimen_8.w),
             bottomRight: Radius.circular(LayoutConstants.dimen_12.w),
           ),
         ),
         child: Text(
-          '$discountApplied %',
+          '$discountApplied%',
           maxLines: 1,
           textAlign: TextAlign.center,
           overflow: TextOverflow.ellipsis,
           style: Theme.of(context).textTheme.subtitle2.copyWith(
-                color: AppColor.white,
+                color: AppColor.primaryColorDark,
               ),
         ),
       );

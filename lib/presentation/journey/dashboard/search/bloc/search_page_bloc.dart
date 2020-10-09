@@ -3,6 +3,8 @@ import 'package:aker_foods_retail/domain/entities/product_category_entity.dart';
 import 'package:aker_foods_retail/domain/entities/product_entity.dart';
 import 'package:aker_foods_retail/domain/entities/product_subcategory_entity.dart';
 import 'package:aker_foods_retail/domain/usecases/products_use_case.dart';
+import 'package:aker_foods_retail/presentation/common_blocs/loader_bloc/loader_bloc.dart';
+import 'package:aker_foods_retail/presentation/common_blocs/loader_bloc/loader_event.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'search_page_event.dart';
@@ -27,6 +29,7 @@ class PaginatedProductsData {
 }
 
 class SearchPageBloc extends Bloc<SearchPageEvent, SearchPageState> {
+  final LoaderBloc loaderBloc;
   final ProductsUseCase productsUseCase;
 
   bool _hasFetchedCategories = false;
@@ -35,20 +38,16 @@ class SearchPageBloc extends Bloc<SearchPageEvent, SearchPageState> {
   int _categoryIndex = 0;
   int _newProductsCount = 0;
 
-  SearchPageBloc({this.productsUseCase}) : super(EmptyState());
+  SearchPageBloc({
+    this.loaderBloc,
+    this.productsUseCase,
+  }) : super(EmptyState());
 
   @override
   Stream<SearchPageState> mapEventToState(SearchPageEvent event) async* {
     if (event is FetchSearchPageProductsEvent) {
       yield* _handleFetchSearchPageProductsEvent();
     }
-    /* else if (event is SearchProductsEvent) {
-      yield* _handleSearchProductsEvent(event);
-    } else if (event is InitiateProductsSearchEvent) {
-      yield* _handleInitiateProductsSearchEvent();
-    } else if (event is CancelProductsSearchEvent) {
-      yield* _handleCancelProductsSearchEvent();
-    }*/
   }
 
   // ======================================================================
@@ -143,6 +142,9 @@ class SearchPageBloc extends Bloc<SearchPageEvent, SearchPageState> {
       }
     }
 
+    if (state is! FetchingProductsState) {
+      loaderBloc.add(ShowLoaderEvent());
+    }
     _newProductsCount = 0;
     await _fetchProductsForCategory();
     yield SearchPageProductsLoadedState(
@@ -150,5 +152,6 @@ class SearchPageBloc extends Bloc<SearchPageEvent, SearchPageState> {
       categories: _categories,
       dataMap: _dataMap,
     );
+    loaderBloc.add(DismissLoaderEvent());
   }
 }

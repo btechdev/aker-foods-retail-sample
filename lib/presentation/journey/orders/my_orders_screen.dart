@@ -1,4 +1,5 @@
 import 'package:aker_foods_retail/common/constants/layout_constants.dart';
+import 'package:aker_foods_retail/common/extensions/pixel_dimension_util_extensions.dart';
 import 'package:aker_foods_retail/common/injector/injector.dart';
 import 'package:aker_foods_retail/common/utils/analytics_utils.dart';
 import 'package:aker_foods_retail/common/utils/pixel_dimension_util.dart';
@@ -106,12 +107,18 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
     }
 
     _isLoading = false;
-    if (state is UserOrderFetchSuccessfulState ||
-        state is UserOrderPaginationFailedState) {
-      return _getOrdersListView(state);
-    } else {
-      return Container();
+    if (state is UserOrderFetchSuccessfulState) {
+      if (state.orders?.isNotEmpty == true) {
+        return _getOrdersListView(state);
+      }
+    } else if (state is UserOrderPaginationFailedState) {
+      if (state.orders?.isNotEmpty == true) {
+        return _getOrdersListView(state);
+      } else {
+        return _noDataIndicatorWidgets(message: 'Failed to get orders data.');
+      }
     }
+    return _noDataIndicatorWidgets();
   }
 
   ListView _getOrdersListView(UserOrderState state) => ListView.builder(
@@ -141,5 +148,47 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
         builder: (BuildContext context) => OrderDetailsScreen(
           order: order,
         ),
+      );
+
+  Widget _noDataIndicatorWidgets({
+    String message = 'No orders placed yet.',
+  }) =>
+      Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text(
+            message,
+            textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.bodyText2.copyWith(
+                  color: AppColor.black40,
+                ),
+          ),
+          Container(
+            height: LayoutConstants.dimen_48.h,
+            margin: EdgeInsets.symmetric(
+              horizontal: LayoutConstants.dimen_16.w,
+              vertical: LayoutConstants.dimen_16.h,
+            ),
+            child: RaisedButton(
+              color: AppColor.primaryColor,
+              shape: LayoutConstants.borderlessRoundedRectangle,
+              onPressed: () {
+                BlocProvider.of<DashboardBloc>(context).add(
+                  NavigateToPageEvent(
+                    pageIndex: DashboardBottomNavigationItem.home.index,
+                  ),
+                );
+                Navigator.pop(context);
+              },
+              child: Text(
+                'Go to Home',
+                style: Theme.of(context).textTheme.button.copyWith(
+                      color: AppColor.white,
+                    ),
+              ),
+            ),
+          ),
+        ],
       );
 }

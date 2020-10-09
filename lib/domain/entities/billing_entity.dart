@@ -1,3 +1,5 @@
+import 'package:aker_foods_retail/domain/entities/product_entity.dart';
+
 class BillingEntity {
   final bool isCouponApplied;
   final double couponAmountSaved;
@@ -5,6 +7,7 @@ class BillingEntity {
   final double discountedAmount;
   final double totalSaved;
   final int deliveryCharges;
+  final List<ProductEntity> updatedProducts;
 
   BillingEntity({
     this.isCouponApplied,
@@ -13,6 +16,7 @@ class BillingEntity {
     this.discountedAmount,
     this.totalSaved,
     this.deliveryCharges,
+    this.updatedProducts,
   });
 
   @override
@@ -25,6 +29,7 @@ class BillingEntity {
     discountedAmount: $discountedAmount,
     totalSaved: $totalSaved,
     deliveryCharges: $deliveryCharges,
+    updatedProducts: ${updatedProducts?.length}
     }''';
   }
 }

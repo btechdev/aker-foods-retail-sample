@@ -12,4 +12,6 @@ abstract class UserAddressRepository {
   Future<AddressModel> getSelectedAddress();
 
   Future<bool> setSelectedAddress(AddressModel addressModel);
+
+  Future<List<int>> getServiceablePinCodes();
 }

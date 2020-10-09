@@ -24,4 +24,7 @@ class UserAddressUseCase {
 
   Future<bool> setSelectedAddress(AddressModel addressModel) async =>
       userAddressRepository.setSelectedAddress(addressModel);
+
+  Future<List<int>> getServiceablePinCodes() async =>
+      userAddressRepository.getServiceablePinCodes();
 }

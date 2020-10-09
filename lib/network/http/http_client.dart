@@ -278,12 +278,11 @@ class HttpClient {
     return HttpUtil.getResponse(response);
   }
 
-  dynamic getImage(String url) async {
+  dynamic getResponse(Uri uri) async {
     if (!await _isDataConnectionAvailable()) {
-      return;
+      return Future.value(null);
     }
-
-    final Response response = await _client.get(url);
-    return response;
+    final Response response = await _client.get(uri, headers: header);
+    return json.decode(response.body);
   }
 }

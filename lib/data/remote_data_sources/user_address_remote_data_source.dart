@@ -35,4 +35,10 @@ class UserAddressRemoteDataSource {
         .get('${ApiEndpoints.newAddress}?page=$pageNo&page_size=$pageSize');
     return ApiResponse<AddressModel>.fromJsonMap(jsonMap);
   }
+
+  Future<List<int>> getServiceablePinCodes() async {
+    final url = apiClient.getParsedUrl(ApiEndpoints.serviceablePinCodes);
+    final response = await apiClient.getResponse(url);
+    return response == null ? [] : response.cast<int>();
+  }
 }
