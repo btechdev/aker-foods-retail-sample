@@ -1,5 +1,3 @@
-
-
 abstract class UserOrderEvent {}
 
 class FetchUserOrders extends UserOrderEvent {
@@ -10,12 +8,16 @@ class FetchUserOrders extends UserOrderEvent {
 }
 
 class ReinitiatePaymentForOrderEvent extends UserOrderEvent {
-  final String orderId;
-  ReinitiatePaymentForOrderEvent({this.orderId});
+  final int cartId;
+
+  ReinitiatePaymentForOrderEvent({this.cartId});
 }
 
-/*
-class VerifyOrderTransactionEvent extends UserOrderEvent{
+class VerifyOrderTransactionEvent extends UserOrderEvent {
   final String orderId;
   VerifyOrderTransactionEvent({this.orderId});
-}*/
+}
+
+class OrderPaymentSuccessEvent extends UserOrderEvent {}
+
+class OrderPaymentFailedEvent extends UserOrderEvent {}

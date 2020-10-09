@@ -214,8 +214,8 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
         ),
       );
 
-  Future _getLocationSelectionBottomSheet(BuildContext context) {
-    return showModalBottomSheet(
+  Future<void> _getLocationSelectionBottomSheet(BuildContext context) async {
+    final status = await showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       isDismissible: true,

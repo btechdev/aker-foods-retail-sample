@@ -183,7 +183,7 @@ class EnterNewAddressScreenState extends State<EnterNewAddressScreen> {
                   type: CustomSnackBarType.success,
                   position: CustomSnackBarPosition.top,
                 ));
-                Navigator.pop(context);
+                Navigator.pop(context, true);
               } else if (state is CreateNewAddressFailedState) {
                 Injector.resolve<SnackBarBloc>().add(ShowSnackBarEvent(
                   text: state.errorMessage,

@@ -1,4 +1,5 @@
 import 'package:aker_foods_retail/common/constants/layout_constants.dart';
+import 'package:aker_foods_retail/common/constants/payment_constants.dart';
 import 'package:aker_foods_retail/common/injector/injector.dart';
 import 'package:aker_foods_retail/common/utils/analytics_utils.dart';
 import 'package:aker_foods_retail/common/utils/date_utils.dart';
@@ -38,7 +39,13 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
   void _handleCompletePayment() {
     AnalyticsUtil.trackEvent(eventName: 'reinitiate payment event');
     userOrderBloc
-        .add(ReinitiatePaymentForOrderEvent(orderId: widget.order.orderId));
+      ..add(ReinitiatePaymentForOrderEvent(cartId: widget.order.id))
+      ..listen((state) {
+        if (state is OrderPaymentFailedEvent ||
+            state is OrderPaymentSuccessEvent) {
+          Navigator.pop(context, {'refreshOrderList': true});
+        }
+      });
   }
 
   @override
@@ -167,24 +174,39 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
             style: Theme.of(context).textTheme.subtitle2,
           ),
           SizedBox(height: LayoutConstants.dimen_12.h),
-          if (widget.order.status == 'FAILED')
-            Expanded(
-              child: SizedBox(
-                height: LayoutConstants.dimen_32.h,
-                child: RaisedButton(
-                  onPressed: _handleCompletePayment,
-                  child: Text(
-                    'Complete Payment',
-                    style: Theme.of(context)
-                        .textTheme
-                        .subtitle1
-                        .copyWith(color: AppColor.white),
-                  ),
-                ),
-              ),
-            ),
+          _getRetryPaymentStatus(),
           Container(),
         ],
+      );
+
+  Widget _getRetryPaymentStatus() {
+    var buttonText = '';
+    if (widget.order.paymentType == PaymentModeConstants.cashOnDelivery) {
+      buttonText = 'Pay Online';
+      return _getRetryPaymentButton(buttonText);
+    }
+    if (widget.order.paymentStatus != OrderPaymentStatus.fullyPaid) {
+      buttonText = 'Retry Payment';
+      return _getRetryPaymentButton(buttonText);
+    } else {
+      return Container();
+    }
+  }
+
+  Expanded _getRetryPaymentButton(String title) => Expanded(
+        child: SizedBox(
+          height: LayoutConstants.dimen_32.h,
+          child: RaisedButton(
+            onPressed: _handleCompletePayment,
+            child: Text(
+              title,
+              style: Theme.of(context)
+                  .textTheme
+                  .subtitle1
+                  .copyWith(color: AppColor.white),
+            ),
+          ),
+        ),
       );
 
   Container _getDeliveryAddressContainer(

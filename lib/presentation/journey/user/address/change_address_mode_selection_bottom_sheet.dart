@@ -87,8 +87,8 @@ class ChangeAddressModeSelectionBottomSheetState
     }
   }
 
-  void _showGooglePlacesApiScreen() {
-    Navigator.push(
+  Future<void> _showGooglePlacesApiScreen() async {
+    await Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => ChooseYourLocationScreen(isFromSearch: true),
@@ -96,15 +96,10 @@ class ChangeAddressModeSelectionBottomSheetState
     );
   }
 
-  void _navigateToConfirmLocationOnMapScreen(int index) {
-    Navigator.pushNamed(context, '/choose-location');
-    switch (index) {
-      case 0:
-        debugPrint('Current Location');
-        break;
-      case 1:
-        debugPrint('Add Address');
-        break;
+  Future<void> _navigateToConfirmLocationOnMapScreen(int index) async {
+    final status = await Navigator.pushNamed(context, '/choose-location');
+    if(status != null && status) {
+      Navigator.pop(context, status);
     }
   }
 }

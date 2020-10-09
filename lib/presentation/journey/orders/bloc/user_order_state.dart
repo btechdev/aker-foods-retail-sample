@@ -41,9 +41,8 @@ class ReinitiatePaymentForOrderFailedState extends UserOrderState {}
 
 class VerifyingOrderTransactionState extends UserOrderState {}
 
-class VerifyOrderTransactionStateSuccessfulState extends UserOrderState {
-
-  VerifyOrderTransactionStateSuccessfulState();
-}
+class VerifyOrderTransactionStateSuccessfulState extends UserOrderState {}
 
 class VerifyOrderTransactionStateFailedState extends UserOrderState {}
+
+class NavigateToOrderListPageState extends UserOrderState {}

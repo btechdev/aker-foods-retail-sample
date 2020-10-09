@@ -3,6 +3,7 @@ import 'package:aker_foods_retail/common/injector/injector.dart';
 import 'package:aker_foods_retail/common/utils/analytics_utils.dart';
 import 'package:aker_foods_retail/common/utils/pixel_dimension_util.dart';
 import 'package:aker_foods_retail/data/models/order_model.dart';
+import 'package:aker_foods_retail/domain/entities/order_entity.dart';
 import 'package:aker_foods_retail/presentation/app/route_constants.dart';
 import 'package:aker_foods_retail/presentation/journey/dashboard/bloc/dashboard_bloc.dart';
 import 'package:aker_foods_retail/presentation/journey/dashboard/bloc/dashboard_event.dart';
@@ -118,13 +119,22 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
         itemBuilder: (context, index) => MyOrderCell(
           index: index,
           entity: state.orders[index],
-          onTap: () => Navigator.push(
-            context,
-            _orderDetailsScreenRoute(state.orders[index]),
-          ),
+          onTap: () => _onTapOrder(state.orders[index]),
         ),
         itemCount: state.orders.length,
       );
+
+  Future<void> _onTapOrder(OrderEntity order) async {
+    final result = await Navigator.push(
+      context,
+      _orderDetailsScreenRoute(order),
+    );
+    if(result != null && result is Map) {
+      if (result['refreshOrderList'] == true) {
+        userOrderBloc.add(FetchUserOrders());
+      }
+    }
+  }
 
   MaterialPageRoute _orderDetailsScreenRoute(OrderModel order) =>
       MaterialPageRoute(

@@ -46,7 +46,7 @@ class _ReferralScreenState extends State<ReferralScreen> {
 
   Container _getBanner() => Container(
         width: double.infinity,
-        height: PixelDimensionUtil().uiHeightPx.toDouble() * 0.5,
+        height: PixelDimensionUtil().uiHeightPx.toDouble() * 0.3,
         padding: EdgeInsets.all(LayoutConstants.dimen_16.w),
         color: AppColor.primaryColor,
         child: _getColumns(),
@@ -64,14 +64,8 @@ class _ReferralScreenState extends State<ReferralScreen> {
   Column _getColumns() => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          _getHeaderText('Total Rewards'),
-          _getValueText('${AppConstants.rupeeSymbol} 0.0'),
-          SizedBox(height: LayoutConstants.dimen_20.h),
-          _getHeaderText('Balance'),
-          _getValueText('${AppConstants.rupeeSymbol} 0.0'),
-          SizedBox(height: LayoutConstants.dimen_20.h),
           _getReferralCodeDescriptionText('${referralEntity.title ?? ''}'
-              '${referralEntity.description ?? ''}'),
+              ' ${referralEntity.description ?? ''}'),
           SizedBox(height: LayoutConstants.dimen_20.h),
           _getHeaderText('Your referral code:'),
           _getValueText(referralEntity.code ?? ''),

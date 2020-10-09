@@ -1,5 +1,9 @@
 import 'package:aker_foods_retail/common/utils/analytics_utils.dart';
+import 'package:aker_foods_retail/presentation/common_blocs/snack_bar_bloc/snack_bar_bloc.dart';
+import 'package:aker_foods_retail/presentation/common_blocs/snack_bar_bloc/snack_bar_event.dart';
+import 'package:aker_foods_retail/presentation/widgets/custom_snack_bar/snack_bar_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_google_places/flutter_google_places.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:geolocator/geolocator.dart';
@@ -45,7 +49,7 @@ class ChooseYourLocationScreenState extends State<ChooseYourLocationScreen> {
 
   Future<void> getCurrentLocation() async {
     _currentLocation =
-        await getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    await getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
     await _animateMapToCurrentLocation();
   }
 
@@ -67,14 +71,19 @@ class ChooseYourLocationScreenState extends State<ChooseYourLocationScreen> {
   }
 
   @override
-  Widget build(BuildContext context) => Scaffold(
+  Widget build(BuildContext context) =>
+      Scaffold(
         resizeToAvoidBottomInset: true,
         extendBodyBehindAppBar: true,
         appBar: AppBar(
           backgroundColor: AppColor.transparent,
-          iconTheme: Theme.of(context).appBarTheme.iconTheme.copyWith(
-                color: AppColor.black,
-              ),
+          iconTheme: Theme
+              .of(context)
+              .appBarTheme
+              .iconTheme
+              .copyWith(
+            color: AppColor.black,
+          ),
 //          title: _getPlacesSearchTextField(),
           actions: <Widget>[
             IconButton(
@@ -106,7 +115,7 @@ class ChooseYourLocationScreenState extends State<ChooseYourLocationScreen> {
 
     return Stack(
       alignment:
-          Alignment(LayoutConstants.dimen_0.w, LayoutConstants.dimen_0.h),
+      Alignment(LayoutConstants.dimen_0.w, LayoutConstants.dimen_0.h),
       children: <Widget>[
         Container(width: mapWidth, height: mapHeight, child: _getMap()),
         Positioned(
@@ -122,7 +131,8 @@ class ChooseYourLocationScreenState extends State<ChooseYourLocationScreen> {
     );
   }
 
-  GoogleMap _getMap() => GoogleMap(
+  GoogleMap _getMap() =>
+      GoogleMap(
         myLocationButtonEnabled: false,
         myLocationEnabled: true,
         initialCameraPosition: const CameraPosition(
@@ -141,15 +151,15 @@ class ChooseYourLocationScreenState extends State<ChooseYourLocationScreen> {
     final middleX = PixelDimensionUtil.screenWidthDp - _iconSize / 2;
     final middleY = PixelDimensionUtil.screenHeightDp - _iconSize / 2;
     final screenCoordinate =
-        ScreenCoordinate(x: middleX.round(), y: middleY.round());
+    ScreenCoordinate(x: middleX.round(), y: middleY.round());
     final middlePoint = await mapController.getLatLng(screenCoordinate);
     final addresses =
-        await _getPlaceForLatLng(middlePoint.latitude, middlePoint.longitude);
+    await _getPlaceForLatLng(middlePoint.latitude, middlePoint.longitude);
     _selectedPlace = addresses.first;
   }
 
-  Future<List<Address>> _getPlaceForLatLng(
-      double latitude, double longitude) async {
+  Future<List<Address>> _getPlaceForLatLng(double latitude,
+      double longitude) async {
     try {
       final places = await Geocoder.local
           .findAddressesFromCoordinates(Coordinates(latitude, longitude));
@@ -164,12 +174,12 @@ class ChooseYourLocationScreenState extends State<ChooseYourLocationScreen> {
   }
 
   Future<void> _animateMapToCurrentLocation() async {
-    await mapController.animateCamera(CameraUpdate.newLatLng(
+    await mapController?.animateCamera(CameraUpdate.newLatLng(
         LatLng(_currentLocation.latitude, _currentLocation.longitude)));
   }
 
   Future<void> _animateCameraToLocation(Location location) async {
-    await mapController.animateCamera(
+    await mapController?.animateCamera(
         CameraUpdate.newLatLng(LatLng(location.lat, location.lng)));
   }
 
@@ -179,7 +189,7 @@ class ChooseYourLocationScreenState extends State<ChooseYourLocationScreen> {
         apiKey: AppConstants.kGoogleApiKey,
         hint: 'Search Places',
         location:
-            Location(_currentLocation.latitude, _currentLocation.longitude),
+        Location(_currentLocation.latitude, _currentLocation.longitude),
         offset: 3,
         mode: Mode.fullscreen,
         onSelected: (prediction) => _getLatLongFor(prediction: prediction),
@@ -196,46 +206,57 @@ class ChooseYourLocationScreenState extends State<ChooseYourLocationScreen> {
     }
   }
 
-  Container _getBottomContainer() => Container(
-      width: double.infinity,
-      decoration: BoxDecoration(
-        color: AppColor.scaffoldBackgroundColor,
-        boxShadow: [
-          BoxShadow(
-            blurRadius: LayoutConstants.dimen_8.h,
-            color: AppColor.black54,
-            offset: Offset(LayoutConstants.dimen_5.h, 0),
+  Container _getBottomContainer() =>
+      Container(
+          width: double.infinity,
+          decoration: BoxDecoration(
+            color: AppColor.scaffoldBackgroundColor,
+            boxShadow: [
+              BoxShadow(
+                blurRadius: LayoutConstants.dimen_8.h,
+                color: AppColor.black54,
+                offset: Offset(LayoutConstants.dimen_5.h, 0),
+              ),
+            ],
           ),
-        ],
-      ),
-      padding: EdgeInsets.symmetric(
-        horizontal: LayoutConstants.dimen_16.w,
-        vertical: LayoutConstants.dimen_16.h,
-      ),
-      child: _getBottomScrollView());
+          padding: EdgeInsets.symmetric(
+            horizontal: LayoutConstants.dimen_16.w,
+            vertical: LayoutConstants.dimen_16.h,
+          ),
+          child: _getBottomScrollView());
 
-  SingleChildScrollView _getBottomScrollView() => SingleChildScrollView(
+  SingleChildScrollView _getBottomScrollView() =>
+      SingleChildScrollView(
         child: _getAddressDetails(),
       );
 
-  Column _getAddressDetails() => Column(
+  Column _getAddressDetails() =>
+      Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Text(
             'Select Delivery Location',
-            style: Theme.of(context).textTheme.headline6.copyWith(
-                  fontWeight: FontWeight.w500,
-                ),
+            style: Theme
+                .of(context)
+                .textTheme
+                .headline6
+                .copyWith(
+              fontWeight: FontWeight.w500,
+            ),
           ),
           SizedBox(height: LayoutConstants.dimen_4.h),
           const Divider(color: AppColor.grey),
           SizedBox(height: LayoutConstants.dimen_8.h),
           Text(
             'Your Location'.toUpperCase(),
-            style: Theme.of(context).textTheme.caption.copyWith(
-                  color: AppColor.grey,
-                ),
+            style: Theme
+                .of(context)
+                .textTheme
+                .caption
+                .copyWith(
+              color: AppColor.grey,
+            ),
           ),
           SizedBox(height: LayoutConstants.dimen_8.h),
           _getAddressContainer(context),
@@ -246,7 +267,8 @@ class ChooseYourLocationScreenState extends State<ChooseYourLocationScreen> {
         ],
       );
 
-  Container _getAddressContainer(BuildContext context) => Container(
+  Container _getAddressContainer(BuildContext context) =>
+      Container(
         alignment: Alignment.center,
         width: double.infinity,
         height: LayoutConstants.dimen_40.h,
@@ -263,14 +285,18 @@ class ChooseYourLocationScreenState extends State<ChooseYourLocationScreen> {
               child: Text(
                 _selectedLocation ?? '',
                 overflow: TextOverflow.ellipsis,
-                style: Theme.of(context).textTheme.bodyText1,
+                style: Theme
+                    .of(context)
+                    .textTheme
+                    .bodyText1,
               ),
             ),
           ],
         ),
       );
 
-  Container _buttonWithContainer() => Container(
+  Container _buttonWithContainer() =>
+      Container(
         width: double.infinity,
         height: LayoutConstants.dimen_48.h,
         child: RaisedButton(
@@ -282,16 +308,27 @@ class ChooseYourLocationScreenState extends State<ChooseYourLocationScreen> {
           ),
           child: Text(
             'Proceed',
-            style: Theme.of(context).textTheme.button.copyWith(
-                  color: AppColor.white,
-                ),
+            style: Theme
+                .of(context)
+                .textTheme
+                .button
+                .copyWith(
+              color: AppColor.white,
+            ),
           ),
         ),
       );
 
   Future<void> _showEnterAddressDetailsBottomSheet() async {
     AnalyticsUtil.trackEvent(eventName: 'Enter address Proceed button clicked');
-    final _ = await showModalBottomSheet(
+    if (_selectedPlace == null) {
+      BlocProvider.of<SnackBarBloc>(context).add(ShowSnackBarEvent(
+        text: 'Please select a place to proceed',
+        type: CustomSnackBarType.error,
+        position: CustomSnackBarPosition.top,));
+      return;
+    }
+    final status = await showModalBottomSheet(
       context: context,
       enableDrag: true,
       isDismissible: true,
@@ -304,16 +341,18 @@ class ChooseYourLocationScreenState extends State<ChooseYourLocationScreen> {
       ),
       builder: _buildBottomSheet,
     );
-   Navigator.pop(context);
+    Navigator.pop(context, status);
   }
 
-  Widget _buildBottomSheet(BuildContext context) => DraggableScrollableSheet(
+  Widget _buildBottomSheet(BuildContext context) =>
+      DraggableScrollableSheet(
         expand: false,
         maxChildSize: 0.90,
         initialChildSize: 0.80,
-        builder: (context, controller) => EnterNewAddressScreen(
-          scrollController: controller,
-          address: _selectedPlace,
-        ),
+        builder: (context, controller) =>
+            EnterNewAddressScreen(
+              scrollController: controller,
+              address: _selectedPlace,
+            ),
       );
 }

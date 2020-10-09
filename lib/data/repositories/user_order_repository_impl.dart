@@ -15,7 +15,7 @@ class UserOrderRepositoryImpl implements UserOrderRepository {
 
   @override
   Future<OrderPaymentReinitiateResponseEntity> reinitiatePaymentForOrder(
-          String orderId) =>
+          String orderId) async =>
       userOrderRemoteDataSource.reinitiatePaymentForOrder(orderId);
 
   @override

@@ -40,4 +40,18 @@ class OrderEntity {
     this.cartItemDetail,
     this.deliveryCharges,
   });
+
+  String getPaymentStatus() {
+    switch (paymentStatus) {
+      case 0: return 'Not Paid';
+      break;
+      case 1: return 'Partially Paid';
+      break;
+      case 2: return 'Paid';
+      break;
+      case 3: return 'Cancelled';
+      break;
+      default: return 'Unknown';
+    }
+  }
 }

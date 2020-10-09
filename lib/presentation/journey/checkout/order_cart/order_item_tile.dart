@@ -1,10 +1,10 @@
 import 'package:aker_foods_retail/common/constants/layout_constants.dart';
 import 'package:aker_foods_retail/common/extensions/pixel_dimension_util_extensions.dart';
-import 'package:aker_foods_retail/domain/entities/order_item_tile_entity.dart';
 import 'package:aker_foods_retail/domain/entities/product_detail_entity.dart';
 import 'package:aker_foods_retail/domain/entities/product_entity.dart';
 import 'package:aker_foods_retail/presentation/journey/checkout/order_cart/order_item_counter.dart';
 import 'package:aker_foods_retail/presentation/widgets/product_info_price_widget.dart';
+import 'package:aker_foods_retail/common/extensions/string_extensions.dart';
 import 'package:flutter/material.dart';
 
 class OrderItemTile extends StatelessWidget {
@@ -66,12 +66,19 @@ class OrderItemTile extends StatelessWidget {
         child: _productImage(),
       );
 
-  Image _productImage() => Image.network(
-        product.image,
-        width: LayoutConstants.dimen_100.w,
-        height: LayoutConstants.dimen_100.h,
-        fit: BoxFit.cover,
-      );
+  Image _productImage() => product.image.isNotNullAndEmpty
+      ? Image.network(
+          product.image,
+          width: LayoutConstants.dimen_100.w,
+          height: LayoutConstants.dimen_100.h,
+          fit: BoxFit.cover,
+        )
+      : Image.asset(
+          'assets/images/logo_transparent_background.png',
+          width: LayoutConstants.productsImageSize,
+          height: LayoutConstants.productsImageSize,
+          fit: BoxFit.cover,
+        );
 
   Container _productDetailsContainer(BuildContext context) => Container(
         alignment: Alignment.center,

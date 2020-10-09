@@ -38,7 +38,8 @@ class _$InjectorConfig extends InjectorConfig {
         userTransactionUseCase: c<UserTransactionUseCase>()));
     container.registerFactory((c) => UserOrderBloc(
         snackBarBloc: c<SnackBarBloc>(),
-        userOrderUseCase: c<UserOrderUseCase>()));
+        userOrderUseCase: c<UserOrderUseCase>(),
+        loaderBloc: c<LoaderBloc>()));
     container.registerFactory(
         (c) => ProductsBloc(productsUseCase: c<ProductsUseCase>()));
     container
