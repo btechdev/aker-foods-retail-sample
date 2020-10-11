@@ -11,12 +11,12 @@ import 'package:aker_foods_retail/presentation/common_blocs/products_bloc/produc
 import 'package:aker_foods_retail/presentation/common_blocs/products_bloc/products_event.dart';
 import 'package:aker_foods_retail/presentation/common_blocs/products_bloc/products_state.dart';
 import 'package:aker_foods_retail/presentation/theme/app_colors.dart';
+import 'package:aker_foods_retail/presentation/widgets/circular_loader_widget.dart';
 import 'package:aker_foods_retail/presentation/widgets/in_stock_product_grid_tile.dart';
 import 'package:aker_foods_retail/presentation/widgets/out_of_stock_product_grid_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:keyboard_avoider/keyboard_avoider.dart';
 
 class SearchProductsScreen extends StatefulWidget {
   SearchProductsScreen({Key key}) : super(key: key);
@@ -86,14 +86,16 @@ class SearchProductsScreenState extends State<SearchProductsScreen> {
       );
 
   Widget _buildBlocWidget(BuildContext context, ProductsState state) {
-    if (state is EmptyState) {
-      return _emptyScaffold(state);
-    } else if (state is SearchingProductsState) {
+    if (state is SearchingProductsState) {
       return _loaderWithScaffold(state);
     } else if (state is ProductsSearchSuccessState) {
-      return _buildProductsGridWithScaffold(state);
+      if (state.products?.isNotEmpty == true) {
+        return _buildProductsGridWithScaffold(state);
+      } else {
+        return _buildNoProductsScaffold(state);
+      }
     }
-    return Container();
+    return _emptyScaffold(state);
   }
 
   Widget _emptyScaffold(ProductsState state) => Scaffold(
@@ -103,10 +105,7 @@ class SearchProductsScreenState extends State<SearchProductsScreen> {
 
   Widget _loaderWithScaffold(ProductsState state) => Scaffold(
         appBar: _getAppBar(state),
-        body: Container(
-          alignment: Alignment.center,
-          child: const CircularProgressIndicator(),
-        ),
+        body: const CircularLoaderWidget(),
       );
 
   Widget _buildProductsGridWithScaffold(ProductsSearchSuccessState state) =>
@@ -114,6 +113,18 @@ class SearchProductsScreenState extends State<SearchProductsScreen> {
         resizeToAvoidBottomInset: false,
         appBar: _getAppBar(state),
         body: _productsStaggeredGridView(state.products),
+      );
+
+  Widget _buildNoProductsScaffold(ProductsSearchSuccessState state) => Scaffold(
+        resizeToAvoidBottomInset: false,
+        appBar: _getAppBar(state),
+        body: Text(
+          'No products found for the searched text.',
+          textAlign: TextAlign.center,
+          style: Theme.of(context).textTheme.bodyText2.copyWith(
+                color: AppColor.black54,
+              ),
+        ),
       );
 
   Widget _productsStaggeredGridView(List<ProductEntity> products) =>

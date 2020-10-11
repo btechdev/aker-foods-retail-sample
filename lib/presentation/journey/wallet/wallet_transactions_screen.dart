@@ -26,14 +26,11 @@ class WalletTransactionsScreen extends StatefulWidget {
 
 class _WalletTransactionsScreenState extends State<WalletTransactionsScreen> {
   UserTransactionBloc userTransactionBloc;
-  bool _isLoading = false;
   final _scrollController = ScrollController();
 
   void _scrollControllerListener() {
     final scrollPosition = _scrollController.position;
-    if (scrollPosition.maxScrollExtent == scrollPosition.pixels &&
-        !_isLoading) {
-      _isLoading = !_isLoading;
+    if (scrollPosition.maxScrollExtent == scrollPosition.pixels) {
       userTransactionBloc.add(FetchUserTransactionsEvent());
     }
   }
@@ -103,7 +100,6 @@ class _WalletTransactionsScreenState extends State<WalletTransactionsScreen> {
 
   Container _getBodyContainer(
       BuildContext context, UserTransactionState state) {
-    _isLoading = false;
     return Container(
       child: Column(
         children: <Widget>[
@@ -181,9 +177,13 @@ class _WalletTransactionsScreenState extends State<WalletTransactionsScreen> {
       return const CircularLoaderWidget();
     }
 
-    _isLoading = false;
     if (state is TransactionFetchSuccessfulState ||
         state is TransactionPaginationFailedState) {
+      if (state.transactions.isEmpty) {
+        return _noDataIndicatorWidgets(
+          message: 'Failed to get the data for transactions.',
+        );
+      }
       return _getListView(state);
     } else {
       return Container();
@@ -263,5 +263,40 @@ class _WalletTransactionsScreenState extends State<WalletTransactionsScreen> {
         style: Theme.of(context).textTheme.bodyText1.copyWith(
               color: AppColor.orangeDark,
             ),
+      );
+
+  Widget _noDataIndicatorWidgets({
+    String message = 'No data available\nfor transactions.',
+  }) =>
+      Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text(
+            message,
+            textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.bodyText2.copyWith(
+                  color: AppColor.black40,
+                ),
+          ),
+          Container(
+            height: LayoutConstants.dimen_48.h,
+            margin: EdgeInsets.symmetric(
+              horizontal: LayoutConstants.dimen_16.w,
+              vertical: LayoutConstants.dimen_16.h,
+            ),
+            child: RaisedButton(
+              color: AppColor.primaryColor,
+              shape: LayoutConstants.borderlessRoundedRectangle,
+              onPressed: () => Navigator.pop(context),
+              child: Text(
+                'Go to Account',
+                style: Theme.of(context).textTheme.button.copyWith(
+                      color: AppColor.white,
+                    ),
+              ),
+            ),
+          ),
+        ],
       );
 }

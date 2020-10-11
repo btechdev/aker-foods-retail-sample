@@ -141,6 +141,7 @@ class _SetupProfileScreen extends State<SetupUserProfileScreen> {
               hintText: 'Email',
               prefixIcon: _textFieldPrefixIcon(Icons.email),
               controller: _emailController,
+              textInputType: TextInputType.emailAddress,
             ),
             _inputFieldsVerticalSpacing(),
             ProfileTextFieldWidget(

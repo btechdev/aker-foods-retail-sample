@@ -35,6 +35,8 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
       await _handleRegisterUserDeviceEvent();
     } else if (event is FetchCurrentLocationEvent) {
       yield* _handleFetchCurrentLocationEvent(event);
+    } else if (event is FetchSavedAddressEvent) {
+      yield* _handleFetchSavedAddressEvent();
     }
   }
 
@@ -79,6 +81,11 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
 
       default:
     }
+  }
+
+  Stream<DashboardState> _handleFetchSavedAddressEvent() async* {
+    _currentAddress = await userAddressUseCase.getSelectedAddress();
+    yield* _getStateToYield();
   }
 
   Future<void> _fetchServiceablePinCodes() async {

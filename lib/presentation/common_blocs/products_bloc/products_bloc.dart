@@ -88,10 +88,13 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
 
   Stream<ProductsState> _handleSearchProductsEvent(
       SearchProductsEvent event) async* {
-    //yield FetchingProductsState();
-    yield SearchingProductsState();
-    final products = await productsUseCase.searchProducts(event.searchText);
-    yield ProductsSearchSuccessState(products: products);
+    try {
+      yield SearchingProductsState();
+      final products = await productsUseCase.searchProducts(event.searchText);
+      yield ProductsSearchSuccessState(products: products);
+    } catch (_) {
+      yield ProductsSearchFailedState();
+    }
   }
 
   Stream<ProductsState> _handleInitiateProductsSearchEvent() async* {

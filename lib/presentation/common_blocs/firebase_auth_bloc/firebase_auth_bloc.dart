@@ -78,6 +78,7 @@ class FirebaseAuthBloc extends Bloc<FirebaseAuthEvent, FirebaseAuthState> {
   Stream<FirebaseAuthState> mapAuthenticateWithSmsCodeEvent(
       AuthenticateWithSmsCodeEvent event) async* {
     debugPrint('event-bloc');
+    yield OtpVerifyingState();
     try {
       final authCredential = PhoneAuthProvider.credential(
           smsCode: event.smsCode, verificationId: _verificationId);
@@ -94,7 +95,6 @@ class FirebaseAuthBloc extends Bloc<FirebaseAuthEvent, FirebaseAuthState> {
       await OneSignal.shared.setExternalUserId(user.userId);
     } catch (e) {
       debugPrint('FirebaseAuthBloc => ${e.message}');
-      debugPrint(e);
       yield AuthFailedState(phoneNumber: event.phoneNumber);
     }
   }

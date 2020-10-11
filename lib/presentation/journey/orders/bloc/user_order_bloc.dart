@@ -128,7 +128,6 @@ class UserOrderBloc extends Bloc<UserOrderEvent, UserOrderState> {
   Stream<UserOrderState> _handleReinitiatePaymentForOrderEvent(
       ReinitiatePaymentForOrderEvent event) async* {
 //    yield ReinitiatingPaymentForOrderState();
-    debugPrint('$loaderBloc');
     loaderBloc.add(ShowLoaderEvent());
     try {
       final response =

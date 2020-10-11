@@ -4,6 +4,7 @@ import 'package:aker_foods_retail/presentation/app/route_constants.dart';
 import 'package:aker_foods_retail/presentation/common_blocs/firebase_auth_bloc/firebase_auth_bloc.dart';
 import 'package:aker_foods_retail/presentation/common_blocs/firebase_auth_bloc/firebase_auth_event.dart';
 import 'package:aker_foods_retail/presentation/common_blocs/firebase_auth_bloc/firebase_auth_state.dart';
+import 'package:aker_foods_retail/presentation/widgets/circular_loader_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:keyboard_avoider/keyboard_avoider.dart';
@@ -197,22 +198,35 @@ class _EnterOTPScreen extends State<EnterOtpScreen>
         ),
       );
 
-  Container _buttonWithContainer() => Container(
-        height: LayoutConstants.dimen_48.h,
-        width: PixelDimensionUtil().uiWidthPx.toDouble(),
-        child: RaisedButton(
-          color: AppColor.primaryColor,
-          onPressed: _smsCode?.length == 6 ? _verifySmsOtp : null,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(LayoutConstants.dimen_12.w),
-          ),
-          child: Text(
-            'CONTINUE',
-            style: Theme.of(context).textTheme.button.copyWith(
-                  color: AppColor.white,
+  BlocBuilder _buttonWithContainer() =>
+      BlocBuilder<FirebaseAuthBloc, FirebaseAuthState>(
+        builder: (context, state) {
+          debugPrint('\n\n\n---------state: $state-------\n\n\n');
+          if (state is OtpVerifyingState) {
+            return Container(
+              child: const CircularLoaderWidget(),
+            );
+          } else {
+            return Container(
+              height: LayoutConstants.dimen_48.h,
+              width: PixelDimensionUtil().uiWidthPx.toDouble(),
+              child: RaisedButton(
+                color: AppColor.primaryColor,
+                onPressed: _smsCode?.length == 6 ? _verifySmsOtp : null,
+                shape: RoundedRectangleBorder(
+                  borderRadius:
+                      BorderRadius.circular(LayoutConstants.dimen_12.w),
                 ),
-          ),
-        ),
+                child: Text(
+                  'CONTINUE',
+                  style: Theme.of(context).textTheme.button.copyWith(
+                        color: AppColor.white,
+                      ),
+                ),
+              ),
+            );
+          }
+        },
       );
 
   Container _bodyLowerSectionContainer() => Container(

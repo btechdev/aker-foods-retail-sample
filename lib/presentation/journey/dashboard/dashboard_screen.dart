@@ -2,7 +2,6 @@ import 'package:aker_foods_retail/presentation/common_blocs/cart_bloc/cart_bloc.
 import 'package:aker_foods_retail/presentation/common_blocs/cart_bloc/cart_state.dart';
 import 'package:aker_foods_retail/presentation/journey/dashboard/bottom_navigation_bar_details.dart';
 import 'package:aker_foods_retail/presentation/journey/dashboard/cart/cart_page.dart';
-import 'package:aker_foods_retail/presentation/journey/dashboard/search/search_page.dart';
 import 'package:aker_foods_retail/presentation/journey/user/my_account/my_account_screen.dart';
 import 'package:aker_foods_retail/presentation/theme/app_colors.dart';
 import 'package:flutter/material.dart';

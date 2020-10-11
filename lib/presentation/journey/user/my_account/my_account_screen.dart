@@ -48,7 +48,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
       title: 'Referral',
     ),
     MyAccountOptionDataEntity(
-      icon: Icons.offline_pin,
+      icon: Icons.power_settings_new,
       title: 'Logout',
     )
   ];
