@@ -5,16 +5,13 @@
 	"dev": {
 		"shouldEnableAllLogs": true,
 		"shouldEnableCrashlytics": true,
-		"host": "https://dev-api.akerretail.com/"
-	},
-	"qa": {
-		"shouldEnableAllLogs": true,
-		"shouldEnableCrashlytics": true,
-		"host": "https://qa-api.akerretail.com/"
+		"host": "https://dev-api.akerretail.com/",
+		"razorpayKey": "rzp_test_9HdLW7r3dXuant"
 	},
 	"prod": {
 		"shouldEnableAllLogs": false,
 		"shouldEnableCrashlytics": true,
-		"host": "https://api.akerretail.com/"
+		"host": "https://api.akerretail.com/",
+		"razorpayKey": "rzp_test_9HdLW7r3dXuant"
 	}
 }

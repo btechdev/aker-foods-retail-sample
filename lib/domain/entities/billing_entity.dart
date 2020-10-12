@@ -6,7 +6,8 @@ class BillingEntity {
   final double totalAmount;
   final double discountedAmount;
   final double totalSaved;
-  final int deliveryCharges;
+  final double deliveryCharges;
+  final double walletAmountUsed;
   final List<ProductEntity> updatedProducts;
 
   BillingEntity({
@@ -17,6 +18,7 @@ class BillingEntity {
     this.totalSaved,
     this.deliveryCharges,
     this.updatedProducts,
+    this.walletAmountUsed,
   });
 
   @override
@@ -29,7 +31,8 @@ class BillingEntity {
     discountedAmount: $discountedAmount,
     totalSaved: $totalSaved,
     deliveryCharges: $deliveryCharges,
-    updatedProducts: ${updatedProducts?.length}
+    walletAmountUsed: $walletAmountUsed,
+    updatedProductsCount: ${updatedProducts?.length}
     }''';
   }
 }

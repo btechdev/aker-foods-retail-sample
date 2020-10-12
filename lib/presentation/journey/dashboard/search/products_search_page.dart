@@ -101,7 +101,7 @@ class ProductsSearchPageState extends State<ProductsSearchPage> {
   Widget _buildSearchPageDefaultContent(SearchPageProductsLoadedState state) =>
       Scaffold(
         appBar: _getAppBar(),
-        body: _getContent(state),
+        body: _getContentWithScrollbar(state),
       );
 
   Widget _buildProductsGrid(context) => Scaffold(
@@ -200,6 +200,11 @@ class ProductsSearchPageState extends State<ProductsSearchPage> {
   }
 
   // ======================================================================
+
+  Widget _getContentWithScrollbar(SearchPageProductsLoadedState state) =>
+      Scrollbar(
+        child: _getContent(state),
+      );
 
   Widget _getContent(SearchPageProductsLoadedState state) =>
       SingleChildScrollView(

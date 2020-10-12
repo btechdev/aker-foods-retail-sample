@@ -292,7 +292,9 @@ class EnterNewAddressScreenState extends State<EnterNewAddressScreen> {
                   color: AppColor.primaryColor,
                   disabledColor: Colors.lightGreen,
                   onPressed: () {
-                     AnalyticsUtil.trackEvent(eventName: 'Add new address button clicked');
+                    AnalyticsUtil.trackEvent(
+                      eventName: 'Save new address button clicked',
+                    );
                     _validateFields ? _createNewAddress() : _showSnackbar();
                   },
                   shape: RoundedRectangleBorder(
