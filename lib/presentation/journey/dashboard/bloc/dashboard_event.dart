@@ -17,3 +17,7 @@ class FetchCurrentLocationEvent extends DashboardEvent {
 class RegisterUserDeviceEvent extends DashboardEvent {
   RegisterUserDeviceEvent() : super(0);
 }
+
+class FetchSavedAddressEvent extends DashboardEvent {
+  FetchSavedAddressEvent():super(0);
+}

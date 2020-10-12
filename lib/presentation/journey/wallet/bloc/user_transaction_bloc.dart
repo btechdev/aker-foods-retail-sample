@@ -30,6 +30,10 @@ class UserTransactionBloc
 
   Stream<UserTransactionState> _handleFetchTransactionEvent(
       UserTransactionEvent event) async* {
+    if (_isLastPageFetched) {
+      return;
+    }
+
     if (_next == null) {
       yield TransactionFetchingState();
     }

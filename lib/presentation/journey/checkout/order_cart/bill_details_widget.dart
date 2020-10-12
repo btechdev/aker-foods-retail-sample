@@ -65,7 +65,7 @@ class BillDetailsWidgetState extends State<BillDetailsWidget> {
           ..._getDiscountDetailsWidgets(),
           const Divider(),
           SizedBox(height: LayoutConstants.dimen_12.h),
-          _finalAmountToPayRow(widget.billingEntity.totalAmount),
+          _finalAmountToPayRow(widget.billingEntity.discountedAmount),
         ],
       );
 
@@ -105,18 +105,6 @@ class BillDetailsWidgetState extends State<BillDetailsWidget> {
           descriptionText: 'Coupon discount amount',
           amountText: '- '
               '${_textWithRupeePrefix(widget.billingEntity.couponAmountSaved)}',
-          textColor: AppColor.primaryColor,
-        ))
-        ..add(SizedBox(height: LayoutConstants.dimen_8.h));
-    }
-
-    final otherDiscountAmount = widget.billingEntity.totalAmount -
-        widget.billingEntity.discountedAmount;
-    if (otherDiscountAmount > 0) {
-      widgets
-        ..add(_billDetailsRow(
-          descriptionText: 'Other discount amount',
-          amountText: '- ${_textWithRupeePrefix(otherDiscountAmount)}',
           textColor: AppColor.primaryColor,
         ))
         ..add(SizedBox(height: LayoutConstants.dimen_8.h));

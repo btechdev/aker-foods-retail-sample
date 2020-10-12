@@ -5,6 +5,7 @@ import 'package:aker_foods_retail/common/utils/analytics_utils.dart';
 import 'package:aker_foods_retail/common/utils/widget_util.dart';
 import 'package:aker_foods_retail/domain/entities/notification_entity.dart';
 import 'package:aker_foods_retail/presentation/theme/app_colors.dart';
+import 'package:aker_foods_retail/presentation/widgets/circular_loader_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -42,9 +43,18 @@ class NotificationsListScreenState extends State<NotificationsListScreen> {
           child: BlocBuilder<NotificationBloc, NotificationState>(
             builder: (context, state) {
               if (state is FetchNotificationSuccessState) {
+                if (state.notifications.isEmpty) {
+                  return _noDataIndicatorWidgets(
+                    message: 'Failed to get the data for notfications.',
+                  );
+                }
                 return _notificationsListView(state.notifications);
+              } else if (state is FetchingNotificationState) {
+                return const CircularLoaderWidget();
               } else {
-                return Container();
+                return _noDataIndicatorWidgets(
+                  message: 'Failed to get the data for notfications.',
+                );
               }
             },
           ),
@@ -140,5 +150,40 @@ class NotificationsListScreenState extends State<NotificationsListScreen> {
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
         style: Theme.of(context).textTheme.bodyText1,
+      );
+
+  Widget _noDataIndicatorWidgets({
+    String message = 'No data available\nfor notifications.',
+  }) =>
+      Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text(
+            message,
+            textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.bodyText2.copyWith(
+                  color: AppColor.black40,
+                ),
+          ),
+          Container(
+            height: LayoutConstants.dimen_48.h,
+            margin: EdgeInsets.symmetric(
+              horizontal: LayoutConstants.dimen_16.w,
+              vertical: LayoutConstants.dimen_16.h,
+            ),
+            child: RaisedButton(
+              color: AppColor.primaryColor,
+              shape: LayoutConstants.borderlessRoundedRectangle,
+              onPressed: () => Navigator.pop(context),
+              child: Text(
+                'Go to Home',
+                style: Theme.of(context).textTheme.button.copyWith(
+                      color: AppColor.white,
+                    ),
+              ),
+            ),
+          ),
+        ],
       );
 }

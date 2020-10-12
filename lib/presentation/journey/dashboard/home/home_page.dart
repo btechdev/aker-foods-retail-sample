@@ -3,6 +3,7 @@ import 'package:aker_foods_retail/common/constants/layout_constants.dart';
 import 'package:aker_foods_retail/common/extensions/pixel_dimension_util_extensions.dart';
 import 'package:aker_foods_retail/common/injector/injector.dart';
 import 'package:aker_foods_retail/common/utils/analytics_utils.dart';
+import 'package:aker_foods_retail/common/utils/global_entities.dart';
 import 'package:aker_foods_retail/common/utils/widget_util.dart';
 import 'package:aker_foods_retail/domain/entities/product_category_entity.dart';
 import 'package:aker_foods_retail/domain/entities/product_entity.dart';
@@ -36,9 +37,11 @@ class HomePageState extends State<HomePage> {
   // ignore: close_sinks
   ProductsBloc productsBloc;
   Map<int, int> productIdCountMap;
-  String _addressString = 'Location unavailable';
 
   Widget _categoriesSection;
+
+  bool _locationIsAvailable = false;
+  String _addressString;
 
   void _initialiseProductIdCountMap() {
     final cartState = BlocProvider.of<CartBloc>(context).state;
@@ -50,6 +53,7 @@ class HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     AnalyticsUtil.trackScreen(screenName: 'Home Page');
+    _addressString = 'Fetching location...';
     productsBloc = Injector.resolve<ProductsBloc>()
       ..add(FetchProductCategoriesEvent());
   }
@@ -84,7 +88,7 @@ class HomePageState extends State<HomePage> {
         ],
       );
 
-  Widget _addressWidget() => Container(
+  /*Widget _addressWidget() => Container(
     alignment: Alignment.center,
     height: LayoutConstants.dimen_56.h,
     child: Row(
@@ -93,9 +97,9 @@ class HomePageState extends State<HomePage> {
         _addressWidgetExpandedText(),
       ],
     ),
-  );
+  );*/
 
-  /*Widget _addressWidget() => wrapWithMaterialInkWell(
+  Widget _addressWidget() => wrapWithMaterialInkWell(
         context: context,
         backgroundColor: AppColor.transparent,
         borderRadius: BorderRadius.circular(LayoutConstants.dimen_8.w),
@@ -110,7 +114,7 @@ class HomePageState extends State<HomePage> {
             ],
           ),
         ),
-      );*/
+      );
 
   Container _addressWidgetIconContainer() => Container(
         alignment: Alignment.center,
@@ -125,13 +129,17 @@ class HomePageState extends State<HomePage> {
 
   BlocBuilder _addressWidgetExpandedText() =>
       BlocBuilder<DashboardBloc, DashboardState>(
-        buildWhen: (_, currentState) =>
-            currentState is FetchCurrentLocationSuccessState,
+//        buildWhen: (_, currentState) =>
+//            currentState is FetchCurrentLocationSuccessState,
         builder: (context, state) => Expanded(
           child: Text(
             _addressString,
             overflow: TextOverflow.ellipsis,
-            style: Theme.of(context).textTheme.bodyText1,
+            style: _locationIsAvailable
+                ? Theme.of(context).textTheme.bodyText1
+                : Theme.of(context).textTheme.subtitle1.copyWith(
+                      color: AppColor.black54,
+                    ),
           ),
         ),
       );
@@ -145,7 +153,11 @@ class HomePageState extends State<HomePage> {
         borderRadius: BorderRadius.circular(LayoutConstants.dimen_12.w),
       ),
       builder: (BuildContext context) =>
-          ChangeAddressModeSelectionBottomSheet(onAddressChange: () => {}),
+          ChangeAddressModeSelectionBottomSheet(onAddressChange: (address) {
+        currentLocalAddress = address;
+        BlocProvider.of<DashboardBloc>(context).add(FetchSavedAddressEvent());
+        Navigator.pop(context);
+      }),
     );
   }
 
@@ -334,10 +346,12 @@ class HomePageState extends State<HomePage> {
     BlocProvider.of<DashboardBloc>(context).listen((state) {
       if (state is FetchCurrentLocationSuccessState) {
         //_address = state.address?.address1 ?? 'Location unavailable';
-        final _address = state.address;
+        final _address = currentLocalAddress ?? state.address;
         if (_address?.zipCode != null && _address?.address1 != null) {
+          _locationIsAvailable = true;
           _addressString = '${_address?.zipCode}, ${_address?.address1}';
         } else {
+          _locationIsAvailable = false;
           _addressString = 'Location unavailable';
         }
       }

@@ -279,7 +279,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
           SizedBox(height: LayoutConstants.dimen_8.h),
           const Divider(),
           SizedBox(height: LayoutConstants.dimen_12.h),
-          _getTotalPayment(context, '${widget.order.totalAmount}'),
+          _getTotalPayment(context, '${widget.order.totalDiscountedAmount}'),
           SizedBox(height: LayoutConstants.dimen_8.h),
         ],
       );

@@ -5,8 +5,10 @@ import 'package:aker_foods_retail/common/extensions/pixel_dimension_util_extensi
 import 'package:aker_foods_retail/common/extensions/string_extensions.dart';
 import 'package:aker_foods_retail/common/injector/injector.dart';
 import 'package:aker_foods_retail/common/local_preferences/local_preferences.dart';
+import 'package:aker_foods_retail/common/utils/data_connection_util.dart';
 import 'package:aker_foods_retail/common/utils/pixel_dimension_util.dart';
 import 'package:aker_foods_retail/config/app_update_config.dart';
+import 'package:aker_foods_retail/config/configuration.dart';
 import 'package:aker_foods_retail/data/models/force_update_data_model.dart';
 import 'package:aker_foods_retail/presentation/app/route_constants.dart';
 import 'package:aker_foods_retail/presentation/common_blocs/snack_bar_bloc/snack_bar_bloc.dart';
@@ -15,18 +17,19 @@ import 'package:aker_foods_retail/presentation/theme/app_colors.dart';
 import 'package:aker_foods_retail/presentation/widgets/circular_loader_widget.dart';
 import 'package:aker_foods_retail/presentation/widgets/custom_snack_bar/snack_bar_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:package_info/package_info.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 const androidPlayStoreUrl = 'https://play.google.com/store';
 const iosAppStoreUrl = 'https://www.apple.com/app-store/';
 
-class SplashPage extends StatefulWidget {
+class SplashScreen extends StatefulWidget {
   @override
-  _SplashPageState createState() => _SplashPageState();
+  _SplashScreenState createState() => _SplashScreenState();
 }
 
-class _SplashPageState extends State<SplashPage> {
+class _SplashScreenState extends State<SplashScreen> {
   bool _isLoading = true;
   String url = '';
   final localPreferences = Injector.resolve<LocalPreferences>();
@@ -34,7 +37,7 @@ class _SplashPageState extends State<SplashPage> {
   @override
   void initState() {
     super.initState();
-    _getAppUpdateStatus();
+    _checkDataConnectionAndAppUpdate();
   }
 
   @override
@@ -44,7 +47,7 @@ class _SplashPageState extends State<SplashPage> {
             'assets/images/splash_image.png',
             width: PixelDimensionUtil.screenWidth,
             height: PixelDimensionUtil.screenHeight,
-            fit: BoxFit.fill,
+            fit: BoxFit.contain,
           ),
           Positioned(
             top: LayoutConstants.dimen_76.h,
@@ -61,6 +64,16 @@ class _SplashPageState extends State<SplashPage> {
         ],
       );
 
+  Future<void> _checkDataConnectionAndAppUpdate() async {
+    final isInternetConnectionAvailable =
+        await Injector.resolve<DataConnectionUtil>().isConnected;
+    if (isInternetConnectionAvailable ?? false) {
+      await _getAppUpdateStatus();
+    } else {
+      await _showExitAppDialog();
+    }
+  }
+
   Future<void> _getAppUpdateStatus() async {
     final PackageInfo packageInfo = await PackageInfo.fromPlatform();
     final currentVersion = packageInfo.version;
@@ -68,15 +81,19 @@ class _SplashPageState extends State<SplashPage> {
     String packageName = packageInfo.packageName;
     String buildNumber = packageInfo.buildNumber;*/
 
-    final appUpdateConfig = Injector.resolve<AppUpdateConfig>();
-    final forceUpdateData =
-        await appUpdateConfig.getForceUpdateData(currentVersion);
-    setState(() {
-      _isLoading = false;
-    });
-    if (forceUpdateData?.isMandatory ?? false) {
-      await _showForceUpdateDialog(forceUpdateData);
-    } else {
+    try {
+      final appUpdateConfig = Injector.resolve<AppUpdateConfig>();
+      final forceUpdateData =
+          await appUpdateConfig.getForceUpdateData(currentVersion);
+      setState(() {
+        _isLoading = false;
+      });
+      if (forceUpdateData?.isMandatory ?? false) {
+        await _showForceUpdateDialog(forceUpdateData);
+      } else {
+        await _redirectToNextScreen();
+      }
+    } catch (_) {
       await _redirectToNextScreen();
     }
   }
@@ -92,8 +109,7 @@ class _SplashPageState extends State<SplashPage> {
         ),
       );
 
-// TODO(soham): Remove later button
-  RaisedButton _laterButton() => RaisedButton(
+  FlatButton _laterButton() => FlatButton(
         onPressed: () {
           Navigator.pop(context);
           _redirectToNextScreen();
@@ -101,7 +117,7 @@ class _SplashPageState extends State<SplashPage> {
         child: Text(
           'Later',
           style: Theme.of(context).textTheme.button.copyWith(
-                color: AppColor.white,
+                color: AppColor.grey,
               ),
         ),
       );
@@ -123,7 +139,7 @@ class _SplashPageState extends State<SplashPage> {
           style: Theme.of(context).textTheme.subtitle2,
         ),
         actions: [
-          _laterButton(),
+          if (Configuration.isDev) _laterButton(),
           _updateButton(forceUpdateData),
         ],
       ),
@@ -150,6 +166,38 @@ class _SplashPageState extends State<SplashPage> {
       await _redirectToNextScreen();
     }
   }
+
+  Future<void> _showExitAppDialog() async {
+    await showDialog(
+      context: context,
+      barrierDismissible: false,
+      child: AlertDialog(
+        title: Text(
+          'No Internet Connection',
+          style: Theme.of(context).textTheme.bodyText1,
+        ),
+        content: Text(
+          'It seems that you are not connected to internet. '
+          'Please retry again after enabling internet on your device.',
+          style: Theme.of(context).textTheme.subtitle2,
+        ),
+        actions: [_exitAppButton()],
+      ),
+    );
+  }
+
+  FlatButton _exitAppButton() => FlatButton(
+        onPressed: () {
+          Navigator.pop(context);
+          SystemNavigator.pop();
+        },
+        child: Text(
+          'OK',
+          style: Theme.of(context).textTheme.subtitle2.copyWith(
+                color: AppColor.grey,
+              ),
+        ),
+      );
 
   String get appInitialRoute {
     final String idToken =

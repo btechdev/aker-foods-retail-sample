@@ -65,6 +65,7 @@ target 'Runner' do
   pod 'Flutter', :path => 'Flutter'
 
   # Plugin Pods
+  pod 'razorpay-pod', '1.1.7'
 
   # Prepare symlinks folder. We use symlinks to avoid having Podfile.lock
   # referring to absolute paths on developers' machines.
@@ -84,7 +85,6 @@ install! 'cocoapods', :disable_input_output_paths => true
 target 'AkerFoodsNotificationExtension' do
   use_frameworks!
   pod 'OneSignal', '>= 2.9.3', '< 3.0'
-  pod 'razorpay-pod', '1.1.7'
 end
 
 post_install do |installer|

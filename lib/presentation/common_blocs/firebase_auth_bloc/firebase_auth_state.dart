@@ -43,6 +43,8 @@ class AuthSuccessState extends FirebaseAuthState {
   }) : super(phoneNumber: user.phoneNumber);
 }
 
+class OtpVerifyingState extends FirebaseAuthState {}
+
 class OtpVerificationFailureState extends FirebaseAuthState {}
 
 class OtpVerificationSuccessState extends FirebaseAuthState {

@@ -21,7 +21,11 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
   Stream<NotificationState> _handleFetchNotificationEvent(
       FetchNotificationsEvent event) async* {
     yield FetchingNotificationState();
-    final notifications = await notificationUseCase.getNotifications();
-    yield FetchNotificationSuccessState(notifications: notifications);
+    try {
+      final notifications = await notificationUseCase.getNotifications();
+      yield FetchNotificationSuccessState(notifications: notifications);
+    } catch (e) {
+      yield FetchNotificationFailureState();
+    }
   }
 }
