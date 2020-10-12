@@ -16,7 +16,6 @@ import 'package:aker_foods_retail/presentation/journey/user/edit_profile/edit_pr
 import 'package:aker_foods_retail/presentation/journey/wallet/wallet_transactions_screen.dart';
 import 'package:aker_foods_retail/presentation/theme/app_colors.dart';
 import 'package:aker_foods_retail/presentation/widgets/circular_loader_widget.dart';
-import 'package:aker_foods_retail/presentation/widgets/empty_state_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -118,7 +117,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
           ? _getLoadingContainer()
           : state is UserProfileFetchSuccessState
               ? _getUserDetailsContainer(context, state)
-              : const EmptyStateWidget();
+              : Container();
 
   Container _getLoadingContainer() {
     return Container(

@@ -34,7 +34,7 @@ class MyOrderCell extends StatelessWidget {
       child: Column(
         children: <Widget>[
           Container(
-            height: LayoutConstants.dimen_180.h,
+            height: LayoutConstants.dimen_190.h,
             color: AppColor.white,
             padding: EdgeInsets.symmetric(
                 horizontal: LayoutConstants.dimen_16.w,

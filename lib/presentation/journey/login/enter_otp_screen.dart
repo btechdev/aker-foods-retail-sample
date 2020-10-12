@@ -5,11 +5,10 @@ import 'package:aker_foods_retail/presentation/common_blocs/firebase_auth_bloc/f
 import 'package:aker_foods_retail/presentation/common_blocs/firebase_auth_bloc/firebase_auth_event.dart';
 import 'package:aker_foods_retail/presentation/common_blocs/firebase_auth_bloc/firebase_auth_state.dart';
 import 'package:aker_foods_retail/presentation/widgets/circular_loader_widget.dart';
+import 'package:aker_foods_retail/presentation/widgets/otp_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:keyboard_avoider/keyboard_avoider.dart';
-import 'package:otp_text_field/otp_field.dart';
-import 'package:otp_text_field/style.dart';
 
 import '../../../common/extensions/pixel_dimension_util_extensions.dart';
 import '../../../common/utils/pixel_dimension_util.dart';
@@ -34,18 +33,21 @@ class _EnterOTPScreen extends State<EnterOtpScreen>
   Animation<int> _animation;
   String _smsCode = '';
   bool showTimer = true;
+  OTPTextField _otpTextField;
+  final GlobalKey<OTPTextFieldState> _textfielKey = GlobalKey();
 
   @override
   void initState() {
     super.initState();
     _authBloc = Injector.resolve<FirebaseAuthBloc>();
+//    setupOtpTextField();
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(seconds: 180),
+      duration: const Duration(seconds: 120),
     );
 
     _animation = StepTween(
-      begin: 60,
+      begin: 120,
       end: 0,
     ).animate(_controller)
       ..addStatusListener((AnimationStatus status) {
@@ -58,10 +60,40 @@ class _EnterOTPScreen extends State<EnterOtpScreen>
     _controller.forward();
   }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    setupOtpTextField();
+  }
+
+  void setupOtpTextField() {
+    _otpTextField = OTPTextField(
+      key: _textfielKey,
+      length: 6,
+      fieldWidth: LayoutConstants.dimen_40.w,
+      fieldStyle: FieldStyle.underline,
+      keyboardType: TextInputType.number,
+      style: Theme.of(context).textTheme.bodyText1,
+      textFieldAlignment: MainAxisAlignment.spaceAround,
+      onChanged: (String value) {
+        setState(() {
+          _smsCode = value;
+        });
+      },
+      onCompleted: (String pin) {
+        setState(
+          () {
+            _smsCode = pin;
+          },
+        );
+      },
+    );
+  }
+
   void resetAnimation() {
     _controller.reset();
     _animation = StepTween(
-      begin: 60,
+      begin: 120,
       end: 0,
     ).animate(_controller);
     _controller.forward();
@@ -166,9 +198,19 @@ class _EnterOTPScreen extends State<EnterOtpScreen>
             Expanded(
               child: Text(
                 'Enter 6 digit OTP',
+                softWrap: true,
                 style: Theme.of(context).textTheme.headline6,
               ),
             ),
+            FlatButton(
+              onPressed: () => _textfielKey.currentState.clearTextFields(),
+              child: Text(
+                'Clear OTP',
+                softWrap: true,
+                overflow: TextOverflow.ellipsis,
+                style: Theme.of(context).textTheme.caption,
+              ),
+            )
           ],
         ),
       );
@@ -180,19 +222,7 @@ class _EnterOTPScreen extends State<EnterOtpScreen>
         child: Row(
           children: [
             Expanded(
-              child: OTPTextField(
-                length: 6,
-                fieldWidth: LayoutConstants.dimen_40.w,
-                fieldStyle: FieldStyle.underline,
-                keyboardType: TextInputType.number,
-                style: Theme.of(context).textTheme.bodyText1,
-                textFieldAlignment: MainAxisAlignment.spaceAround,
-                onCompleted: (pin) {
-                  setState(() {
-                    _smsCode = pin;
-                  });
-                },
-              ),
+              child: _otpTextField,
             ),
           ],
         ),
@@ -201,7 +231,6 @@ class _EnterOTPScreen extends State<EnterOtpScreen>
   BlocBuilder _buttonWithContainer() =>
       BlocBuilder<FirebaseAuthBloc, FirebaseAuthState>(
         builder: (context, state) {
-          debugPrint('\n\n\n---------state: $state-------\n\n\n');
           if (state is OtpVerifyingState) {
             return Container(
               child: const CircularLoaderWidget(),
@@ -250,7 +279,7 @@ class _EnterOTPScreen extends State<EnterOtpScreen>
               children: [
                 Text(
                   'Have not received your OTP yet?',
-                  style: Theme.of(context).textTheme.subtitle1,
+                  style: Theme.of(context).textTheme.caption,
                 ),
                 showTimer
                     ? CountdownTimerText(animation: _animation)
