@@ -49,6 +49,7 @@ class SearchProductsScreenState extends State<SearchProductsScreen> {
     _searchFieldFocusNode = FocusNode();
     _searchFieldController = TextEditingController();
     _initialiseProductIdCountMap();
+    _searchFieldFocusNode.requestFocus();
   }
 
   @override
@@ -118,12 +119,19 @@ class SearchProductsScreenState extends State<SearchProductsScreen> {
   Widget _buildNoProductsScaffold(ProductsSearchSuccessState state) => Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: _getAppBar(state),
-        body: Text(
-          'No products found for the searched text.',
-          textAlign: TextAlign.center,
-          style: Theme.of(context).textTheme.bodyText2.copyWith(
-                color: AppColor.black54,
-              ),
+        body: Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: LayoutConstants.dimen_16.w,
+            vertical: LayoutConstants.dimen_16.h,
+          ),
+          child: Text(
+            'No products found for the searched text.',
+            softWrap: true,
+            textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.bodyText2.copyWith(
+                  color: AppColor.black54,
+                ),
+          ),
         ),
       );
 
