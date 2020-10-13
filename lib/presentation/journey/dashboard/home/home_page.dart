@@ -167,10 +167,14 @@ class HomePageState extends State<HomePage> {
     return BlocBuilder<ProductsBloc, ProductsState>(
       builder: (context, state) {
         _initialiseProductIdCountMap();
-        return _getContent(state);
+        return _getContentWithScrollbar(state);
       },
     );
   }
+
+  Widget _getContentWithScrollbar(ProductsState state) => Scrollbar(
+        child: _getContent(state),
+      );
 
   Widget _getContent(ProductsState state) => SingleChildScrollView(
         primary: true,

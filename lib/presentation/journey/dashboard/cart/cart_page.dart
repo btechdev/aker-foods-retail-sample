@@ -287,12 +287,19 @@ class _CartPageState extends State<CartPage> {
 
   Widget _cartBottomWidget(CartState state) {
     if (state is CartLoadedState) {
-      return _buttonWithContainer();
+      return _buttonMaterialCard();
     }
     return Container();
   }
 
-  Container _buttonWithContainer() => Container(
+  Widget _buttonMaterialCard() => Material(
+        type: MaterialType.card,
+        elevation: 8,
+        color: AppColor.white,
+        child: _buttonWithContainer(),
+      );
+
+  Widget _buttonWithContainer() => Container(
         height: LayoutConstants.dimen_48.h,
         margin: EdgeInsets.symmetric(
             horizontal: LayoutConstants.dimen_16.w,
@@ -301,8 +308,8 @@ class _CartPageState extends State<CartPage> {
           color: AppColor.primaryColor,
           shape: LayoutConstants.borderlessRoundedRectangle,
           onPressed: () {
+            AnalyticsUtil.trackEvent(eventName: 'place order click event');
             if (_addressId == null) {
-              AnalyticsUtil.trackEvent(eventName: 'place order click event');
               Injector.resolve<SnackBarBloc>().add(ShowSnackBarEvent(
                 type: CustomSnackBarType.error,
                 text: 'Please provide the delivery address',

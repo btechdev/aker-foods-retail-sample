@@ -30,9 +30,6 @@ class DashboardScreenState extends State<DashboardScreen> {
     BlocProvider.of<DashboardBloc>(context)
       ..add(RegisterUserDeviceEvent())
       ..add(FetchCurrentLocationEvent());
-    /*BlocProvider.of<DashboardBloc>(context)
-      ..add(RegisterUserDeviceEvent())
-      ..add(FetchCurrentLocationEvent());*/
     _bottomNavigationPageWidgets = [
       HomePage(),
       ProductsSearchPage(),
@@ -106,7 +103,7 @@ class DashboardScreenState extends State<DashboardScreen> {
     DashboardState dashboardState,
   ) =>
       BottomNavigationBar(
-        elevation: 32,
+        elevation: 16,
         iconSize: 36,
         currentIndex: dashboardState.pageIndex,
         type: BottomNavigationBarType.fixed,

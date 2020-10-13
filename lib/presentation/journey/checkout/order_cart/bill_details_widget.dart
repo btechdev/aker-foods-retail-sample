@@ -84,12 +84,18 @@ class BillDetailsWidgetState extends State<BillDetailsWidget> {
         children: [
           Text(
             descriptionText,
+            softWrap: true,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
             style: Theme.of(context).textTheme.subtitle1.copyWith(
                   color: textColor,
                 ),
           ),
           Text(
             amountText,
+            softWrap: true,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
             style: Theme.of(context).textTheme.subtitle1.copyWith(
                   color: textColor,
                 ),
@@ -110,14 +116,25 @@ class BillDetailsWidgetState extends State<BillDetailsWidget> {
         ..add(SizedBox(height: LayoutConstants.dimen_8.h));
     }
 
+    widgets.add(_billDetailsRow(
+      descriptionText: 'Total amount saved',
+      amountText: '${_textWithRupeePrefix(widget.billingEntity.totalSaved)}',
+      textColor: AppColor.primaryColor,
+    ));
+
+    final walletAmountUsed = widget.billingEntity?.walletAmountUsed ?? 0.0;
     final deliveryCharge =
         (widget.billingEntity.deliveryCharges ?? 0).toDouble();
+    if (walletAmountUsed > 0) {
+      widgets
+        ..add(SizedBox(height: LayoutConstants.dimen_8.h))
+        ..add(_billDetailsRow(
+          descriptionText: 'Wallet amount used',
+          amountText: '- ${_textWithRupeePrefix(walletAmountUsed)}',
+          textColor: AppColor.primaryColor,
+        ));
+    }
     widgets
-      ..add(_billDetailsRow(
-        descriptionText: 'Total amount saved',
-        amountText: '${_textWithRupeePrefix(widget.billingEntity.totalSaved)}',
-        textColor: AppColor.primaryColor,
-      ))
       ..add(SizedBox(height: LayoutConstants.dimen_8.h))
       ..add(_billDetailsRow(
         descriptionText: 'Delivery charge',

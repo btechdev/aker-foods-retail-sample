@@ -40,7 +40,6 @@ class ChangeAddressModeSelectionBottomSheetState
         create: (context) => changeAddressBloc,
         child: DraggableScrollableSheet(
             expand: false,
-            //maxChildSize: savedAddresses?.isNotEmpty == true ? 1.0 : 0.45,
             maxChildSize: 0.75,
             initialChildSize: 0.45,
             builder: (context, controller) {

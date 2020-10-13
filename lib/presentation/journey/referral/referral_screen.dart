@@ -24,6 +24,7 @@ class _ReferralScreenState extends State<ReferralScreen> {
     super.initState();
     AnalyticsUtil.trackScreen(screenName: 'Referral screen');
   }
+
   @override
   Widget build(BuildContext context) {
     referralEntity = ModalRoute.of(context).settings.arguments;
@@ -64,11 +65,11 @@ class _ReferralScreenState extends State<ReferralScreen> {
   Column _getColumns() => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          _getReferralCodeDescriptionText('${referralEntity.title ?? ''}'
-              ' ${referralEntity.description ?? ''}'),
+          _getReferralCodeDescriptionText('${referralEntity?.title ?? ''}'
+              ' ${referralEntity?.description ?? ''}'),
           SizedBox(height: LayoutConstants.dimen_20.h),
           _getHeaderText('Your referral code:'),
-          _getValueText(referralEntity.code ?? ''),
+          _getValueText(referralEntity?.code ?? ''),
         ],
       );
 

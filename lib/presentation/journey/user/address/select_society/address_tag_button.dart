@@ -18,9 +18,8 @@ class AddressTagButton extends StatelessWidget {
         padding: EdgeInsets.zero,
         shape: RoundedRectangleBorder(
           side: BorderSide(
-              color: isSelected
-                  ? AppColor.transparent
-                  : AppColor.primaryColorDark),
+            color: isSelected ? AppColor.transparent : AppColor.primaryColor,
+          ),
           borderRadius: BorderRadius.circular(LayoutConstants.dimen_20.w),
         ),
         onPressed: onSelect,
@@ -29,7 +28,7 @@ class AddressTagButton extends StatelessWidget {
           title,
           style: Theme.of(context).textTheme.caption.copyWith(
                 fontWeight: FontWeight.bold,
-                color: isSelected ? AppColor.white : AppColor.primaryColorDark,
+                color: isSelected ? AppColor.white : AppColor.primaryColor,
               ),
         ),
       );

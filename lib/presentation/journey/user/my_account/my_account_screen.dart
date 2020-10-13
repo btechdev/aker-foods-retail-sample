@@ -3,6 +3,7 @@ import 'package:aker_foods_retail/common/constants/layout_constants.dart';
 import 'package:aker_foods_retail/common/extensions/pixel_dimension_util_extensions.dart';
 import 'package:aker_foods_retail/common/injector/injector.dart';
 import 'package:aker_foods_retail/common/utils/analytics_utils.dart';
+import 'package:aker_foods_retail/common/utils/widget_util.dart';
 import 'package:aker_foods_retail/data/models/address_model.dart';
 import 'package:aker_foods_retail/domain/entities/address_entity.dart';
 import 'package:aker_foods_retail/domain/entities/my_account_option_data_entity.dart';
@@ -16,7 +17,6 @@ import 'package:aker_foods_retail/presentation/journey/user/edit_profile/edit_pr
 import 'package:aker_foods_retail/presentation/journey/wallet/wallet_transactions_screen.dart';
 import 'package:aker_foods_retail/presentation/theme/app_colors.dart';
 import 'package:aker_foods_retail/presentation/widgets/circular_loader_widget.dart';
-import 'package:aker_foods_retail/presentation/widgets/empty_state_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -118,7 +118,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
           ? _getLoadingContainer()
           : state is UserProfileFetchSuccessState
               ? _getUserDetailsContainer(context, state)
-              : const EmptyStateWidget();
+              : Container();
 
   Container _getLoadingContainer() {
     return Container(
@@ -154,23 +154,25 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
         child: ListView.separated(
           separatorBuilder: (context, index) => const Divider(
             color: AppColor.grey,
+            height: LayoutConstants.dimen_1,
           ),
           itemCount: options.length,
-          itemBuilder: (context, index) => GestureDetector(
-            onTap: () => {_navigateTo(index)},
-            child: (index == 1)
-                ? _getCell(
-                    MyAccountOptionDataEntity(
-                        icon: Icons.account_balance_wallet,
-                        title: 'My Wallet',
-                        subtitle:
-                            '${AppConstants.rupeeSymbol} $currentBalance'),
-                  )
-                : _getCell(
-                    options[index],
-                  ),
-          ),
+          itemBuilder: _accountOptionsListItem,
         ),
+      );
+
+  Widget _accountOptionsListItem(context, index) => wrapWithMaterialInkWell(
+        context: context,
+        onTap: () => _navigateTo(index),
+        child: (index == 1)
+            ? _getCell(
+                MyAccountOptionDataEntity(
+                  icon: Icons.account_balance_wallet,
+                  title: 'My Wallet',
+                  subtitle: '${AppConstants.rupeeSymbol} $currentBalance',
+                ),
+              )
+            : _getCell(options[index]),
       );
 
   Container _getAddressContainer(BuildContext context, AddressEntity address) =>
@@ -215,7 +217,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
       );
 
   Future<void> _getLocationSelectionBottomSheet(BuildContext context) async {
-    final status = await showModalBottomSheet(
+    await showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       isDismissible: true,

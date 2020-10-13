@@ -1,10 +1,8 @@
+import 'package:aker_foods_retail/config/configuration.dart';
 import 'package:aker_foods_retail/domain/entities/payment_details_entity.dart';
 import 'package:flutter/foundation.dart';
 
 class RazorpayPaymentModel {
-  // TODO(Bhushan): Decide on this if should be taken from configuration or API
-  static const String key = 'rzp_test_9HdLW7r3dXuant';
-
   int amount;
   String orderId;
   String name;
@@ -29,7 +27,7 @@ class RazorpayPaymentModel {
       );
 
   Map<String, dynamic> toJson() => {
-        'key': key,
+        'key': Configuration.razorpayKey,
         'amount': amount,
         'order_id': orderId,
         'name': name,
@@ -39,6 +37,4 @@ class RazorpayPaymentModel {
           'wallets': ['paytm']
         }
       };
-// TODO(Bhushan): Get detailed information on 'preFill' & 'external' data maps
-
 }

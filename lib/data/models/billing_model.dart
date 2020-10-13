@@ -9,7 +9,8 @@ class BillingModel extends BillingEntity {
     final double totalAmount,
     final double discountedAmount,
     final double totalSaved,
-    final int deliveryCharges,
+    final double deliveryCharges,
+    final double walletAmountUsed,
     final List<ProductModel> updatedProducts,
   }) : super(
           isCouponApplied: isCouponApplied,
@@ -18,17 +19,23 @@ class BillingModel extends BillingEntity {
           discountedAmount: discountedAmount,
           totalSaved: totalSaved,
           deliveryCharges: deliveryCharges,
+          walletAmountUsed: walletAmountUsed,
           updatedProducts: updatedProducts,
         );
 
-  factory BillingModel.fromJson(Map<String, dynamic> jsonMap) => BillingModel(
-        isCouponApplied: jsonMap['coupon']['is_applied'],
-        couponAmountSaved: jsonMap['coupon']['amount_saved'],
-        totalAmount: jsonMap['billing']['total_amount'],
-        discountedAmount: jsonMap['billing']['discounted_amount'],
-        totalSaved: jsonMap['billing']['total_saved'],
-        deliveryCharges: jsonMap['billing']['delivery_charges'],
-        updatedProducts:
-            ApiResponseParser.listFromJson<ProductModel>(jsonMap['products']),
-      );
+  factory BillingModel.fromJson(Map<String, dynamic> jsonMap) {
+    final dynamic deliveryCharges = jsonMap['billing']['delivery_charges'];
+    final dynamic walletAmountUsed = jsonMap['billing']['wallet_amount_used'];
+    return BillingModel(
+      isCouponApplied: jsonMap['coupon']['is_applied'],
+      couponAmountSaved: jsonMap['coupon']['amount_saved'],
+      totalAmount: jsonMap['billing']['total_amount'],
+      discountedAmount: jsonMap['billing']['discounted_amount'],
+      totalSaved: jsonMap['billing']['total_saved'],
+      deliveryCharges: double.tryParse(deliveryCharges?.toString() ?? '0'),
+      walletAmountUsed: double.tryParse(walletAmountUsed?.toString() ?? '0'),
+      updatedProducts:
+          ApiResponseParser.listFromJson<ProductModel>(jsonMap['products']),
+    );
+  }
 }

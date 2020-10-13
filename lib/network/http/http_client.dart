@@ -3,7 +3,6 @@ import 'dart:io' as dart_io;
 
 import 'package:aker_foods_retail/common/extensions/string_extensions.dart';
 import 'package:aker_foods_retail/common/utils/data_connection_util.dart';
-import 'package:aker_foods_retail/config/configuration.dart';
 import 'package:aker_foods_retail/network/http/http_constants.dart';
 import 'package:aker_foods_retail/network/http/http_method_enum.dart';
 import 'package:aker_foods_retail/network/http/http_util.dart';
@@ -258,8 +257,8 @@ class HttpClient {
     final request = MultipartRequest(
         HttpMethod(type: method).toString(), getParsedUrl(path))
       ..headers['accept'] = 'application/json'
-      ..headers[HttpConstants.contentType] = HttpConstants.multipartFormDataType
-      ..headers[HttpConstants.authorization] = Configuration.token;
+      ..headers[HttpConstants.contentType] =
+          HttpConstants.multipartFormDataType;
 
     data?.forEach((key, value) => request.fields[key] = value);
     mapFile?.forEach((key, value) async {

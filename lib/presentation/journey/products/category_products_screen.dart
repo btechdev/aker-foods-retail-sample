@@ -86,7 +86,9 @@ class CategoryProductsScreenState extends State<CategoryProductsScreen> {
     if (state is FetchingBannerDetailsState) {
       return const CircularLoaderWidget();
     } else if (state is CategoryProductsFetchSuccessState) {
-      return _productsStaggeredGridView(state.products);
+      return Scrollbar(
+        child: _productsStaggeredGridView(state.products),
+      );
     }
     return Container();
   }

@@ -136,7 +136,7 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
       context,
       _orderDetailsScreenRoute(order),
     );
-    if(result != null && result is Map) {
+    if (result != null && result is Map) {
       if (result['refreshOrderList'] == true) {
         userOrderBloc.add(FetchUserOrders());
       }
@@ -182,7 +182,7 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
                 Navigator.pop(context);
               },
               child: Text(
-                'Go to Home',
+                'Go to Account',
                 style: Theme.of(context).textTheme.button.copyWith(
                       color: AppColor.white,
                     ),

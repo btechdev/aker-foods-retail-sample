@@ -159,12 +159,14 @@ class BannerDetailsScreenState extends State<BannerDetailsScreen> {
         child: const CircularProgressIndicator(),
       );
 
-  CustomScrollView _wrapWithCustomScrollView(List<Widget> slivers) {
+  Widget _wrapWithCustomScrollView(List<Widget> slivers) {
     _initialiseProductIdCountMap();
-    return CustomScrollView(
-      primary: true,
-      shrinkWrap: true,
-      slivers: slivers,
+    return Scrollbar(
+      child: CustomScrollView(
+        primary: true,
+        shrinkWrap: true,
+        slivers: slivers,
+      ),
     );
   }
 
