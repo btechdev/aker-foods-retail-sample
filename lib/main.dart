@@ -71,7 +71,7 @@ Future<void> _initialiseOneSignal() async {
     OSiOSSettings.promptBeforeOpeningPushUrl: true
   };
   await OneSignal.shared.init(
-    '15cc841b-f301-4663-a12e-9f5467eaf167',
+    Configuration.oneSignalAppId,
     iOSSettings: iOSSettings,
   );
 
