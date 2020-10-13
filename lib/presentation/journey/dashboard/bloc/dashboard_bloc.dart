@@ -1,3 +1,4 @@
+import 'package:aker_foods_retail/common/constants/app_constants.dart';
 import 'package:aker_foods_retail/domain/entities/address_entity.dart';
 import 'package:aker_foods_retail/domain/usecases/user_address_use_case.dart';
 import 'package:aker_foods_retail/domain/usecases/user_profile_user_case.dart';
@@ -17,9 +18,12 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   SnackBarBloc snackBarBloc;
   UserProfileUseCase userProfileUseCase;
   UserAddressUseCase userAddressUseCase;
-  AddressEntity _currentAddress;
 
   Set<String> serviceablePinCodes = Set();
+
+  LocationPermission _locationPermission;
+  Position _currentPosition;
+  AddressEntity _currentAddress;
 
   DashboardBloc({
     this.snackBarBloc,
@@ -34,7 +38,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     } else if (event is RegisterUserDeviceEvent) {
       await _handleRegisterUserDeviceEvent();
     } else if (event is FetchCurrentLocationEvent) {
-      yield* _handleFetchCurrentLocationEvent(event);
+      yield* _handleFetchCurrentLocationEvent();
     } else if (event is FetchSavedAddressEvent) {
       yield* _handleFetchSavedAddressEvent();
     }
@@ -48,23 +52,20 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     } catch (_) {}
   }
 
-  Stream<DashboardState> _handleFetchCurrentLocationEvent(
-      DashboardEvent event) async* {
-    //yield FetchingCurrentLocationState(pageIndex: state.pageIndex);
+  Stream<DashboardState> _handleFetchCurrentLocationEvent() async* {
+    if (_currentPosition != null) {
+      _currentAddress ??= await _getCurrentPositionAddress();
+      yield* _getStateToYield();
+      return;
+    }
+
+    yield FetchingCurrentLocationState(pageIndex: state.pageIndex);
     if (serviceablePinCodes.isEmpty) {
       await _fetchServiceablePinCodes();
     }
 
-    LocationPermission locationPermission;
-    final currentPermission = await checkPermission();
-    if (currentPermission == LocationPermission.denied ||
-        currentPermission == LocationPermission.deniedForever) {
-      locationPermission = await requestPermission();
-    } else {
-      locationPermission = currentPermission;
-    }
-    debugPrint('------Permission: $locationPermission ---------');
-    switch (locationPermission) {
+    await _initLocationPermission();
+    switch (_locationPermission) {
       case LocationPermission.denied:
       case LocationPermission.deniedForever:
         _currentAddress = await userAddressUseCase.getSelectedAddress();
@@ -74,9 +75,19 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
 
       case LocationPermission.always:
       case LocationPermission.whileInUse:
-        _currentAddress = await _getCurrentLocation();
+        _currentPosition = await getCurrentPosition();
+        _currentAddress = await _getCurrentPositionAddress();
         debugPrint('--------Location: ${_currentAddress.address1}---------');
         yield* _getStateToYield();
+        if (serviceablePinCodes.isNotEmpty &&
+            _currentAddress.zipCode?.isNotEmpty == true) {
+          if (!serviceablePinCodes.contains(_currentAddress.zipCode)) {
+            snackBarBloc.add(ShowSnackBarEvent(
+              type: CustomSnackBarType.error,
+              text: 'Currently unable to provide service at your location',
+            ));
+          }
+        }
         break;
 
       default:
@@ -87,6 +98,8 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     _currentAddress = await userAddressUseCase.getSelectedAddress();
     yield* _getStateToYield();
   }
+
+  // =======================================================================
 
   Future<void> _fetchServiceablePinCodes() async {
     try {
@@ -101,31 +114,30 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     }
   }
 
+  Future<void> _initLocationPermission() async {
+    final currentPermission = await checkPermission();
+    if (currentPermission == LocationPermission.denied) {
+      _locationPermission = await requestPermission();
+    } else {
+      _locationPermission = currentPermission;
+    }
+    debugPrint('------Permission: $_locationPermission ---------');
+  }
+
   Stream<DashboardState> _getStateToYield() async* {
     if (_currentAddress == null) {
       yield FetchCurrentLocationFailedState(pageIndex: state.pageIndex);
     }
 
-    if (serviceablePinCodes.isNotEmpty &&
-        _currentAddress.zipCode?.isNotEmpty == true) {
-      if (!serviceablePinCodes.contains(_currentAddress.zipCode)) {
-        snackBarBloc.add(ShowSnackBarEvent(
-          type: CustomSnackBarType.error,
-          text: 'Currently unable to provide service at your location',
-        ));
-      }
-    }
     yield FetchCurrentLocationSuccessState(
       address: _currentAddress,
       pageIndex: state.pageIndex,
     );
   }
 
-  Future<AddressEntity> _getCurrentLocation() async {
-    final currentPosition =
-        await getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+  Future<AddressEntity> _getCurrentPositionAddress() async {
     final geocoderAddress =
-        await _getGeocoderAddressFromPosition(currentPosition);
+        await _getGeocoderAddressFromPosition(_currentPosition);
     return geocoderAddress == null ? null : _getAddress(geocoderAddress);
   }
 
@@ -142,7 +154,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   }
 
   AddressEntity _getAddress(Address geocoderAddress) => AddressEntity(
-        label: 'DEFAULT',
+        label: AppConstants.defaultAddressLabel,
         address1: geocoderAddress.addressLine,
         address2:
             '${geocoderAddress.subLocality}, ${geocoderAddress.locality}, '

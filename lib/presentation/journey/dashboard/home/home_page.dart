@@ -5,6 +5,7 @@ import 'package:aker_foods_retail/common/injector/injector.dart';
 import 'package:aker_foods_retail/common/utils/analytics_utils.dart';
 import 'package:aker_foods_retail/common/utils/global_entities.dart';
 import 'package:aker_foods_retail/common/utils/widget_util.dart';
+import 'package:aker_foods_retail/domain/entities/address_entity.dart';
 import 'package:aker_foods_retail/domain/entities/product_category_entity.dart';
 import 'package:aker_foods_retail/domain/entities/product_entity.dart';
 import 'package:aker_foods_retail/presentation/app/route_constants.dart';
@@ -41,7 +42,7 @@ class HomePageState extends State<HomePage> {
   Widget _categoriesSection;
 
   bool _locationIsAvailable = false;
-  String _addressString;
+  String _addressString = '';
 
   void _initialiseProductIdCountMap() {
     final cartState = BlocProvider.of<CartBloc>(context).state;
@@ -53,22 +54,22 @@ class HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     AnalyticsUtil.trackScreen(screenName: 'Home Page');
-    _addressString = 'Fetching location...';
     productsBloc = Injector.resolve<ProductsBloc>()
       ..add(FetchProductCategoriesEvent());
+    _populateAddressLocation(context);
+    if (currentLocalAddress != null) {
+      _initAddressUIValues(currentLocalAddress);
+    }
   }
 
   @override
-  Widget build(BuildContext context) {
-    _populateAddressLocation(context);
-    return Scaffold(
-      appBar: _getAppBar(),
-      body: BlocProvider<ProductsBloc>(
-        create: (context) => productsBloc,
-        child: _wrapWithBlocBuilder(),
-      ),
-    );
-  }
+  Widget build(BuildContext context) => Scaffold(
+        appBar: _getAppBar(),
+        body: BlocProvider<ProductsBloc>(
+          create: (context) => productsBloc,
+          child: _wrapWithBlocBuilder(),
+        ),
+      );
 
   AppBar _getAppBar() => AppBar(
         elevation: 8,
@@ -129,8 +130,6 @@ class HomePageState extends State<HomePage> {
 
   BlocBuilder _addressWidgetExpandedText() =>
       BlocBuilder<DashboardBloc, DashboardState>(
-//        buildWhen: (_, currentState) =>
-//            currentState is FetchCurrentLocationSuccessState,
         builder: (context, state) => Expanded(
           child: Text(
             _addressString,
@@ -152,13 +151,16 @@ class HomePageState extends State<HomePage> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(LayoutConstants.dimen_12.w),
       ),
-      builder: (BuildContext context) =>
-          ChangeAddressModeSelectionBottomSheet(onAddressChange: (address) {
-        currentLocalAddress = address;
-        BlocProvider.of<DashboardBloc>(context).add(FetchSavedAddressEvent());
-        Navigator.pop(context);
-      }),
+      builder: (BuildContext context) => ChangeAddressModeSelectionBottomSheet(
+        onAddressChange: _onAddressChangedUsingBottomSheet,
+      ),
     );
+  }
+
+  void _onAddressChangedUsingBottomSheet(address) {
+    currentLocalAddress = address;
+    BlocProvider.of<DashboardBloc>(context).add(FetchSavedAddressEvent());
+    Navigator.pop(context); // Close bottom sheet
   }
 
   // =======================================================================
@@ -348,17 +350,22 @@ class HomePageState extends State<HomePage> {
 
   void _populateAddressLocation(BuildContext context) {
     BlocProvider.of<DashboardBloc>(context).listen((state) {
-      if (state is FetchCurrentLocationSuccessState) {
-        //_address = state.address?.address1 ?? 'Location unavailable';
-        final _address = currentLocalAddress ?? state.address;
-        if (_address?.zipCode != null && _address?.address1 != null) {
-          _locationIsAvailable = true;
-          _addressString = '${_address?.zipCode}, ${_address?.address1}';
-        } else {
-          _locationIsAvailable = false;
-          _addressString = 'Location unavailable';
-        }
+      if (state is FetchingCurrentLocationState) {
+        _addressString = 'Fetching location...';
+      } else if (state is FetchCurrentLocationSuccessState) {
+        _initAddressUIValues(currentLocalAddress ?? state.address);
+        currentLocalAddress = state.address;
       }
     });
+  }
+
+  void _initAddressUIValues(AddressEntity address) {
+    if (address?.zipCode != null && address?.address1 != null) {
+      _locationIsAvailable = true;
+      _addressString = '${address?.zipCode}, ${address?.address1}';
+    } else {
+      _locationIsAvailable = false;
+      _addressString = 'Location unavailable';
+    }
   }
 }

@@ -113,11 +113,6 @@ class DashboardScreenState extends State<DashboardScreen> {
           BlocProvider.of<DashboardBloc>(context).add(
             NavigateToPageEvent(pageIndex: index ?? 0),
           );
-          if (index == 0) {
-            BlocProvider.of<DashboardBloc>(context).add(
-              FetchCurrentLocationEvent(),
-            );
-          }
         },
       );
 }

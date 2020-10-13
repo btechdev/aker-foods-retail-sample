@@ -11,6 +11,7 @@ class AppConstants {
   static const firebaseAuthRequestTimeoutDuration = Duration(minutes: 1);
 
   static const rupeeSymbol = '₹';
+  static const defaultAddressLabel = 'DEFAULT';
   static const unknownError = 'Unknown error occurred';
 
   static const kGoogleApiKey = 'AIzaSyAxfdSiEsi2r0yL4A53HxEtuc0NxTkttX8';
