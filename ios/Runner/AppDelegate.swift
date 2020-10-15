@@ -9,7 +9,6 @@ import FirebaseAuth
     _ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
-    GMSServices.provideAPIKey("AIzaSyAxfdSiEsi2r0yL4A53HxEtuc0NxTkttX8")
     GeneratedPluginRegistrant.register(with: self)
     if #available(iOS 10.0, *) {
          // For iOS 10 display notification (sent via APNS)
@@ -26,7 +25,7 @@ import FirebaseAuth
        }
 
        application.registerForRemoteNotifications()
-
+    GMSServices.provideAPIKey("AIzaSyAxfdSiEsi2r0yL4A53HxEtuc0NxTkttX8")
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
     override func application(_ application: UIApplication, didReceiveRemoteNotification notification: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
