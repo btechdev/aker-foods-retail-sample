@@ -4,7 +4,7 @@ enum PaymentMode { cashOnDelivery, online }
 
 extension PaymentModeExtension on PaymentMode {
   int toInt() {
-    return this == PaymentMode.cashOnDelivery
+    return (this == null || this == PaymentMode.cashOnDelivery)
         ? PaymentModeConstants.cashOnDelivery
         : PaymentModeConstants.online;
   }

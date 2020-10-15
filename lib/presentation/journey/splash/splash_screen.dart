@@ -14,7 +14,6 @@ import 'package:aker_foods_retail/presentation/app/route_constants.dart';
 import 'package:aker_foods_retail/presentation/common_blocs/snack_bar_bloc/snack_bar_bloc.dart';
 import 'package:aker_foods_retail/presentation/common_blocs/snack_bar_bloc/snack_bar_event.dart';
 import 'package:aker_foods_retail/presentation/theme/app_colors.dart';
-import 'package:aker_foods_retail/presentation/widgets/circular_loader_widget.dart';
 import 'package:aker_foods_retail/presentation/widgets/custom_snack_bar/snack_bar_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -41,28 +40,57 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   @override
-  Widget build(BuildContext context) => Stack(
-        children: [
-          Image.asset(
-            'assets/images/splash_image.png',
-            width: PixelDimensionUtil.screenWidth,
-            height: PixelDimensionUtil.screenHeight,
-            fit: BoxFit.contain,
+  Widget build(BuildContext context) => Scaffold(body: _getBody());
+
+  /*
+  Stack(
+      children: [
+        Image.asset(
+          'assets/images/splash_image.png',
+          width: PixelDimensionUtil.screenWidth,
+          height: PixelDimensionUtil.screenHeight,
+          fit: BoxFit.contain,
+        ),
+        Positioned(
+          top: LayoutConstants.dimen_76.h,
+          left:
+              (PixelDimensionUtil.screenWidth / 2) - LayoutConstants.dimen_16.w,
+          child: _isLoading
+              ? SizedBox(
+                  height: LayoutConstants.dimen_32.h,
+                  width: LayoutConstants.dimen_32.w,
+                  child: const CircularLoaderWidget(),
+                )
+              : Container(),
+        )
+      ],
+    );
+  */
+
+  Widget _getBody() {
+    return Stack(
+      children: [
+        Align(
+          alignment: Alignment.topCenter,
+          child: Container(
+            height: PixelDimensionUtil().uiHeightPx * 0.50,
+            padding: EdgeInsets.symmetric(
+              horizontal: LayoutConstants.dimen_32.w,
+              vertical: LayoutConstants.dimen_32.h,
+            ),
+            child: Image.asset('assets/images/logo_transparent_background.png'),
           ),
-          Positioned(
-            top: LayoutConstants.dimen_76.h,
-            left:
-                PixelDimensionUtil.screenWidth / 2 - LayoutConstants.dimen_16.w,
-            child: _isLoading
-                ? SizedBox(
-                    height: LayoutConstants.dimen_32.h,
-                    width: LayoutConstants.dimen_32.w,
-                    child: const CircularLoaderWidget(),
-                  )
-                : Container(),
-          )
-        ],
-      );
+        ),
+        Align(
+          alignment: Alignment.bottomCenter,
+          child: Padding(
+            padding: EdgeInsets.only(bottom: LayoutConstants.dimen_80.h),
+            child: _isLoading ? const CircularProgressIndicator() : Container(),
+          ),
+        ),
+      ],
+    );
+  }
 
   Future<void> _checkDataConnectionAndAppUpdate() async {
     final isInternetConnectionAvailable =
@@ -70,6 +98,9 @@ class _SplashScreenState extends State<SplashScreen> {
     if (isInternetConnectionAvailable ?? false) {
       await _getAppUpdateStatus();
     } else {
+      setState(() {
+        _isLoading = false;
+      });
       await _showExitAppDialog();
     }
   }
@@ -207,7 +238,10 @@ class _SplashScreenState extends State<SplashScreen> {
     }
 
     final bool userHasSetupProfile =
-        localPreferences.get(PreferencesKeys.userHasSetupProfile);
+        localPreferences.get(PreferencesKeys.userHasSetupProfile) ?? false;
+    debugPrint('=========================================================');
+    debugPrint('UserHasProfile =>> $userHasSetupProfile');
+    debugPrint('=========================================================');
     if (!userHasSetupProfile) {
       return RouteConstants.setupUserProfile;
     }

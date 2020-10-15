@@ -1,4 +1,5 @@
 import 'package:aker_foods_retail/common/local_preferences/local_preferences.dart';
+import 'package:flutter/foundation.dart';
 import 'package:meta/meta.dart';
 
 class AuthenticationLocalDataSource {
@@ -39,8 +40,12 @@ class AuthenticationLocalDataSource {
         PreferencesKeys.userHasSetupProfile,
       );
 
-  Future<bool> setUserHasSetupProfileFlag(bool flag) =>
-      localPreferences.set(PreferencesKeys.userHasSetupProfile, flag);
+  Future<bool> setUserHasSetupProfileFlag(bool flag) {
+    debugPrint('=========================================================');
+    debugPrint('UserHasProfile =>> $flag');
+    debugPrint('=========================================================');
+    return localPreferences.set(PreferencesKeys.userHasSetupProfile, flag);
+  }
 
   Future<bool> removeUserHasSetupProfileFlag() => localPreferences.remove(
         PreferencesKeys.userHasSetupProfile,

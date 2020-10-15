@@ -17,7 +17,8 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart';
 
 class HttpUtil {
-  static const unknownError = 'UNKNOWN_ERROR';
+  static const unknownError = 'Unknown error occurred.\n'
+      'Please contact support team.';
 
   static bool _hasAttemptedRefreshAuthorization = false;
   static Response _apiRequestResponse;

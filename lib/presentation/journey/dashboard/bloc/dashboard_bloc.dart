@@ -21,6 +21,8 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
 
   Set<String> serviceablePinCodes = Set();
 
+  bool _locationServiceDisabled = false;
+  bool _locationPermissionDenied = false;
   LocationPermission _locationPermission;
   Position _currentPosition;
   AddressEntity _currentAddress;
@@ -53,6 +55,17 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   }
 
   Stream<DashboardState> _handleFetchCurrentLocationEvent() async* {
+    if (_currentAddress != null) {
+      yield* _getStateToYield();
+      return;
+    }
+
+    if ((_locationServiceDisabled ?? false) ||
+        (_locationPermissionDenied ?? false)) {
+      yield FetchCurrentLocationFailedState(pageIndex: state.pageIndex);
+      return;
+    }
+
     if (_currentPosition != null) {
       _currentAddress ??= await _getCurrentPositionAddress();
       yield* _getStateToYield();
@@ -68,25 +81,31 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     switch (_locationPermission) {
       case LocationPermission.denied:
       case LocationPermission.deniedForever:
+        _locationPermissionDenied = true;
         _currentAddress = await userAddressUseCase.getSelectedAddress();
-        debugPrint('--------Location: ${_currentAddress.address1}---------');
         yield* _getStateToYield();
         break;
 
       case LocationPermission.always:
       case LocationPermission.whileInUse:
-        _currentPosition = await getCurrentPosition();
-        _currentAddress = await _getCurrentPositionAddress();
-        debugPrint('--------Location: ${_currentAddress.address1}---------');
-        yield* _getStateToYield();
-        if (serviceablePinCodes.isNotEmpty &&
-            _currentAddress.zipCode?.isNotEmpty == true) {
-          if (!serviceablePinCodes.contains(_currentAddress.zipCode)) {
-            snackBarBloc.add(ShowSnackBarEvent(
-              type: CustomSnackBarType.error,
-              text: 'Currently unable to provide service at your location',
-            ));
+        try {
+          _currentPosition = await getCurrentPosition();
+          _currentAddress = await _getCurrentPositionAddress();
+          yield* _getStateToYield();
+          if (serviceablePinCodes.isNotEmpty &&
+              _currentAddress.zipCode?.isNotEmpty == true) {
+            if (!serviceablePinCodes.contains(_currentAddress.zipCode)) {
+              snackBarBloc.add(ShowSnackBarEvent(
+                type: CustomSnackBarType.error,
+                text: 'Currently unable to provide service at your location',
+              ));
+            }
           }
+        } catch (e) {
+          if (e is LocationServiceDisabledException) {
+            _locationServiceDisabled = true;
+          }
+          yield FetchCurrentLocationFailedState(pageIndex: state.pageIndex);
         }
         break;
 

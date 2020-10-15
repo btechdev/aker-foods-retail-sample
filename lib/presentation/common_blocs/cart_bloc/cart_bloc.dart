@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:aker_foods_retail/common/constants/payment_constants.dart';
 import 'package:aker_foods_retail/common/exceptions/cart_data_exception.dart';
 import 'package:aker_foods_retail/common/exceptions/server_exception.dart';
+import 'package:aker_foods_retail/common/extensions/string_extensions.dart';
 import 'package:aker_foods_retail/data/models/razorpay_payment_model.dart';
 import 'package:aker_foods_retail/domain/entities/billing_entity.dart';
 import 'package:aker_foods_retail/domain/entities/cart_entity.dart';
@@ -182,9 +183,12 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       return;
     }
 
-    String message = '${HttpUtil.unknownError}: ${error.toString()}';
+    String message;
     if (error is ServerException) {
-      message = error.message;
+      message = error?.message;
+    }
+    if (message.isNullOrEmpty) {
+      message = HttpUtil.unknownError;
     }
     yield CartLoadedState(
       cartEntity: cartEntity,

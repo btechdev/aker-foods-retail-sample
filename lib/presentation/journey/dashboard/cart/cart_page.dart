@@ -37,7 +37,7 @@ class CartPage extends StatefulWidget {
 class _CartPageState extends State<CartPage> {
   String appliedCouponPromoCode = '';
 
-  PaymentMode _paymentMode;
+  PaymentMode _paymentMode = PaymentMode.cashOnDelivery;
   int _addressId;
   Timer _orderPaymentVerificationPollingTimer;
 
@@ -87,6 +87,8 @@ class _CartPageState extends State<CartPage> {
     }*/
     if (state is CartLoadedState) {
       appliedCouponPromoCode = state.cartEntity?.promoCode;
+      _paymentMode =
+          PaymentModeExtension.fromInt(state.cartEntity?.paymentMode);
       return _cartDetailsWithScaffold(state);
     }
     if (state is CartEmptyState) {
@@ -118,8 +120,10 @@ class _CartPageState extends State<CartPage> {
         ),
       );
 
-  Scaffold _cartDetailsWithScaffold(CartState state,
-          {bool showLoader = false}) =>
+  Scaffold _cartDetailsWithScaffold(
+    CartState state, {
+    bool showLoader = false,
+  }) =>
       Scaffold(
         appBar: _getAppBar(),
         bottomNavigationBar:
@@ -168,9 +172,6 @@ class _CartPageState extends State<CartPage> {
         OrderDeliverySelection(),
         const Divider(),
         PaymentModeSelection(
-          /*selectedPaymentMode: PaymentModeExtension.fromInt(
-            state.cartEntity.paymentMode ?? PaymentModeConstants.cashOnDelivery,
-          ),*/
           selectedPaymentMode: _paymentMode ?? PaymentMode.cashOnDelivery,
           onPaymentSelection: (mode) {
             _paymentMode = mode;

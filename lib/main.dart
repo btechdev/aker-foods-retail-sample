@@ -41,7 +41,8 @@ Future<void> main() async {
   */
 
   // Initialise OneSignal for push notification service
-  unawaited(_initialiseOneSignal());
+  // ignore: unawaited_futures
+  _initialiseOneSignal();
 
   // Set application for portrait device orientation
   unawaited(

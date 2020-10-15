@@ -59,6 +59,8 @@ class HomePageState extends State<HomePage> {
     _populateAddressLocation(context);
     if (currentLocalAddress != null) {
       _initAddressUIValues(currentLocalAddress);
+    } else {
+      BlocProvider.of<DashboardBloc>(context).add(FetchCurrentLocationEvent());
     }
   }
 
@@ -293,7 +295,10 @@ class HomePageState extends State<HomePage> {
           url: categories[i].imageUrl,
         ));
       }
-      return _categoriesSection = Row(children: rowChildren);
+      return _categoriesSection = Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: rowChildren,
+      );
     } else if (state is CategoryWiseProductsFetchSuccessState) {
       return _categoriesSection;
     } else {
@@ -329,6 +334,9 @@ class HomePageState extends State<HomePage> {
           ),
           Text(
             title,
+            softWrap: true,
+            maxLines: 2,
+            textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.bodyText1.copyWith(
                   color: AppColor.primaryColor,
                 ),
@@ -351,7 +359,11 @@ class HomePageState extends State<HomePage> {
   void _populateAddressLocation(BuildContext context) {
     BlocProvider.of<DashboardBloc>(context).listen((state) {
       if (state is FetchingCurrentLocationState) {
+        _locationIsAvailable = false;
         _addressString = 'Fetching location...';
+      } else if (state is FetchCurrentLocationFailedState) {
+        _locationIsAvailable = false;
+        _addressString = 'Location unavailable';
       } else if (state is FetchCurrentLocationSuccessState) {
         _initAddressUIValues(currentLocalAddress ?? state.address);
         currentLocalAddress = state.address;

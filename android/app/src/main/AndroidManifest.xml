@@ -52,7 +52,7 @@
 		   special context set for you by the time it is initialized. -->
 		<meta-data
 			android:name="com.claimsforce.segment.WRITE_KEY"
-			android:value="FjiFLTKXrpuQbOXwtcEGG7XCoEHwdWA7"/>
+			android:value="kr8vC00Y4crXCwA5ryHSOX8yCrUCKEOJ"/>
 		<meta-data
 			android:name="com.claimsforce.segment.TRACK_APPLICATION_LIFECYCLE_EVENTS"
 			android:value="true"/>
@@ -65,7 +65,8 @@
 		<meta-data
 			android:name="com.claimsforce.segment.DEBUG"
 			android:value="true"/>
-		<meta-data android:name="com.google.android.geo.API_KEY"
+		<meta-data
+			android:name="com.google.android.geo.API_KEY"
 			android:value="AIzaSyAxfdSiEsi2r0yL4A53HxEtuc0NxTkttX8"/>
 	</application>
 </manifest>
