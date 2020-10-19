@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:aker_foods_retail/common/utils/database_utils.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
@@ -29,20 +30,13 @@ Future<void> main() async {
   final localPreferences = Injector.resolve<LocalPreferences>();
   await localPreferences.init();
 
-  /*final appUpdateConfig = Injector.resolve<AppUpdateConfig>();
-  await appUpdateConfig.getAppUpdateInfo();
-  final model = appUpdateConfig.getAppUpdateInfoFromLocal();*/
-
   // Enable Crashlytics based on environment and
   // Pass all uncaught errors from the framework to Crashlytics.
-  /*
   Crashlytics.instance.enableInDevMode = Configuration.shouldEnableCrashlytics;
   FlutterError.onError = Crashlytics.instance.recordFlutterError;
-  */
 
   // Initialise OneSignal for push notification service
-  // ignore: unawaited_futures
-  _initialiseOneSignal();
+  unawaited(_initialiseOneSignal());
 
   // Set application for portrait device orientation
   unawaited(
@@ -57,7 +51,7 @@ Future<void> main() async {
 
   runZoned(
     () => runApp(App(localPreferences)),
-    //onError: Crashlytics.instance.recordError,
+    onError: Crashlytics.instance.recordError,
   );
 }
 
