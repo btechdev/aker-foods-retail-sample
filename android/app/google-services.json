@@ -54,6 +54,85 @@
             {
               "client_id": "267926914538-7nhim1ob1j5s5bn6cgghs7fs7s5cv6bv.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "267926914538-iebeer7hhhe9ajk46ubt9sllbfendoko.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.akerretail.order"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:267926914538:android:937e48f5af303aff6e5e93",
+        "android_client_info": {
+          "package_name": "com.akerretail.order"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "267926914538-7nhim1ob1j5s5bn6cgghs7fs7s5cv6bv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDSKsTDn1e2jJ-zSEFqfrp5lOgwqdrlZeY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "267926914538-7nhim1ob1j5s5bn6cgghs7fs7s5cv6bv.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "267926914538-iebeer7hhhe9ajk46ubt9sllbfendoko.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.akerretail.order"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:267926914538:android:39e86e10864a1de56e5e93",
+        "android_client_info": {
+          "package_name": "com.akerretail.order.dev"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "267926914538-7nhim1ob1j5s5bn6cgghs7fs7s5cv6bv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDSKsTDn1e2jJ-zSEFqfrp5lOgwqdrlZeY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "267926914538-7nhim1ob1j5s5bn6cgghs7fs7s5cv6bv.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "267926914538-iebeer7hhhe9ajk46ubt9sllbfendoko.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.akerretail.order"
+              }
             }
           ]
         }

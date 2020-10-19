@@ -48,7 +48,7 @@ android {
 	}
 
 	defaultConfig {
-		applicationId "com.akerfoods.aker_foods_retail"
+		applicationId "com.akerretail.order"
 		minSdkVersion 19
 		targetSdkVersion 30
 		versionCode flutterVersionCode.toInteger()
@@ -58,6 +58,8 @@ android {
 
 	buildTypes {
 		debug {
+			applicationIdSuffix ".dev"
+			versionNameSuffix "-dev"
 			manifestPlaceholders = [
 					onesignal_app_id               : '15cc841b-f301-4663-a12e-9f5467eaf167',
 					onesignal_google_project_number: 'REMOTE'
