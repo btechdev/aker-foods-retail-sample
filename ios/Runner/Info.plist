@@ -28,6 +28,14 @@
 				<string>com.googleusercontent.apps.267926914538-8iukju92c4l0mvgighvmoejss5u2omob</string>
 			</array>
 		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.267926914538-iebeer7hhhe9ajk46ubt9sllbfendoko</string>
+			</array>
+		</dict>
 	</array>
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
@@ -78,11 +86,11 @@
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 	<key>com.claimsforce.segment.ENABLE_AMPLITUDE_INTEGRATION</key>
-	<false/>
+	<true/>
 	<key>com.claimsforce.segment.TRACK_APPLICATION_LIFECYCLE_EVENTS</key>
-	<false/>
+	<true/>
 	<key>com.claimsforce.segment.WRITE_KEY</key>
-	<string>FjiFLTKXrpuQbOXwtcEGG7XCoEHwdWA7</string>
+	<string>jCv2dxUkUddKCDPjd59EIeT0W5Lioepm</string>
 	<key>io.flutter.embedded_views_preview</key>
 	<true/>
 </dict>
