@@ -173,14 +173,7 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
             child: RaisedButton(
               color: AppColor.primaryColor,
               shape: LayoutConstants.borderlessRoundedRectangle,
-              onPressed: () {
-                BlocProvider.of<DashboardBloc>(context).add(
-                  NavigateToPageEvent(
-                    pageIndex: DashboardBottomNavigationItem.home.index,
-                  ),
-                );
-                Navigator.pop(context);
-              },
+              onPressed: () => Navigator.pop(context),
               child: Text(
                 'Go to Account',
                 style: Theme.of(context).textTheme.button.copyWith(
