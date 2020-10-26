@@ -75,6 +75,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "267926914538-n29ijlkqchhs97fg3us7c026aunukuta.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.akerretail.order",
+            "certificate_hash": "63db608085e82ec225ccc58e24059b5fd213b233"
+          }
+        },
+        {
           "client_id": "267926914538-7nhim1ob1j5s5bn6cgghs7fs7s5cv6bv.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -110,6 +118,14 @@
         }
       },
       "oauth_client": [
+        {
+          "client_id": "267926914538-n75i43e7muonlse3l3m15c7qemo5h6lf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.akerretail.order.dev",
+            "certificate_hash": "63db608085e82ec225ccc58e24059b5fd213b233"
+          }
+        },
         {
           "client_id": "267926914538-7nhim1ob1j5s5bn6cgghs7fs7s5cv6bv.apps.googleusercontent.com",
           "client_type": 3
