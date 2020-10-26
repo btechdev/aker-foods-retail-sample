@@ -45,9 +45,9 @@ dependencies:
   url_launcher: ^5.5.2 # Launching a URL in the mobile platform
 
   # Firebase
-  firebase_core: ^0.5.0
-  firebase_auth: ^0.18.0+1
-  firebase_crashlytics: ^0.1.4+1
+  firebase_core: ^0.5.0+1
+  firebase_auth: ^0.18.1+2
+  firebase_crashlytics: ^0.2.1+1
 
   # Map & Location
   google_maps_flutter: ^0.5.32

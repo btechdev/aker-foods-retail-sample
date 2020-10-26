@@ -35,6 +35,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 apply plugin: 'com.onesignal.androidsdk.onesignal-gradle-plugin'
+apply plugin: 'com.google.firebase.crashlytics'
 
 android {
 	compileSdkVersion 30
@@ -87,7 +88,16 @@ flutter {
 
 dependencies {
 	implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+
+	// BoM for the Firebase platform
+	implementation platform('com.google.firebase:firebase-bom:25.12.0')
+	// When using the BoM, you don't specify versions in Firebase library dependencies
+
+	// Dependency for the Crashlytics library
+	implementation 'com.google.firebase:firebase-crashlytics-ktx'
+
+	// Dependency for the OneSignal library
 	implementation 'com.onesignal:OneSignal:3.15.3'
 }
+
 apply plugin: 'com.google.gms.google-services'
-apply plugin: 'com.google.firebase.crashlytics'

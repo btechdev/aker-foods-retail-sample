@@ -30,10 +30,13 @@ Future<void> main() async {
   final localPreferences = Injector.resolve<LocalPreferences>();
   await localPreferences.init();
 
-  // Enable Crashlytics based on environment and
+  /*// Enable Crashlytics based on environment and
   // Pass all uncaught errors from the framework to Crashlytics.
   Crashlytics.instance.enableInDevMode = Configuration.shouldEnableCrashlytics;
-  FlutterError.onError = Crashlytics.instance.recordFlutterError;
+  FlutterError.onError = Crashlytics.instance.recordFlutterError;*/
+
+  await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
+  FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
 
   // Initialise OneSignal for push notification service
   unawaited(_initialiseOneSignal());
@@ -51,7 +54,7 @@ Future<void> main() async {
 
   runZoned(
     () => runApp(App(localPreferences)),
-    onError: Crashlytics.instance.recordError,
+    onError: FirebaseCrashlytics.instance.recordError,
   );
 }
 
