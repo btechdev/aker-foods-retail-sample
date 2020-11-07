@@ -1,6 +1,7 @@
 import 'package:aker_foods_retail/common/constants/layout_constants.dart';
 import 'package:aker_foods_retail/common/extensions/pixel_dimension_util_extensions.dart';
 import 'package:aker_foods_retail/data/models/address_model.dart';
+import 'package:aker_foods_retail/domain/entities/address_entity.dart';
 import 'package:aker_foods_retail/presentation/theme/app_colors.dart';
 import 'package:aker_foods_retail/presentation/theme/text_themes.dart';
 import 'package:flutter/material.dart';
@@ -86,41 +87,49 @@ class ChangeAddressScreen extends StatelessWidget {
         return _addressModeSelectionListItem(context, 1);
 
       default:
+        final address = savedAddresses[index - 7];
         return ListTile(
+          leading: _addressLabelWidget(context, address),
           title: Text(
-            savedAddresses[index - 7].address1,
+            address?.address1 ?? '',
             style: Theme.of(context).textTheme.subtitle1,
           ),
           subtitle: Text(
-            savedAddresses[index - 7].address2,
+            address?.address2 ?? '',
             style: Theme.of(context).textTheme.addressSubtitle,
           ),
-          trailing: _getTrailing(index),
-          onTap: () => onSelectAddress(savedAddresses[index - 7])
-
+          trailing: _checkIconIfAddressIsSelected(address),
+          onTap: () => onSelectAddress(address),
         );
     }
   }
 
-  Widget _getTrailing(int index) {
-    if (savedAddresses.isNotEmpty && currentAddress != null) {
-      if (savedAddresses[index - 7].id == currentAddress.id) {
-        return const Icon(
-          Icons.check,
-          color: AppColor.primaryColor,
-        );
-      } else {
-        return const Icon(
-          Icons.check,
-          color: AppColor.transparent,
-        );
-      }
-    } else {
-      return const Icon(
-        Icons.check,
-        color: AppColor.transparent,
-      );
-    }
+  Widget _addressLabelWidget(BuildContext context, AddressEntity address) {
+    return Container(
+      alignment: Alignment.center,
+      width: LayoutConstants.dimen_56.w,
+      height: LayoutConstants.dimen_20.h,
+      decoration: BoxDecoration(
+        color: AppColor.white,
+        border: Border.all(color: AppColor.primaryColor),
+        borderRadius: BorderRadius.circular(LayoutConstants.dimen_20.w),
+      ),
+      child: Text(
+        address?.label ?? '',
+        style: Theme.of(context).textTheme.overline.copyWith(
+              color: AppColor.primaryColor,
+            ),
+      ),
+    );
+  }
+
+  Widget _checkIconIfAddressIsSelected(AddressEntity address) {
+    return Icon(
+      Icons.check,
+      color: address?.id == currentAddress?.id
+          ? AppColor.primaryColor
+          : AppColor.transparent,
+    );
   }
 
   Row _getHeader(BuildContext context) {

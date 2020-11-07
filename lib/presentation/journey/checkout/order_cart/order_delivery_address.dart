@@ -90,18 +90,50 @@ class _OrderDeliveryAddressSelectionState
           if (state is FetchSelectedAddressSuccessState) {
             _selectedAddress = state.addressModel;
             widget.onAddressSelection(_selectedAddress.id);
-            return Text(
-              '${_selectedAddress.address1}'
-              ' ${_selectedAddress.address2}',
-              style: Theme.of(context).textTheme.subtitle1.copyWith(
-                    color: AppColor.primaryColor,
-                  ),
+            return Row(
+              children: [
+                _addressLabelWidget(context),
+                SizedBox(width: LayoutConstants.dimen_12.w),
+                Expanded(
+                  child: _addressText(),
+                ),
+              ],
             );
           } else {
             return const Text('');
           }
         },
       );
+
+  Text _addressText() => Text(
+        '${_selectedAddress.address1}'
+        ' ${_selectedAddress.address2}',
+        maxLines: 5,
+        softWrap: true,
+        overflow: TextOverflow.ellipsis,
+        style: Theme.of(context).textTheme.subtitle1.copyWith(
+              color: AppColor.primaryColor,
+            ),
+      );
+
+  Widget _addressLabelWidget(BuildContext context) {
+    return Container(
+      alignment: Alignment.center,
+      width: LayoutConstants.dimen_56.w,
+      height: LayoutConstants.dimen_20.h,
+      decoration: BoxDecoration(
+        color: AppColor.white,
+        border: Border.all(color: AppColor.primaryColor),
+        borderRadius: BorderRadius.circular(LayoutConstants.dimen_20.w),
+      ),
+      child: Text(
+        _selectedAddress?.label ?? '',
+        style: Theme.of(context).textTheme.overline.copyWith(
+              color: AppColor.primaryColor,
+            ),
+      ),
+    );
+  }
 
   Future<void> _getLocationSelectionBottomSheet() async {
     final _ = await showModalBottomSheet(
